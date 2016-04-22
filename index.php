@@ -1,39 +1,55 @@
-<?php // $Id: view.php,v 0.2 2010/01/15 matbury Exp $
+<?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
 /**
  * This page prints a list of instances of mplayer in current course
  *
- * @author Matt Bury - matbury@gmail.com
- * @version $Id: view.php,v 1.1 2010/01/15 matbury Exp $
- * @licence http://www.gnu.org/copyleft/gpl.html GNU Public Licence
- * @package mplayer
- **/
-/**    Copyright (C) 2009  Matt Bury
-*
-*    This program is free software: you can redistribute it and/or modify
-*    it under the terms of the GNU General Public License as published by
-*    the Free Software Foundation, either version 3 of the License, or
-*    (at your option) any later version.
-*
-*    This program is distributed in the hope that it will be useful,
-*    but WITHOUT ANY WARRANTY; without even the implied warranty of
-*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*    GNU General Public License for more details.
-*
-*    You should have received a copy of the GNU General Public License
-*    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
-require_once('../../config.php');
-require_once('lib.php');
+ * @package  mod_mplayer
+ * @category mod
+ * @author   Matt Bury - matbury@gmail.com
+ * @author   Valery Fremaux <valery.fremaux@gmail.com>
+ * @licence  http://www.gnu.org/copyleft/gpl.html GNU Public Licence
+ */
+require('../../config.php');
+require_once($CFG->dirroot.'/mod/mplayer/lib.php');
 
 $id = required_param('id', PARAM_INT);   // course
-if (! $course = $DB->get_record('course', array('id' => $id))) {
-    error('Course ID is incorrect');
+if (!$course = $DB->get_record('course', array('id' => $id))) {
+    print_error('coursemisconf');
 }
+
+// Security.
 
 require_login($course->id);
 
-add_to_log($course->id, 'mplayer', 'view all', 'index.php?id='.$course->id, '');
+require_once($CFG->libdir.'/completionlib.php');
+$context = context_module::instance($cm->id);
+require_capability('mod/mplayer:viewall', $context);
+
+// Trigger module viewed event.
+$event = \mod_mplayer\event\mplayer_viewedall::create(array(
+    'objectid' => $course->id,
+    'context' => $context,
+    'other' => array(
+        'objectname' => $mplayer->name
+    )
+));
+$event->add_record_snapshot('course_modules', $cm);
+$event->add_record_snapshot('course', $course);
+$event->trigger();
 
 // Get all required stringsmplayer.
 

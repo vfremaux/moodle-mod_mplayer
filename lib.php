@@ -1,13 +1,30 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+defined('MOODLE_INTERNAL') || die();
 
 /**
  * Library of functions and constants for module mplayer
  * For more information on the parameters used by JW FLV Player see documentation: http://developer.longtailvideo.com/trac/wiki/FlashVars
  * 
- * @author Matt Bury - matbury@gmail.com - http://matbury.com/
- * @version $Id: index.php,v 0.2 2009/02/21 matbury Exp $
- * @licence http://www.gnu.org/copyleft/gpl.html GNU Public Licence
- * @package mplayer
+ * @package  mod_mplayer
+ * @category mod
+ * @author   Matt Bury - matbury@gmail.com
+ * @author   Valery Fremaux <valery.fremaux@gmail.com>
+ * @licence  http://www.gnu.org/copyleft/gpl.html GNU Public Licence
  */
 require_once($CFG->dirroot.'/mod/mplayer/locallib.php');
 
@@ -28,6 +45,35 @@ require_once($CFG->dirroot.'/mod/mplayer/locallib.php');
  */
 
 /**
+ * @uses FEATURE_GROUPS
+ * @uses FEATURE_GROUPINGS
+ * @uses FEATURE_GROUPMEMBERSONLY
+ * @uses FEATURE_MOD_INTRO
+ * @uses FEATURE_COMPLETION_TRACKS_VIEWS
+ * @uses FEATURE_GRADE_HAS_GRADE
+ * @uses FEATURE_GRADE_OUTCOMES
+ * @param string $feature FEATURE_xx constant for requested feature
+ * @return mixed True if module supports feature, null if doesn't know
+ */
+function mplayer_supports($feature) {
+    switch($feature) {
+        case FEATURE_GROUPS:                  return false;
+        case FEATURE_GROUPINGS:               return false;
+        case FEATURE_GROUPMEMBERSONLY:        return true;
+        case FEATURE_MOD_INTRO:               return true;
+        case FEATURE_COMPLETION_TRACKS_VIEWS: return true;
+        case FEATURE_COMPLETION_HAS_RULES:    return true;
+        case FEATURE_GRADE_HAS_GRADE:         return false;
+        case FEATURE_GRADE_OUTCOMES:          return false;
+        case FEATURE_BACKUP_MOODLE2:          return true;
+        case FEATURE_SHOW_DESCRIPTION:        return true;
+        case FEATURE_MOD_ARCHETYPE:           return MOD_ARCHETYPE_RESOURCE;
+
+        default: return null;
+    }
+}
+
+/**
  * Given an object containing all the necessary data, 
  * (defined by the form in mod.html) this function 
  * will create a new instance and return the id number 
@@ -39,12 +85,31 @@ require_once($CFG->dirroot.'/mod/mplayer/locallib.php');
 function mplayer_add_instance($mplayer) {
     global $DB;
 
+    $config = get_config('mplayer');
+
     $mplayer->timecreated = time();
 
     // saves draft customization image files into definitive filearea
     $instancefiles = mplayer_get_fileareas();
+
+    if (!empty($mplayer->configxmlgroup['clearconfigxml'])) {
+        mplayer_clear_area($mplayer, 'configxml');
+    } else {
+        $mplayer->configxml = @$mplayer->configxmlgroup['configxml'];
+    }
+
     foreach ($instancefiles as $if) {
         mplayer_save_draft_file($mplayer, $if);
+    }
+
+    // May never arrive if RTMP not enabled
+    if (!empty($mplayer->streamer)) {
+        // Get the uploaded video mediafiles and move them to wooza storage.
+        mplayer_convert_storage_for_streamer($mplayer);
+    }
+
+    if (empty($mplayer->technology)) {
+        $mplayer->technology = $config->default_player;
     }
 
     $notes = $mplayer->notes;
@@ -65,19 +130,32 @@ function mplayer_add_instance($mplayer) {
 function mplayer_update_instance($mplayer) {
     global $DB;
 
+    $config = get_config('mplayer');
+
     $mplayer->timemodified = time();
     $mplayer->id = $mplayer->instance;
 
-    if (!empty($mplayer->playlistgroup['clearplaylist'])) {
-        mplayer_clear_area($mplayer, 'playlistfile');
-    } else {
-        $mplayer->playlistfile = $mplayer->playlistgroup['playlistfile'];
+    if (empty($config->default_player)) {
+        set_config('default_player', 'flowplayer', 'mplayer');
+        $config->default_player = 'flowplayer';
+    }
+
+    if (empty($mplayer->technology)) {
+        $mplayer->technology = $config->default_player;
+    }
+
+    if (empty($mplayer->autostart)) {
+        $mplayer->autostart = 0;
+    }
+
+    if (empty($mplayer->fullscreen)) {
+        $mplayer->fullscreen = 0;
     }
 
     if (!empty($mplayer->configxmlgroup['clearconfigxml'])) {
         mplayer_clear_area($mplayer, 'configxml');
     } else {
-        $mplayer->configxml = $mplayer->configxmlgroup['configxml'];
+        $mplayer->configxml = @$mplayer->configxmlgroup['configxml'];
     }
 
     // Saves draft customization image files into definitive filearea.
@@ -85,6 +163,12 @@ function mplayer_update_instance($mplayer) {
 
     foreach ($instancefiles as $ci) {
         mplayer_save_draft_file($mplayer, $ci);
+    }
+
+    // May never arrive if RTMP not enabled
+    if (!empty($mplayer->streamer)) {
+        // Get the uploaded mediafile and convert them to remote storage. Set up the stream access URL.
+        mplayer_convert_storage_for_streamer($mplayer);
     }
 
     $notes = $mplayer->notes;
@@ -114,8 +198,8 @@ function mplayer_delete_instance($id) {
         return false;
     }
 
-    $context = get_context_instance(CONTEXT_MODULE, $cm->id);
-    
+    $context = context_module::instance($cm->id);
+
     $fs = get_file_storage();
     $fs->delete_area_files($context->id);
 
@@ -134,7 +218,7 @@ function mplayer_delete_instance($id) {
  *
  * @return null
  * @todo Finish documenting this function
- **/
+ */
 function mplayer_user_outline($course, $user, $mod, $mplayer) {
     $return->time = time();
     $return->info = '';
@@ -158,7 +242,7 @@ function mplayer_user_outline($course, $user, $mod, $mplayer) {
  *
  * @return boolean
  * @todo Finish documenting this function
- **/
+ */
 function mplayer_user_complete($course, $user, $mod, $mplayer) {
     return true;
 }
@@ -179,7 +263,7 @@ function mplayer_print_recent_activity($course, $isteacher, $timestart) {
 }
 
 /**
- * 
+ *
  *
  * @uses $CFG
  * @return array
@@ -229,7 +313,18 @@ function mplayer_cron() {
 function mplayer_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload) {
     global $CFG, $DB;
 
-    if ($filearea != 'playlistfile') {
+    $guests = false;
+    if ($course->id > SITEID) {
+        $enrols = enrol_get_instances($course->id, true);
+        foreach($enrols as $e) {
+            if ($e->enrol == 'guest') {
+                $guests = true;
+                break;
+            }
+        }
+    }
+
+    if (!$guests) {
         require_login($course);
     }
 
@@ -246,7 +341,7 @@ function mplayer_pluginfile($course, $cm, $context, $filearea, $args, $forcedown
     $itemid = (int)array_shift($args);
 
     $fs = get_file_storage();
-    if ($filearea == 'mplayerfile' || $filearea == 'playlistthumb') {
+    if ($filearea == 'mplayerfiles') {
         // Case for fileareas possibly holding more than one file.
         $relativepath = implode('/', $args);
         $fullpath = "/$context->id/mod_mplayer/$filearea/0/$relativepath";
@@ -279,7 +374,7 @@ function mplayer_pluginfile($course, $cm, $context, $filearea, $args, $forcedown
  * @return mixed Null or object with an array of grades and with the maximum grade
  */
 function mplayer_grades($mplayerid) {
-   return NULL;
+    return null;
 }
 
 /**
@@ -326,43 +421,20 @@ function mplayer_scale_used($mplayerid, $scaleid) {
 function mplayer_scale_used_anywhere($scaleid) {
     global $DB;
 
-    if ($scaleid && $DB->record_exists('mplayer', array('grade' => -$scaleid))) {
-        return true;
-    } else {
-        return false;
-    }
+    return false;
 }
 
 /**
- * Execute post-install custom actions for the module
- * This function was added in 1.9
- *
- * @return boolean true if success, false on error
+ *-------------------------------------------------------------------- view.php --------------------------------------------------------------------
  */
-function mplayer_install() {
-     return true;
-}
 
 /**
- * Execute post-uninstall custom actions for the module
- * This function was added in 1.9
+ * Set moodledata path in $mplayer object
  *
- * @return boolean true if success, false on error
+ * @param $mplayer
+ * @return $mplayer
  */
-function mplayer_uninstall() {
-    return true;
-}
-
-/*
--------------------------------------------------------------------- view.php --------------------------------------------------------------------
-*/
-
-/**
-* Set moodledata path in $mplayer object
-*
-* @param $mplayer
-* @return $mplayer
-*/
+ /*
 function mplayer_set_moodledata($mplayer) {
     global $CFG, $COURSE;
 
@@ -371,13 +443,15 @@ function mplayer_set_moodledata($mplayer) {
     $mplayer->moodledata = $CFG->wwwroot.'/pluginfile.php/'.$context->id.'/mod_mplayer/';
     return $mplayer;
 }
+*/
 
 /**
-* Assign the correct path to the file parameter (media source) in $mplayer object
-*
-* @param obj $mplayer
-* @return obj $mplayer
-*/
+ * Assign the correct path to the file parameter (media source) in $mplayer object
+ *
+ * @param obj $mplayer
+ * @return obj $mplayer
+ */
+ /*
 function mplayer_set_type($mplayer) {
     switch($mplayer->type) {
 
@@ -427,6 +501,7 @@ function mplayer_set_type($mplayer) {
     }
     return $mplayer;
 }
+*/
 
 /**
  * Assign the correct path to the file parameter (media source) in $mplayer object
@@ -434,6 +509,7 @@ function mplayer_set_type($mplayer) {
  * @param $mplayer
  * @return $mplayer
  */
+ /*
 function mplayer_set_paths(&$mplayer) {
     global $CFG;
 
@@ -442,10 +518,10 @@ function mplayer_set_paths(&$mplayer) {
     $context = context_module::instance($cm->id);
 
     // Check if there is a playlist.
-    if ($playlisturl = mplayer_get_file_url($mplayer, 'playlistfile', $context)) {
+    if ($playlisturl = mplayer_get_file_url($mplayer, 'playlistfiles', $context)) {
         $mplayer->mplayerfile = '&file='.$playlisturl;
     } else {
-        $mplayer->mplayerfile = '&file='.mplayer_get_file_url($mplayer, 'mplayerfile', $context);
+        $mplayer->mplayerfile = '&file='.mplayer_get_file_url($mplayer, 'mplayerfiles', $context);
     }
 
     // Set wwwroot.
@@ -856,4 +932,38 @@ function mplayer_set_paths(&$mplayer) {
         $mplayer->snapshotscript = '';
     }
     return $mplayer;
+}
+*/
+
+/**
+ * Obtains the automatic completion state for this module based on any conditions
+ * in mplayer settings.
+ *
+ * @param object $course Course
+ * @param object $cm Course-module
+ * @param int $userid User ID
+ * @param bool $type Type of comparison (or/and; can be used as return value if no conditions)
+ * @return bool True if completed, false if not, $type if conditions not set.
+ */
+function mplayer_get_completion_state($course, $cm, $userid, $type) {
+    global $CFG, $DB;
+
+    $mplayerinstance = $DB->get_record('mplayer', array('id' => $cm->instance));
+
+    $result = $type; // default return value;
+
+    // If completion option is enabled, evaluate it and return true/false.
+    if (@$mplayerinstance->completionmediaviewed) {
+        $finished = $DB->count_records('mplayer_userdata', array('userid' => $userid, 'mplayerid' => $cm->instance, 'finished' => 1));
+        if ($type == COMPLETION_AND) {
+            $result = $result && $finished;
+        } else {
+            $result = $result || $finished;
+        }
+    } else {
+        // Completion option is not enabled so just return $type.
+        return $type;
+    }
+
+    return $result;
 }

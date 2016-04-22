@@ -1,0 +1,152 @@
+.mplayer-cont {
+    height:560px;
+}
+
+.thumbs{
+    width:100%;
+    height:450px;
+}
+
+.thumbs.is-loading{
+    /* override background image when clip changes */
+    background:#333
+}
+
+.thumbs hgroup{
+    /* info box */
+    background-color:rgba(0,0,0,0.7);
+    position:absolute;top:3%;left:2%;
+    width:250px;
+    -webkit-border-radius:10px;
+    -moz-border-radius:10px;
+    border-radius:10px;
+    padding:15px;
+    margin:0;
+    color:#999;
+    display:none;
+    opacity:0;
+    filter:progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
+    -webkit-transition:opacity .5s;
+    -moz-transition:opacity .5s;
+    transition:opacity .5s;
+    z-index:1;
+}
+
+.thumbs hgroup h1{
+    font-size:larger
+}
+.thumbs hgroup h2{
+    color:#fff;
+    font-weight:bold;
+    line-height:1.5
+}
+
+.thumbs .fp-embed{
+    /* embedding disabled */
+    display:none
+}
+
+.thumbs .fp-playlist{
+    /* thumbs under the video */
+    position:relative;
+    top:102%;
+    text-align:center;
+    z-index:2;
+    -webkit-transition:opacity 1s .5s;
+    -moz-transition:opacity 1s .5s;
+    transition:opacity 1s .5s;
+}
+
+.thumbs .fp-playlist a{
+    height:90px;
+    display:inline-block;
+    margin-right:8px;
+    cursor:pointer;
+    opacity:0.6;
+    filter:progid:DXImageTransform.Microsoft.Alpha(Opacity=0.6);
+}
+
+.thumbs .fp-playlist a img{
+    height:90px;
+}
+
+.thumbs .fp-playlist a:hover{
+    opacity:0.8;
+    filter:progid:DXImageTransform.Microsoft.Alpha(Opacity=0.8);
+}
+
+.thumbs .fp-playlist a.is-active{
+    border:1px #fff solid;
+    opacity:1;
+    filter:progid:DXImageTransform.Microsoft.Alpha(Opacity=1);
+}
+
+.thumbs.is-mouseover hgroup,.thumbs.is-mouseover .fp-playlist{
+    opacity:1;
+    filter:progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
+    -webkit-transition-delay:0;
+    -moz-transition-delay:0;
+    transition-delay:0
+}
+
+.thumbs.video0 .info0{
+    display:block
+}
+
+.thumbs.video1 .info1{
+    display:block
+}
+
+.thumbs.video2 .info2{
+    display:block
+}
+
+.thumbs.video3 .info3{
+    display:block
+}
+
+.thumbs.video4 .info4{
+    display:block
+}
+
+.thumbs.video5 .info5{
+    display:block
+}
+
+.thumbs.video6 .info6{
+    display:block
+}
+
+@media (max-width: 600px){
+    .thumbs hgroup{
+        width:300px;
+    }
+    .thumbs hgroup h1{
+        font-size:25px
+    }
+}
+
+.thumbs hgroup{
+    font-size: 10px;
+    font-weight: bold;
+    color: #e8e8e8;
+}
+
+.left-section {
+    width: 200px;
+    height: 200px;
+    color: white;
+      float: left;
+}
+
+
+.right-section {
+   width:50%;
+     float: left;
+}
+
+.thumbs .mplayer-cont {
+    background-color: #000;
+    padding: 10px;
+    text-align: center;
+}

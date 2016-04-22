@@ -1,5 +1,37 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+defined('MOODLE_INTERNAL') || die();
+
+/**
+ * Library of functions and constants for module mplayer
+ * For more information on the parameters used by JW FLV Player see documentation: http://developer.longtailvideo.com/trac/wiki/FlashVars
+ * 
+ * @package  mod_mplayer
+ * @category mod
+ * @author   Matt Bury - matbury@gmail.com
+ * @author   Valery Fremaux <valery.fremaux@gmail.com>
+ * @licence  http://www.gnu.org/copyleft/gpl.html GNU Public Licence
+ */
+
+/**
+ * Saves all draft files received from instance setup
+ * @param objectref &$mplayer
+ * @param string $filearea name of a filearea to process for saving
+ */
 function mplayer_save_draft_file(&$mplayer, $filearea) {
     global $USER;
     static $fs;
@@ -22,9 +54,10 @@ function mplayer_save_draft_file(&$mplayer, $filearea) {
     }
 
     $mplayer->$filearea = 0;
-    if (!$fs->is_area_empty($usercontext->id, 'user', 'draft', $filepickeritemid, true)){
-        $filearea = str_replace('fileid', '', $filearea);
-        file_save_draft_area_files($filepickeritemid, $context->id, 'mod_mplayer', $filearea, 0);
+    $subdirs = ($filearea == 'mplayerfiles') ? true : false;
+    if (!$fs->is_area_empty($usercontext->id, 'user', 'draft', $filepickeritemid, false)) {
+        $options = array('subdirs' => $subdirs);
+        file_save_draft_area_files($filepickeritemid, $context->id, 'mod_mplayer', $filearea, 0, $options);
         if ($savedfiles = $fs->get_area_files($context->id, 'mod_mplayer', $filearea, 0)) {
             $savedfile = array_pop($savedfiles);
             $mplayer->$filearea = $savedfile->get_id();
@@ -34,7 +67,10 @@ function mplayer_save_draft_file(&$mplayer, $filearea) {
 
 /**
  * Gives the physical file location of a complementary file
- * sotred into mplayer fileareas.
+ * stored into mplayer fileareas.
+ * @param objectref &$mplayer
+ * @param string $filearea name of a filearea to process for saving
+ * @param object $context give the module context if already available on call. It will be reprocessed if not given.
  */
 function mplayer_get_file_location(&$mplayer, $filearea, $context = null) {
     global $CFG;
@@ -62,10 +98,61 @@ function mplayer_get_file_location(&$mplayer, $filearea, $context = null) {
 }
 
 /**
- * Gives the file url of a complementary file
- * sotred into mplayer fileareas.
+ * Get dynamically a remote file and store it. If the play list changes at remote endpoint,
+ * changes will be immediately reported.
+ * @return a local temp location of the file.
  */
-function mplayer_get_file_url(&$mplayer, $filearea, $context = null) {
+
+function mplayer_load_remote_file($mplayer, $url, $context) {
+
+    $ch = curl_init($url);
+
+    curl_setopt($ch, CURLOPT_TIMEOUT, 60);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POST, false);
+    curl_setopt($ch, CURLOPT_USERAGENT, 'Moodle Media Player');
+    curl_setopt($ch, CURLOPT_POSTFIELDS, '');
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-Type: text/xml charset=UTF-8"));
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+
+    $raw = curl_exec($ch);
+
+    // check for curl errors
+    $curlerrno = curl_errno($ch);
+    if ($curlerrno != 0) {
+        debugging("Request for $uri failed with curl error $curlerrno");
+        return;
+    } 
+
+    // check HTTP error code
+    $info =  curl_getinfo($ch);
+    if (!empty($info['http_code']) and ($info['http_code'] != 200)) {
+        debugging("Request for $uri failed with HTTP code ".$info['http_code']);
+        return;
+    } else {
+        $fs = get_file_storage();
+        $filerec = new StdClass();
+        $filerec->contextid = $context->id;
+        $filerec->component = 'mod_mplayer';
+        $filerec->filearea = 'remoteplaylist';
+        $filerec->itemid = 0;
+        $filerec->filepath = '/';
+        $filerec->filename = 'playlist.xml';
+        $fs->create_file_from_string($filerec, $raw);
+    }
+}
+
+/**
+ * Gives the file url of a complementary file
+ * stored into mplayer fileareas.
+ * @param objectref &$mplayer the mplayer instance
+ * @param string $filearea where to look in
+ * @param object $context if available the related context object.
+ * @param boolean $array if true, gives the URL table of all files found in this area, if false, gives the first available file.
+ * @return mixed, array or single URL as string
+ */
+function mplayer_get_file_url(&$mplayer, $filearea, $context = null, $path = '/', $array = false) {
     global $CFG;
 
     $url = false;
@@ -79,51 +166,220 @@ function mplayer_get_file_url(&$mplayer, $filearea, $context = null) {
     $fs = get_file_storage();
 
     if (!$fs->is_area_empty($context->id, 'mod_mplayer', $filearea, 0, true)) {
-        if ($areafiles = $fs->get_area_files($context->id, 'mod_mplayer', $filearea, 0)) {
-            $storedfile = array_pop($areafiles);
-            $url = $CFG->wwwroot.'/pluginfile.php/'.$context->id.'/mod_mplayer/'.$filearea.'/0/'.$storedfile->get_filename();
+        if ($areafiles = $fs->get_directory_files($context->id, 'mod_mplayer', $filearea, 0, $path, true, false, 'itemid, filepath,filename')) {
+            if ($array) {
+                $url = array();
+                foreach ($areafiles as $storedfile) {
+                    $url[] = $CFG->wwwroot.'/pluginfile.php/'.$context->id.'/mod_mplayer/'.$filearea.'/0'.$storedfile->get_filepath().$storedfile->get_filename();
+                }
+            } else {
+                $storedfile = array_pop($areafiles);
+                $url = $CFG->wwwroot.'/pluginfile.php/'.$context->id.'/mod_mplayer/'.$filearea.'/0'.$storedfile->get_filepath().$storedfile->get_filename();
+            }
         }
     }
     return $url;
 }
 
-function mplayer_clear_area(&$mplayer, $filearea) {
+/**
+ * Get clips from loaded files depending on their organisation
+ * Following rules are checked :
+ * if a filename starts with <n>_ then the file url is assigned to clip <n> as a source.
+ * if a file is in a subpath named <n> then the file is assigned to clip <n>.
+ * if not matching any of above, goes to clip 0
+ * @param objectref &$mplayer the mplayer instance
+ * @param string $filearea where to look in
+ * @param object $context if available the related context object.
+ * @param boolean $array if true, gives the URL table of all files found in this area, if false, gives the first available file.
+ * @return mixed, array or single URL as string
+ */
+function mplayer_get_clips_from_files(&$mplayer) {
+    global $CFG;
+
+    $cm = get_coursemodule_from_instance('mplayer', $mplayer->id);
+    $context = context_module::instance($cm->id);
+
+    $clips = array();
+    $fs = get_file_storage();
+
+    if (!$fs->is_area_empty($context->id, 'mod_mplayer', 'mplayerfiles', 0, true)) {
+        // Get sources and fill clip array with.
+        if ($areafiles = $fs->get_directory_files($context->id, 'mod_mplayer', 'mplayerfiles', 0, '/medias/', true, false, 'filepath, filename')) {
+            if (count($areafiles) > 0) {
+                // If we do have some media files.
+                foreach ($areafiles as $storedfile) {
+
+                    /*
+                     * Process each entry. an entry can be at root level and thus is a clip 0 source, or
+                     * may be in a numbered subdir and will be registered for the corresponding clip.
+                     */
+                    $filepath = $storedfile->get_filepath();
+                    $filename = $storedfile->get_filename();
+                    if ($filepath == '/medias/') {
+                        $ix = 0;
+                    } elseif (preg_match('#^/medias/(\d+)#', $filepath, $matches)) {
+                        $ix = $matches[1];
+                    } else {
+                        // Ignore
+                        continue;
+                    }
+
+                    if (preg_match('/\.stm$/', $filename)) {
+                        // This is a stream manifest. Get url from it
+                        $contenthash = $storedfile->get_contenthash();
+                        $l1 = $contenthash[0].$contenthash[1];
+                        $l2 = $contenthash[2].$contenthash[3];
+                        $manifestlocation = $CFG->dataroot.'/filedir/'.$l1.'/'.$l2.'/'.$contenthash;
+                        $streamed_obj = simplexml_load_file($manifestlocation);
+
+                        if (!$streamed_obj) {
+                            // Manifest not readable. COntinue.
+                            continue;
+                        }
+
+                        if (!empty($streamed_obj->clip)) {
+                            $ix = $streamed_obj->clip;
+                        }
+                        $url = ''.$streamed_obj->stream;
+                    } else {
+                        // Normal local case.
+                        $url = moodle_url::make_pluginfile_url($context->id, 'mod_mplayer', 'mplayerfiles', 0, $filepath, $filename);
+                    }
+
+                    $clip = new Stdclass();
+                    $clip->sources[] = $url;
+                    $clip->title = '';
+
+                    $clips[$ix] = $clip;
+                }
+            }
+        }
+
+        if ($mplayer->playlist == 'thumbs') {
+            // Get thumbs and fill clip array with.
+            if ($thumbfiles = $fs->get_directory_files($context->id, 'mod_mplayer', 'mplayerfiles', 0, '/thumbs/', true, false, 'filepath, filename')) {
+                if (count($areafiles) > 0) {
+                    // If we do have some media files.
+                    foreach ($thumbfiles as $storedfile) {
+    
+                        /*
+                         * Process each entry. an entry can be at root level and thus is a clip 0 source, or
+                         * may be in a numbered subdir and will be registered for the corresponding clip.
+                         */
+                        $filepath = $storedfile->get_filepath();
+                        $filename = $storedfile->get_filename();
+                        if ($filepath == '/thumbs/') {
+                            $ix = 0;
+                        } elseif (preg_match('#^/thumbs/(\d+)#', $filepath, $matches)) {
+                            $ix = $matches[1];
+                        } elseif(preg_match('#^(\d+)#', $filename, $matches)) {
+                            $ix = $matches[1];
+                        } else {
+                            // Ignore
+                            continue;
+                        }
+                        if (array_key_exists($ix, $clips)) {
+                            $clips[$ix]->thumb = moodle_url::make_pluginfile_url($context->id, 'mod_mplayer', 'mplayerfiles', 0, $storedfile->get_filepath(), $storedfile->get_filename());
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // Open captions file and get clip titles from caption. there should be only one file 
+    if ($captionfiles = $fs->get_directory_files($context->id, 'mod_mplayer', 'mplayerfiles', 0, '/captions/', true, false, 'filepath, filename')) {
+        $captionfile = array_pop($captionfiles);
+        $captions = $captionfile->get_content();
+        $titlearray = explode("\n", $captions);
+        $ix = 0;
+        foreach ($titlearray as $t) {
+            if (array_key_exists($ix, $clips)) {
+                $clips[$ix]->title = $t;
+            }
+            $ix++;
+        }
+    }
+
+    return $clips;
+}
+
+/**
+ * As an alternative from using internal files, you may parse an xml playlist file and
+ * get all clips information from it
+ * @param objectref &$mplayer the mplayer instance
+ * @param string $playlistfile the path of a file inthe file system from where to read XML
+ */
+function mplayer_xml_playlist(&$mplayer, $playlistfile) {
+
+    $playlist_obj = simplexml_load_file($playlistfile);
+
+    $clips = array();
+
+    if (!$playlist_obj) {
+        // Not readable XML file.
+        return false;
+    }
+
+    $ix = 0;
+    foreach ($playlist_obj->trackList->track as $video_info) {
+        // TODO : process multiple locations in a track as alternative sources.
+        $clip = new StdClass();
+        $clip->sources[] = $video_info->location;
+        $listitemcontent = '';
+        if ($mplayer->playlist == 'thumbs') {
+            if (isset($video_info->thumb)) {
+                $clip->thumb = ''.$video_info->thumb;
+            }
+        } elseif ($mplayer->playlist == 'dots') {
+            // Let have thumbs, but let the CSS to the trick.
+            $clip->thumb = '';
+        } else {
+            // No thumbs at all
+        }
+
+        // Accepts two alternate caption attributes.
+        if (isset($video_info->caption)) {
+            $clip->title = $video_info->caption;
+        } elseif (isset($video_info->title)) {
+            $clip->title = $video_info->title;
+        }
+
+        $clips[$ix] = $clip;
+        $ix++;
+    }
+
+    return($clips);
+}
+
+/**
+ * Clears a full area in a mplayer
+ * @param objectref &$mplayer the mplayer instance
+ * @param string $filearea the filearea name.
+ */
+function mplayer_clear_area(&$mplayer, $filearea, $context = null) {
+
+    if ($context->contextlevel != CONTEXT_MODULE || $context->instance != $mplayer->id) {
+        throw(new CodingException('Context does not match given mplayer instance.'));
+    }
 
     if (!$cm = get_coursemodule_from_instance('mplayer', $mplayer->id)) {
         return false;
     }
 
-    $context = context_module::instance($cm->id);
+    if (!$context) {
+        $context = context_module::instance($cm->id);
+    }
 
     $fs = get_file_storage();
     $fs->delete_area_files($context->id, 'mod_mplayer', $filearea);
 }
 
-function mplayer_get_playlist_thumb_url($image, $context) {
-    global $CFG;
-
-    return $CFG->wwwroot.'/pluginfile.php/'.$context->id.'/mod_mplayer/playlistthumb/0/'.$image;
-}
-
-function mplayer_require_js(){
+function mplayer_require_js() {
     global $CFG, $PAGE;
-    
+
     if ($CFG->mplayer_default_player == 'jw') {
         $PAGE->requires->js('/mod/mplayer/jw/6.9/jwplayer.js');
-    }
-}
-
-function mplayer_check_jquery() {
-    global $CFG, $PAGE, $JQUERYVERSION;
-
-    $current = '1.11.0';
-    if (empty($JQUERYVERSION)) {
-        $JQUERYVERSION = '1.11.0';
-        $PAGE->requires->js('/mod/mplayer/js/jquery-'.$current.'.min.js', true);
-    } else {
-        if ($JQUERYVERSION < $current) {
-            debugging('the previously loaded version of jquery is lower than required. This may cause issues to dashboard. Programmers might consider upgrading JQuery version in the component that preloads JQuery library.', DEBUG_DEVELOPER, array('notrace'));
-        }
     }
 }
 
@@ -131,7 +387,7 @@ function mplayer_check_jquery() {
  * Get all file areas used in module
  */
 function mplayer_get_fileareas() {
-    return array('intro', 'mplayerfile', 'playlistfile', 'playlistthumb', 'configxml', 'image', 'audiodescriptionfile', 'captionsfile', 'hdfile', 'livestreamfile', 'livestreamimage', 'logoboxfile', 'logofile');
+    return array('mplayerfiles', 'configxml', 'audiodescriptionfile', 'captionsfile', 'hdfile', 'livestreamfile', 'livestreamimagefile', 'logoboxfile', 'logofile');
 }
 
 /**
@@ -156,10 +412,11 @@ function mplayer_print_header_js($mplayer) {
 
 /**
  * Print alternative FlashVars embed parameters
- *
+ * OBSOLETE : not called
  * @param $mplayer
  * @return string
  */
+ /*
 function mplayer_print_body_flashvars($mplayer) {
     // Build URL to moodledata directory
     $mplayer = mplayer_set_moodledata($mplayer);
@@ -239,6 +496,7 @@ function mplayer_print_body_flashvars($mplayer) {
                 $mplayer->volume.'" />';
     return $mplayer_flashvars;
 }
+*/
 
 /* functions for Form */
 
@@ -279,16 +537,63 @@ function mplayer_list_linktarget() {
  * Define type of media to serve
  * @return array
  */
-function mplayer_list_type() {
-    return array('video' => 'Video',
-                'youtube' => 'YouTube',
-                'url' => 'Full URL',
-                'xml' => 'XML Playlist',
-                'sound' => 'Sound',
-                'image' => 'Image',
-                'http' => 'HTTP (pseudo) Streaming',
-                'lighttpd' => 'Lighttpd Streaming',
-                'rtmp' => 'RTMP Streaming');
+function mplayer_list_type($player) {
+    global $CFG;
+
+    if ($player->technology == 'jw') {
+        return array('video' => get_string('video', 'mplayer'),
+                    'youtube' => 'YouTube',
+                    'url' => get_string('fullurl', 'mplayer'),
+                    'xml' => 'XML Playlist',
+                    'sound' => 'Sound',
+                    'image' => 'Image',
+                    'http' => 'HTTP (pseudo) Streaming',
+                    'lighttpd' => 'Lighttpd Streaming',
+                    'rtmp' => 'RTMP Streaming');
+    } else {
+        return array('video' => get_string('video', 'mplayer'),
+                    'url' => get_string('fullurl', 'mplayer'),
+                    'xml' => get_string('xmlplaylist', 'mplayer'),
+                    'httpxml' => get_string('httpxmlplaylist', 'mplayer'),
+                    'xmlrtmp' => 'RTMP XML Playlist',
+                    'xmlhttprtmp' => 'RTMP HTTP XML Playlist',
+                    'rtmp' => 'RTMP Streaming');
+    }
+}
+
+/**
+ * Define available technologies
+ * @return array
+ */
+function mplayer_list_technologies() {
+    global $CFG;
+
+    return array('flowplayer' => 'Flowplayer',
+                'jw' => 'JW Player'
+    );
+}
+
+/**
+ * Define available possibilities for subtitle behaviour
+ * @return array
+ */
+function mplayer_list_langchoiceoptions() {
+    return array(0 => get_string('langcourse', 'mplayer'),
+        1 => get_string('languser', 'mplayer'),
+        2 => get_string('langfreechoice', 'mplayer'),
+        3 => get_string('langteacherchoice', 'mplayer'),
+    );
+}
+
+/**
+ * Define available possibilities for subtitle behaviour
+ * @return array
+ */
+function mplayer_list_availablelangoptions() {
+    // This is a first approach that takes only activated languages in Moodle. Other languages
+    // Will be ignored.
+    // TODO : Extend language choice to wider list.
+    return get_string_manager()->get_list_of_translations();
 }
 
 /**
@@ -308,10 +613,13 @@ function mplayer_list_type() {
 function mplayer_list_streamer() {
     global $CFG;
 
-    return array('' => 'none'
+    $config = get_config('mplayer');
+
+    return array('' => 'none',
                  //, $CFG->wwwroot.'/mod/mplayer/xmoov/xmoov.php' => 'Xmoov-php (http)'
                  //, 'lighttpd' => 'Lighttpd'
-                 //, 'rtmp://yourstreamingserver.com/yourmediadirectory' => 'RTMP'
+                 'http' => 'Remote HTTP',
+                 'wowza' => 'Wowza'
                  );
 }
 
@@ -371,6 +679,7 @@ function mplayer_list_playlistposition() {
  */
 function mplayer_list_playliststyles() {
     return array(
+        '' => get_string('none', 'mplayer'),
         'dots' => get_string('dots', 'mplayer'),
         'thumbs' => get_string('thumbs', 'mplayer')
     );
@@ -398,7 +707,7 @@ function mplayer_list_logoboxalign() {
 }
 
 /**
- * Define position of metaviewer
+ * Define position of metaviewer (JW Player only)
  * @return array
  */
 function mplayer_list_metaviewerposition() {
@@ -411,7 +720,7 @@ function mplayer_list_metaviewerposition() {
 }
 
 /**
- * Define position of searchbar
+ * Define position of searchbar (JW Player)
  * @return array
  */
 function mplayer_list_searchbarposition() {
@@ -536,7 +845,7 @@ function mplayer_list_repeat() {
 }
 
 /**
- * Define scaling properties of video stream
+ * Define scaling properties of video stream (JW Player)
  * i.e. the way the video adjusts its dimensions to fit the FLV player window
  * @return array
  */
@@ -575,3 +884,291 @@ function mplayer_list_volume() {
                 '100' => '100');
 }
 
+/**
+ * converts the local storage into a local proxy and remote storage. 
+ * this function will process the whole filearea keeping no video files inside.
+ * video files are removed from Moodle storage after having been copied to the remote streming storage.
+ * A proxy descriptor is stored using similar filename with .stm extension which is added to the original file's fullname
+ * to keep full track of multiple endoding versions of a same resource.
+ * The filepath of the original video location in local storage is preserved.
+ * @param object $mplayer
+ */
+function mplayer_convert_storage_for_streamer($mplayer) {
+    global $CFG;
+
+    $config = get_config('mod_mplayer');
+
+    $fs = get_file_storage();
+    $context = context_module::instance($mplayer->coursemodule);
+
+    if ($fs->is_area_empty($context->id, 'mod_mplayer', 'mplayerfiles', 0)) {
+        return;
+    }
+
+    $storage = mplayer_get_media_storage($mplayer->streamer);
+    // echo "Storing in storage $mplayer->streamer";
+
+    $files = $fs->get_directory_files($context->id, 'mod_mplayer', 'mplayerfiles', 0, '/medias/', true, false);
+
+    if ($files) {
+        foreach ($files as $storedfile) {
+            $originalname = $storedfile->get_filename();
+            if (!preg_match('/\.stm/', $originalname)) {
+                // Process anything that is NOT a proxy
+
+                // Prepare proxy record
+                $rec = new StdClass();
+                $rec->contextid = $context->id;
+                $rec->component = 'mod_mplayer';
+                $rec->filearea = 'mplayerfiles';
+                $rec->itemid = 0;
+                $rec->filepath = $storedfile->get_filepath();
+                $rec->filename = $originalname.'.stm';
+
+                $type = mplayer_flowplayer_get_type($mplayer, $originalname);
+                $stmcontent = $storage->get_manifest($storedfile, $type);
+
+                // Remove old file in the way if any.
+                if ($oldfile = $fs->get_file($context->id, 'mod_mplayer', 'mplayerfiles', 0, $rec->filepath, $rec->filename)) {
+                    mtrace("Deleting old one ");
+                    $oldfile->delete();
+                }
+
+                // Create proxy file.
+                $fs->create_file_from_string($rec, $stmcontent);
+
+                $storage->store_media($storedfile);
+
+                // Finally remove moodle side file.
+                $storedfile->delete();
+            }
+        }
+    }
+}
+
+/**
+ * add js for a source
+ * @param string $url the media storage url
+ * @param objectref $mplayer the current player
+ * @return string the source JS snippet
+ */
+function mplayer_flowplayer_get_type(&$mplayer, $url) {
+    if (empty($mplayer->streamer) || $mplayer->streamer == 'http') {
+        // Non streamed sources
+        if (preg_match('/\.webm$/', $url)) {
+            $type = 'video/webm';
+        } else {
+            $type = 'video/mp4';
+        }
+    } else {
+        if (preg_match('/\.m3u8$/', $url)) {
+            // HLS Support
+            $type = 'application/x-mpegurl';
+        } elseif (preg_match('/\/vod\/smil\:/', $url)) {
+            // HLS Support
+            $type = 'application/x-mpegurl';
+        } else {
+            // Other RTMP calls
+            $type = 'video/flash';
+        }
+    }
+
+    return $type;
+}
+
+/**
+ * Builds a storage hierarchy in mplayerfiles file area.
+ * the hierarchy has top directories as : 
+ * - medias : several files as alternative sources for the clip
+ * - thumbs : one file as thumb
+ * - posters : one file as static poster (when video is staled or loading)
+ * - tracks : several files with text track, one per supported language
+ * - cues : one file with cue list
+ *
+ * Each directory can have one single file, or a set of numbers clips subdirs. All
+ * files present at root will be used as clip 1 and appended to the first clip subdir 
+ * content. Clip subdirs follow the content restrictions of the "single clip" case. 
+ * That is, if the mplayer plays two clips : 
+ *
+ * - medias
+ *    - 0 : set of media files of clip 1
+ *    - 1 : set of mediafiles of clip 2
+ * - thumbs
+ *    - 0 : thumb file for clip 1
+ *    - 1 : thumb file for clip 1
+ * etc.
+ */
+function mplayer_init_storage($cm, $draftitemid = 0) {
+    global $USER;
+
+    $fs = get_file_storage();
+
+    if ($draftitemid) {
+        $context = context_user::instance($USER->id);
+        $component = 'user';
+        $filearea = 'draft';
+        $itemid = $draftitemid;
+    } else {
+        $context = context_module::instance($cm->id);
+        $component = 'mod_mplayer';
+        $filearea = 'mplayerfiles';
+        $itemid = 0;
+    }
+
+    if ($fs->is_area_empty($context->id, $component, $filearea, $draftitemid)) {
+        $fs->create_directory($context->id, $component, $filearea, $itemid, '/medias/');
+        $fs->create_directory($context->id, $component, $filearea, $itemid, '/medias/0/');
+        $fs->create_directory($context->id, $component, $filearea, $itemid, '/thumbs/');
+        $fs->create_directory($context->id, $component, $filearea, $itemid, '/thumbs/0/');
+        $fs->create_directory($context->id, $component, $filearea, $itemid, '/tracks/');
+        $fs->create_directory($context->id, $component, $filearea, $itemid, '/tracks/0/');
+        $fs->create_directory($context->id, $component, $filearea, $itemid, '/cues/');
+        $fs->create_directory($context->id, $component, $filearea, $itemid, '/cues/0/');
+        $fs->create_directory($context->id, $component, $filearea, $itemid, '/captions/');
+        $fs->create_directory($context->id, $component, $filearea, $itemid, '/playlist/');
+        $fs->create_directory($context->id, $component, $filearea, $itemid, '/posters/');
+    }
+}
+
+/**
+ * converts the old mplayer storage architecture to new storage
+ * organisation. Use for upgrade passing over 2015110100 version.
+ */
+function mplayer_upgrade_storage($mplayer) {
+
+    $fs = get_file_storage();
+
+    $cm = get_coursemodule_from_instance('mplayer', $mplayer->id);
+    $context = context_module::instance($cm->id);
+
+    mplayer_init_storage($cm);
+
+    // check old 'mplayerfile' area
+    if ($oldfiles = $fs->get_area_files($context->id, 'mod_mplayer', 'mplayerfile', 0, 'itemid,filepath,filename', false)) {
+        foreach ($oldfiles as $storedfile) {
+            $newrec = new StdClass();
+            $newrec->contextid = $context->id;
+            $newrec->component = 'mod_mplayer';
+            $newrec->filearea = 'mplayerfiles';
+            $newrec->itemid = 0;
+            $filename = $storedfile->get_filename();
+
+            // Get clip prefix
+            if (preg_match('/^(\d+)_(.*)$/', $filename, $matches)) {
+                $ix = $matches[1];
+                $filename = $matches[2];
+            } else {
+                // Get clip prefix, other pattern possible
+                if (preg_match('/_(\\d+)_$/', $filename, $matches)) {
+                    $ix = $matches[1];
+                } else {
+                    $ix = 0;
+                }
+            }
+
+            $newrec->filepath = '/medias/'.$ix.'/';
+            $newrec->filename = $filename;
+
+            // TODO (possibly) : If filename is numerically prefixed (clipped), move it to clip folder. 
+            $fs->create_file_from_storedfile($newrec, $storedfile);
+        }
+        $fs->delete_area_files($context->id, 'mod_mplayer', 'mplayerfile');
+    }
+
+    // Move old thumbs to mplayerfiles area
+    if ($oldfiles = $fs->get_area_files($context->id, 'mod_mplayer', 'playlistthumb', 0, 'itemid,filepath,filename', false)) {
+        foreach ($oldfiles as $storedfile) {
+            $newrec = new StdClass();
+            $newrec->contextid = $context->id;
+            $newrec->component = 'mod_mplayer';
+            $newrec->filearea = 'mplayerfiles';
+            $newrec->itemid = 0;
+            $filename = $storedfile->get_filename();
+
+            // Get clip prefix
+            if (preg_match('/^(\d+)_(.*)$/', $filename, $matches)) {
+                $ix = $matches[1];
+                $filename = $matches[2];
+            } else {
+                $ix = 0;
+            }
+
+            $newrec->filepath = '/thumbs/'.$ix.'/';
+            $newrec->filename = $filename;
+
+            $fs->create_file_from_storedfile($newrec, $storedfile);
+        }
+        $fs->delete_area_files($context->id, 'mod_mplayer', 'playlistthumb');
+    }
+
+    // Move old tracks to mplayerfiles area
+    if ($oldfiles = $fs->get_area_files($context->id, 'mod_mplayer', 'trackfile', 0, 'itemid,filepath,filename', false)) {
+        foreach ($oldfiles as $storedfile) {
+            $newrec = new StdClass();
+            $newrec->contextid = $context->id;
+            $newrec->component = 'mod_mplayer';
+            $newrec->filearea = 'mplayerfiles';
+            $newrec->itemid = 0;
+            $filename = $storedfile->get_filename();
+
+            // Get clip prefix
+            if (preg_match('/^(\d+)_(.*)$/', $filename, $matches)) {
+                $ix = $matches[1];
+                $filename = $matches[2];
+            } else {
+                $ix = 0;
+            }
+
+            $newrec->filepath = '/tracks/'.$ix.'/';
+            $newrec->filename = $filename;
+
+            $fs->create_file_from_storedfile($newrec, $storedfile);
+        }
+        $fs->delete_area_files($context->id, 'mod_mplayer', 'trackfile');
+    }
+
+    // Move old posters to mplayerfiles area
+    if ($oldfiles = $fs->get_area_files($context->id, 'mod_mplayer', 'image', 0, 'itemid,filepath,filename', false)) {
+        foreach ($oldfiles as $storedfile) {
+            $newrec = new StdClass();
+            $newrec->contextid = $context->id;
+            $newrec->component = 'mod_mplayer';
+            $newrec->filearea = 'mplayerfiles';
+            $newrec->itemid = 0;
+            $filename = $storedfile->get_filename();
+
+            $newrec->filepath = '/posters/';
+            $newrec->filename = $filename;
+
+            $fs->create_file_from_storedfile($newrec, $storedfile);
+        }
+        $fs->delete_area_files($context->id, 'mod_mplayer', 'image');
+    }
+
+    // Move old playlist file to mplayerfiles area
+    if ($oldfiles = $fs->get_area_files($context->id, 'mod_mplayer', 'playlist', 0, 'itemid,filepath,filename', false)) {
+        foreach ($oldfiles as $storedfile) {
+            $newrec = new StdClass();
+            $newrec->contextid = $context->id;
+            $newrec->component = 'mod_mplayer';
+            $newrec->filearea = 'mplayerfiles';
+            $newrec->itemid = 0;
+            $filename = $storedfile->get_filename();
+
+            $newrec->filepath = '/playlist/';
+            $newrec->filename = $filename;
+
+            $fs->create_file_from_storedfile($newrec, $storedfile);
+        }
+        $fs->delete_area_files($context->id, 'mod_mplayer', 'playlist');
+    }
+}
+
+function mplayer_get_media_storage($storage) {
+    global $CFG;
+
+    $storageclass = $storage.'_storage';
+    require_once($CFG->dirroot.'/mod/mplayer/storage/'.$storageclass.'.class.php');
+    $storageobj = new $storageclass();
+    return $storageobj;
+}
