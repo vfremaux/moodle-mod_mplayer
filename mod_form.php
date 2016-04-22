@@ -60,13 +60,16 @@ class mod_mplayer_mod_form extends moodleform_mod {
         // Adding the "general" fieldset, where all the common settings are shown
         $mform->addElement('header', 'general', get_string('general', 'form'));
 
-        // Adding the standard "name" field
-        $mform->addElement('text', 'name', get_string('mplayername', 'mplayer'), $mplayer_url_array);
-        $mform->setType('name', PARAM_TEXT);
+        $mform->addElement('text', 'name', get_string('name'), array('size'=>'64'));
+        if (!empty($CFG->formatstringstriptags)) {
+            $mform->setType('name', PARAM_TEXT);
+        } else {
+            $mform->setType('name', PARAM_CLEANHTML);
+        }
         $mform->addRule('name', null, 'required', null, 'client');
+        $mform->addRule('name', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
 
-        // Introduction.
-        $this->add_intro_editor(true, get_string('summary', 'mplayer'));
+        $this->standard_intro_elements();
 
         //--------------------------------------- TECHNOLOGY ----------------------------------------
 
