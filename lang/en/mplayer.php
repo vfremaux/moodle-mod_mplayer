@@ -1,67 +1,35 @@
 <?php
 
 /**    Copyright (C) 2009  Matt Bury
- *
- *    This program is free software: you can redistribute it and/or modify
- *    it under the terms of the GNU General Public License as published by
- *    the Free Software Foundation, either version 3 of the License, or
- *    (at your option) any later version.
- *
- *    This program is distributed in the hope that it will be useful,
- *    but WITHOUT ANY WARRANTY; without even the implied warranty of
- *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *    GNU General Public License for more details.
- *
- *    You should have received a copy of the GNU General Public License
- *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-
-$string['mplayer:addinstance'] = 'Add an instance';
-$string['mplayer:view'] = 'View';
+*
+*    This program is free software: you can redistribute it and/or modify
+*    it under the terms of the GNU General Public License as published by
+*    the Free Software Foundation, either version 3 of the License, or
+*    (at your option) any later version.
+*
+*    This program is distributed in the hope that it will be useful,
+*    but WITHOUT ANY WARRANTY; without even the implied warranty of
+*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*    GNU General Public License for more details.
+*
+*    You should have received a copy of the GNU General Public License
+*    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
 
 // Default module labels
-$string['backtocourse'] = 'Back to course';
-$string['mediaviewed'] = 'Viewing media';
-$string['completionmediaviewed'] = 'marked when student has finished to view the full media';
 $string['mplayer'] = 'Media Player';
-$string['player'] = 'Player';
 $string['pluginname'] = 'Media Player';
-$string['pluginadministration'] = 'Media Player Administration';
 $string['modulename'] = 'Media Player';
 $string['modulenameplural'] = 'Media Players';
-$string['video'] = 'Internal video(s)';
-$string['fullurl'] = 'Full URL';
-$string['xmlplaylist'] = 'XML Playlist';
-$string['httpxmlplaylist'] = 'Remote XML Playlist (by http)';
-$string['external'] = 'External Url';
-$string['none'] = 'None';
 // Titles for mod/mplayer/mod_form.php sections
 $string['mplayername'] = 'Name';
 $string['mplayerintro'] = 'Description';
-$string['summary'] = 'Description';
-$string['playlistlocalpath'] = 'Local path url template';
-$string['playlistfile'] = 'Play list files';
-$string['clearplaylist'] = 'Clear play list file';
-$string['clearconfigxml'] = 'Clear XML config file';
-$string['invalidmplayerid'] = 'This player ID is invalid';
-$string['nomplayers'] = 'There are no mplayers in this course';
-$string['technology'] = 'Technology';
-$string['allowtechnologychoice'] = 'Authors can choose';
-$string['allowtechnologychoicedesc'] = 'If enabled, authors can override the site level technology choice per instance.';
-$string['configsubtitles'] = 'Subtitles options';
-$string['langselection'] = 'Subtitle language';
-$string['langcourse'] = 'Course language';
-$string['languser'] = 'User profile language';
-$string['langfreechoice'] = 'Free choice';
-$string['langteacherchoice'] = 'Teacher choice';
-$string['langforced'] = 'Force language';
-$string['showdebugcode'] = 'Show debug code';
-
+$string['pluginadministration'] = 'Administration';
 //---------------------------------------------------------------------------------------------
 // Labels for mod/mplayer/mod_form.php
 //// Source
-$string['mplayerresources'] = 'Media Resources';
-$string['mplayerfiles'] = 'Media definition files';
+$string['mplayersource'] = 'Media Source';
+$string['mplayerfile'] = 'Media File';
 $string['type'] = 'Type';
 $string['streamer'] = 'Streamer';
 
@@ -69,15 +37,7 @@ $string['streamer'] = 'Streamer';
 $string['playlists'] = 'Playlist';
 $string['playlist'] = 'Position';
 $string['playlistsize'] = 'Size (pixels)';
-$string['playliststyle'] = 'Layout';
 $string['item'] = 'Start Item';
-$string['dots'] = 'Dots';
-$string['thumbs'] = 'Thumbs';
-$string['bottom'] = 'Beneath';
-$string['left'] = 'At left';
-$string['right'] = 'At right';
-$string['over'] = 'Over';
-$string['above'] = 'Above';
 
 //// Configxml
 $string['config'] = 'Config XML';
@@ -89,7 +49,6 @@ $string['notes'] = 'Notes';
 $string['width'] = 'Width';
 $string['height'] = 'Height';
 $string['skin'] = 'Skin';
-$string['configskin'] = 'Skin (JW Player)';
 $string['image'] = 'Poster Image';
 $string['icons'] = 'Show Icons';
 $string['controlbar'] = 'Control Bar';
@@ -103,7 +62,6 @@ $string['screencolor'] = 'Screen Color';
 $string['behaviour'] = 'Behaviour';
 $string['autostart'] = 'Auto Start';
 $string['fullscreen'] = 'Full Screen';
-$string['nativefullscreen'] = 'Native fullscreen controls (flowplayer)';
 $string['volume'] = 'Volume';
 $string['mute'] = 'Mute';
 $string['mplayerstart'] = 'Start (position in seconds)';
@@ -115,14 +73,7 @@ $string['quality'] = 'Quality';
 $string['displayclick'] = 'Display Click';
 $string['resizing'] = 'Resizing';
 $string['stretching'] = 'Stretching';
-$string['configstretching'] = 'Stretching (JW Player)';
 $string['plugins'] = 'Plugins';
-$string['splashmode'] = 'Splash mode';
-$string['splashenabled'] = 'Enabled';
-$string['nosplash'] = 'Disabled';
-
-$string['videomedia'] = 'Media Video';
-$string['uploadtomediapool'] = 'Upload to media pool';
 
 //// Metadata
 $string['metadata'] = 'Metadata';
@@ -199,31 +150,10 @@ $string['logolink'] = 'Link';
 $string['logohide'] = 'Auto Hide';
 $string['logoposition'] = 'Position';
 
-// Advanced
+//// Advanced
 $string['advanced'] = 'Advanced';
 $string['fpversion'] = 'Flash Player Version';
 $string['tracecall'] = 'Trace Call (debugging)';
-
-// Cues
-$string['cuelaunch'] = 'Launch the {$a}';
-$string['cueininvite'] = 'Before continuing watching this video, you are proposed to execute a {$a->type} activity.<br/><br/>{$a->link}';
-$string['cueininviteoptional'] = 'Before continuing watching this video, you are proposed to execute a {$a->type} activity.<br/><br/>{$a->link}<br/><a href="javascript:cuepoint_resume_from_id(\'{$a->playerid}\')">Resume now</a>';
-$string['resumefromcue'] = 'You can now resume your video.';
-
-// storages
-$string['httpmediaserver'] = 'HTTP media server';
-$string['httpmediapath'] = 'HTTP media path';
-$string['httpmediacontentdir'] = 'HTTP storage dir';
-$string['confighttpmediaserver'] = 'http://medias.my-domaine.com';
-$string['confighttpmediapath'] = '/path/to/medias';
-$string['confighttpmediacontentdir'] = 'HTTP physical storage dir should be a remote NFS mounted point onto remote HTTP volumes.';
-$string['wowzaserver'] = 'RTMP Streaming source';
-$string['configwowzaserver'] = 'rtmp://your.server.name';
-$string['wowzaapplication'] = 'Streaming application';
-$string['configwowzaapplication'] = 'Usually /vod for playing videos';
-$string['wowzacontentdir'] = 'Content Directory';
-$string['configwowzacontentdir'] = 'This content dir should be a remote mounted network storage volume on the streaming server';
-
 
 //---------------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------------------
@@ -242,6 +172,7 @@ $string['mplayer_advanced_help'] = '
   <p><strong>Trace Call</strong>: (for development and debugging purposes only)</p>
 <p>Activity Module Developed by Matt Bury - <a href="http://matbury.com/" target="_blank">http://matbury.com/</a></p>
 <p>JW FLV Player Developed By Jeroen Wijering - <a href="http://www.longtailvideo.com/" target="_blank">http://www.longtailvideo.com/</a></p>
+<p align="center"><a href="help.php?module=swf&amp;file=index.html">Help Files Index</a></p>
 </div>
 ';
 
@@ -272,6 +203,7 @@ $string['mplayer_appearance_help'] = '
   <p><strong></strong>Colors are  hexidecimal values - e.g. black = 000000, white = FFFFFF, red = FF0000, green = 00FF00 and blue = 0000FF</p>
 <p>Activity Module Developed by Matt Bury - <a href="http://matbury.com/" target="_blank">http://matbury.com/</a></p>
 <p>JW FLV Player Developed By Jeroen Wijering - <a href="http://www.longtailvideo.com/" target="_blank">http://www.longtailvideo.com/</a></p>
+<p align="center"><a href="help.php?module=swf&amp;file=index.html">Help Files Index</a></p>
 </div>
 ';
 
@@ -283,6 +215,7 @@ $string['mplayer_audiodescription_help'] = '
   <p><strong>Volume</strong>: volume of audio playback</p>
 <p>Activity Module Developed by Matt Bury - <a href="http://matbury.com/" target="_blank">http://matbury.com/</a></p>
 <p>JW FLV Player Developed By Jeroen Wijering - <a href="http://www.longtailvideo.com/" target="_blank">http://www.longtailvideo.com/</a></p>
+<p align="center"><a href="help.php?module=swf&amp;file=index.html">Help Files Index</a></p>
 </div>
 ';
 
@@ -305,6 +238,7 @@ $string['mplayer_behaviour_help'] = '
   <p><strong>Plugins</strong>: add additional functions to the video player. See:   <a href="http://www.longtailvideo.com/addons/plugins">http://www.longtailvideo.com/addons/plugins</a></p>
 <p>Activity Module Developed by Matt Bury - <a href="http://matbury.com/" target="_blank">http://matbury.com/</a></p>
 <p>JW FLV Player Developed By Jeroen Wijering - <a href="http://www.longtailvideo.com/" target="_blank">http://www.longtailvideo.com/</a></p>
+<p align="center"><a href="help.php?module=swf&amp;file=index.html">Help Files Index</a></p>
 </div>
 ';
 
@@ -319,6 +253,7 @@ $string['mplayer_captions_help'] = '
   <p>More details about this plugin:   <a href="http://developer.longtailvideo.com/trac/wiki/PluginsCaptions">http://developer.longtailvideo.com/trac/wiki/PluginsCaptions</a></p>
   <p>Activity Module Developed by Matt Bury - <a href="http://matbury.com/" target="_blank">http://matbury.com/</a></p>
 <p>JW FLV Player Developed By Jeroen Wijering - <a href="http://www.longtailvideo.com/" target="_blank">http://www.longtailvideo.com/</a></p>
+<p align="center"><a href="help.php?module=swf&amp;file=index.html">Help Files Index</a></p>
 </div>
 ';
 
@@ -329,6 +264,7 @@ $string['mplayer_configxml_help'] = '
   <p>Particularly useful if you want to have one external file that determines the parameters of serveral Media Player instances allowing you to edit them all by editing a single file.</p>
   <p>Activity Module Developed by Matt Bury - <a href="http://matbury.com/" target="_blank">http://matbury.com/</a></p>
 <p>JW FLV Player Developed By Jeroen Wijering - <a href="http://www.longtailvideo.com/" target="_blank">http://www.longtailvideo.com/</a></p>
+<p align="center"><a href="help.php?module=swf&amp;file=index.html">Help Files Index</a></p>
 </div>
 ';
 
@@ -343,6 +279,7 @@ $string['mplayer_hd_help'] = '
   <p>For more information see:   <a href="http://developer.longtailvideo.com/trac/wiki/PluginsHd">http://developer.longtailvideo.com/trac/wiki/PluginsHd</a></p>
 <p>Activity Module Developed by Matt Bury - <a href="http://matbury.com/" target="_blank">http://matbury.com/</a></p>
 <p>JW FLV Player Developed By Jeroen Wijering - <a href="http://www.longtailvideo.com/" target="_blank">http://www.longtailvideo.com/</a></p>
+<p align="center"><a href="help.php?module=swf&amp;file=index.html">Help Files Index</a></p>
 </div>
 ';
 
@@ -361,6 +298,7 @@ $string['mplayer_infobox_help'] = '
   <p>For more information see:   <a href="http://developer.longtailvideo.com/trac/wiki/PluginsInfobox">http://developer.longtailvideo.com/trac/wiki/PluginsInfobox</a></p>
 <p>Activity Module Developed by Matt Bury - <a href="http://matbury.com/" target="_blank">http://matbury.com/</a></p>
 <p>JW FLV Player Developed By Jeroen Wijering - <a href="http://www.longtailvideo.com/" target="_blank">http://www.longtailvideo.com/</a></p>
+<p align="center"><a href="help.php?module=swf&amp;file=index.html">Help Files Index</a></p>
 </div>
 ';
 
@@ -376,6 +314,7 @@ $string['mplayer_livestream_help'] = '
   <p>For more information see:   <a href="http://developer.longtailvideo.com/trac/wiki/PluginsLivestream">http://developer.longtailvideo.com/trac/wiki/PluginsLivestream</a></p>
 <p>Activity Module Developed by Matt Bury - <a href="http://matbury.com/" target="_blank">http://matbury.com/</a></p>
 <p>JW FLV Player Developed By Jeroen Wijering - <a href="http://www.longtailvideo.com/" target="_blank">http://www.longtailvideo.com/</a></p>
+<p align="center"><a href="help.php?module=swf&amp;file=index.html">Help Files Index</a></p>
 </div>
 ';
 
@@ -395,6 +334,7 @@ $string['mplayer_logo_help'] = '
   <p><strong>Please note:</strong> Logo &amp; logo link only function in licensed versions of the JW Player. See Logo Box for unlicenced players.</p>
   <p>Activity Module Developed by Matt Bury - <a href="http://matbury.com/" target="_blank">http://matbury.com/</a></p>
 <p>JW FLV Player Developed By Jeroen Wijering - <a href="http://www.longtailvideo.com/" target="_blank">http://www.longtailvideo.com/</a></p>
+<p align="center"><a href="help.php?module=swf&amp;file=index.html">Help Files Index</a></p>
 </div>
 ';
 
@@ -409,6 +349,7 @@ $string['mplayer_logobox_help'] = '
   <p>For more information see:   <a href="http://developer.longtailvideo.com/trac/wiki/PluginsLogobox">http://developer.longtailvideo.com/trac/wiki/PluginsLogobox</a></p>
 <p>Activity Module Developed by Matt Bury - <a href="http://matbury.com/" target="_blank">http://matbury.com/</a></p>
 <p>JW FLV Player Developed By Jeroen Wijering - <a href="http://www.longtailvideo.com/" target="_blank">http://www.longtailvideo.com/</a></p>
+<p align="center"><a href="help.php?module=swf&amp;file=index.html">Help Files Index</a></p>
 </div>
 ';
 
@@ -423,6 +364,7 @@ $string['mplayer_metadata_help'] = '
   <p>To display metadata to users, see Infobox.</p>
   <p>Activity Module Developed by Matt Bury - <a href="http://matbury.com/" target="_blank">http://matbury.com/</a></p>
 <p>JW FLV Player Developed By Jeroen Wijering - <a href="http://www.longtailvideo.com/" target="_blank">http://www.longtailvideo.com/</a></p>
+<p align="center"><a href="help.php?module=swf&amp;file=index.html">Help Files Index</a></p>
 </div>
 ';
 
@@ -442,6 +384,7 @@ $string['mplayer_metaviewer_help'] = '
   <p>NB: Useful for debugging or examining video file properties but not much else.</p>
 <p>Activity Module Developed by Matt Bury - <a href="http://matbury.com/" target="_blank">http://matbury.com/</a></p>
 <p>JW FLV Player Developed By Jeroen Wijering - <a href="http://www.longtailvideo.com/" target="_blank">http://www.longtailvideo.com/</a></p>
+<p align="center"><a href="help.php?module=swf&amp;file=index.html">Help Files Index</a></p>
 </div>
 ';
 
@@ -467,6 +410,7 @@ $string['mplayer_playlist_help'] = '
   <p><strong>Shuffle</strong>: play playlist items in random order</p>
   <p>Activity Module Developed by Matt Bury - <a href="http://matbury.com/" target="_blank">http://matbury.com/</a></p>
 <p>JW FLV Player Developed By Jeroen Wijering - <a href="http://www.longtailvideo.com/" target="_blank">http://www.longtailvideo.com/</a></p>
+<p align="center"><a href="help.php?module=swf&amp;file=index.html">Help Files Index</a></p>
 </div>
 ';
 
@@ -486,6 +430,7 @@ $string['mplayer_searchbar_help'] = '
   <p>For more information see:   <a href="http://developer.longtailvideo.com/trac/wiki/PluginsSearchbar">http://developer.longtailvideo.com/trac/wiki/PluginsSearchbar</a></p>
 <p>Activity Module Developed by Matt Bury - <a href="http://matbury.com/" target="_blank">http://matbury.com/</a></p>
 <p>JW FLV Player Developed By Jeroen Wijering - <a href="http://www.longtailvideo.com/" target="_blank">http://www.longtailvideo.com/</a></p>
+<p align="center"><a href="help.php?module=swf&amp;file=index.html">Help Files Index</a></p>
 </div>
 ';
 
@@ -498,14 +443,17 @@ $string['mplayer_snapshot_help'] = '
   <p>For more information see:   <a href="http://developer.longtailvideo.com/trac/wiki/PluginsSnapshot">http://developer.longtailvideo.com/trac/wiki/PluginsSnapshot</a></p>
   <p>Activity Module Developed by Matt Bury - <a href="http://matbury.com/" target="_blank">http://matbury.com/</a></p>
 <p>JW FLV Player Developed By Jeroen Wijering - <a href="http://www.longtailvideo.com/" target="_blank">http://www.longtailvideo.com/</a></p>
+<p align="center"><a href="help.php?module=swf&amp;file=index.html">Help Files Index</a></p>
 </div>
 ';
 
-$string['mplayer_resources'] = 'Media Resources';
-$string['mplayer_resources_help'] = '
+$string['mplayer_source'] = 'Source';
+$string['mplayer_source_help'] = '
 <div class="indent">
+  <p><strong>Note:</strong> If Sound, Image or Video are selected, the player will automatically look for the video file in the Moodle course files directory. Use &quot;Choose or upload a file...&quot;.</p>
+  <p><strong>Media File:</strong> The source or location of the media file to be played. </p>
   <ul>
-    <li>Manage all your media resource files in this file manager. </li>
+    <li>Click on the &quot;Choose or upload a file...&quot; button to play videos from the Moodle course files directory. </li>
     <li>Video file types can be an FLV, F4V, MOV, MP4 or any file type supported by Flash Player. </li>
     <li>If the video file is on a different domain to your Moodle, there must be a crossdomain.xml policy file on that domain. i.e. If your site URL is &quot;http://mymoodle.com/&quot;, and the video file URL is &quot;http://someotherserver.com/videos/sample_video.flv&quot;, then there must be a crossdomain.xml file at &quot;http://someotherserver.com/crossdomain.xml&quot;. Some video hosting sites such as YouTube.com already have a &quot;catchall&quot; crossdomain.xml policy file installed, allowing you to consume media from them without any configuration being necessary. For further details, see: <a href="http://kb2.adobe.com/cps/142/tn_14213.html">http://kb2.adobe.com/cps/142/tn_14213.html</a></li>
     <li>You can also link to an XML playlist here. For more information about playlists, see:   <a href="http://code.google.com/p/moodle-flv-player/wiki/UsingXMLPlaylists">http://code.google.com/p/moodle-flv-player/wiki/UsingXMLPlaylists</a></li>
@@ -524,57 +472,8 @@ $string['mplayer_resources_help'] = '
   </ul>
   <p><strong>Streamer:</strong> (advanced) the gateway of the streaming server to be used (requires configuration by a developer). More than one streaming server configuration is possible.</p>
   <p>&nbsp;</p>
-  <p>Activity Module originally developed by Matt Bury - <a href="http://matbury.com/" target="_blank">http://matbury.com/</a></p>
+  <p>Activity Module Developed by Matt Bury - <a href="http://matbury.com/" target="_blank">http://matbury.com/</a></p>
 <p>JW FLV Player Developed By Jeroen Wijering - <a href="http://www.longtailvideo.com/" target="_blank">http://www.longtailvideo.com/</a></p>
+<p align="center"><a href="help.php?module=swf&amp;file=index.html">Help Files Index</a></p>
 </div>
-';
-
-$string['cue_list'] = 'Cuelists';
-$string['cue_list_help'] = '
-<div class="indent">
-  <p><strong>video|timestamp1|url|timestamp2;</strong></p>
-  <ul>
-    <li>video = numero video in play list </li>
-    <li>timestamp1 = timestamp cuepoint</li>
-    <li>url = url cuepoint</li>
-    <li>timestamp2 = not required:
-        <ul>
-            <li>0: video re-played when popup it closed</li>
-            <li>timestamp: popup it closed and video re-played after timestamp</li>
-            <li>empty: no specific action</li>
-        </ul>
-    </li>
-  </ul>
-</div>';
-
-$string['mplayer_technology'] = 'Technology';
-$string['mplayer_technology_help'] = '
-<p>The MPlayer supports both Flowplayer HTML5 and JW player technology. Moodle administrator may choose to force the technology for the whole platform,
-or let the teacher choose which to use.</p>
-<p>When changing the technology, do a first save of the settings and edit the settings back to load the alternate tecnhology parameters.</p>
-';
-
-$string['mplayer_track'] = 'Subtitles';
-$string['mplayer_track_help'] = '
-Admits a VTT file which is a simply text formatted file that gives subtitles 
-mapped to timestamps.
-
-----
-WEBVTT FILE
-
-1
-00:00:01.000 --> 00:00:04.000
-The first subtitle from 1 seconds to 4 seconds
-This is a second line
-And a third one
-
-2
-00:00:05.000 --> 00:00:06.000
-<b>Bold</b>, <i>italic</i> and <u>underlines</u> are supported
-
-...
-----
-
-Refer to http://www.delphiki.com/webvtt/ for a full format specification.
-
 ';

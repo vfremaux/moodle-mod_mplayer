@@ -4,7 +4,7 @@
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
   <TABLES>
-    <TABLE NAME="mplayer" COMMENT="Wrapper for Jeroen Wijering FLV Player" NEXT="mplayer_userdata">
+    <TABLE NAME="mplayer" COMMENT="Wrapper for Jeroen Wijering FLV Player">
         <FIELDS>
             <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" COMMENT="id" NEXT="course"/>
             <FIELD NAME="course" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" COMMENT="course" PREVIOUS="id" NEXT="name"/>
@@ -12,9 +12,8 @@
             <FIELD NAME="intro" TYPE="text" LENGTH="medium" NOTNULL="false" SEQUENCE="false" COMMENT="intro" PREVIOUS="name" NEXT="introformat"/>
             <FIELD NAME="introformat" TYPE="int" LENGTH="4" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" COMMENT="introformat" PREVIOUS="intro" NEXT="timecreated"/>
             <FIELD NAME="timecreated" TYPE="int" LENGTH="11" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" COMMENT="timecreated" PREVIOUS="introformat" NEXT="timemodified"/>
-            <FIELD NAME="timemodified" TYPE="int" LENGTH="11" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" COMMENT="timemodified" PREVIOUS="timecreated" NEXT="technology"/>
-            <FIELD NAME="technology" TYPE="char" LENGTH="15" NOTNULL="false" SEQUENCE="false" COMMENT="technology" PREVIOUS="timemodified" NEXT="author"/>
-            <FIELD NAME="configxml" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="configxml" PREVIOUS="technology" NEXT="author"/>
+            <FIELD NAME="timemodified" TYPE="int" LENGTH="11" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" COMMENT="timemodified" PREVIOUS="timecreated" NEXT="configxml"/>
+            <FIELD NAME="configxml" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="configxml" PREVIOUS="timemodified" NEXT="author"/>
             <FIELD NAME="author" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="author" PREVIOUS="configxml" NEXT="mplayerdate"/>
             <FIELD NAME="mplayerdate" TYPE="char" LENGTH="50" NOTNULL="false" SEQUENCE="false" COMMENT="mplayerdate" PREVIOUS="author" NEXT="description"/>
             <FIELD NAME="description" TYPE="text" LENGTH="medium" NOTNULL="false" SEQUENCE="false" COMMENT="description" PREVIOUS="mplayerdate" NEXT="infoboxcolor"/>
@@ -22,10 +21,8 @@
             <FIELD NAME="infoboxposition" TYPE="char" LENGTH="30" NOTNULL="false" SEQUENCE="false" COMMENT="infoboxposition" PREVIOUS="infoboxcolor" NEXT="infoboxsize"/>
             <FIELD NAME="infoboxsize" TYPE="int" LENGTH="4" NOTNULL="false" UNSIGNED="true" SEQUENCE="false" COMMENT="infoboxsize" PREVIOUS="infoboxposition" NEXT="duration"/>
             <FIELD NAME="duration" TYPE="int" LENGTH="11" NOTNULL="false" UNSIGNED="true" SEQUENCE="false" COMMENT="duration" PREVIOUS="infoboxsize" NEXT="mplayerfile"/>
-            <FIELD NAME="mplayerfile" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="deprecated" PREVIOUS="duration" NEXT="external"/>
-            <FIELD NAME="external" TYPE="text" LENGTH="medium" NOTNULL="false" SEQUENCE="false" COMMENT="external" PREVIOUS="mplayerfile" NEXT="cuelists"/>
-            <FIELD NAME="cuelists" TYPE="text" LENGTH="medium" NOTNULL="false" SEQUENCE="false" COMMENT="deprecated" PREVIOUS="external" NEXT="hdbitrate"/>
-            <FIELD NAME="hdbitrate" TYPE="int" LENGTH="7" NOTNULL="false" SEQUENCE="false" UNSIGNED="true" COMMENT="hdbitrate" PREVIOUS="external" NEXT="hdfile"/>
+            <FIELD NAME="mplayerfile" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="mplayerfile" PREVIOUS="duration" NEXT="hdbitrate"/>
+            <FIELD NAME="hdbitrate" TYPE="int" LENGTH="7" NOTNULL="false" SEQUENCE="false" UNSIGNED="true" COMMENT="hdbitrate" PREVIOUS="mplayerfile" NEXT="hdfile"/>
             <FIELD NAME="hdfile" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="hdfile" PREVIOUS="hdbitrate" NEXT="hdfullscreen"/>
             <FIELD NAME="hdfullscreen" TYPE="char" LENGTH="20" NOTNULL="false" SEQUENCE="false" COMMENT="hdfullscreen" PREVIOUS="hdfile" NEXT="hdstate"/>
             <FIELD NAME="hdstate" TYPE="char" LENGTH="20" NOTNULL="false" SEQUENCE="false" COMMENT="hdstate" PREVIOUS="hdfullscreen" NEXT="livestreamfile"/>
@@ -84,41 +81,21 @@
             <FIELD NAME="captionsfontsize" TYPE="int" LENGTH="3" NOTNULL="false" UNSIGNED="true" SEQUENCE="false" COMMENT="captionsfontsize" PREVIOUS="captionsfile" NEXT="captionsstate"/>
             <FIELD NAME="captionsstate" TYPE="char" LENGTH="12" NOTNULL="false" SEQUENCE="false" COMMENT="captionsstate" PREVIOUS="captionsfontsize" NEXT="fpversion"/>
             <FIELD NAME="fpversion" TYPE="char" LENGTH="20" NOTNULL="false" SEQUENCE="false" COMMENT="fpversion" PREVIOUS="captionsstate" NEXT="notes"/>
-            <FIELD NAME="notes" TYPE="text" LENGTH="medium" NOTNULL="false" SEQUENCE="false" COMMENT="notes" PREVIOUS="fpversion" NEXT="notesformat"/>
-            <FIELD NAME="notesformat" TYPE="text" LENGTH="medium" NOTNULL="false" SEQUENCE="false" COMMENT="notes" PREVIOUS="notes" NEXT="metaviewerposition"/>
-            <FIELD NAME="metaviewerposition" TYPE="char" LENGTH="30" NOTNULL="false" SEQUENCE="false" COMMENT="metaviewerposition" PREVIOUS="notesformat" NEXT="metaviewersize"/>
+            <FIELD NAME="notes" TYPE="text" LENGTH="medium" NOTNULL="false" SEQUENCE="false" COMMENT="notes" PREVIOUS="fpversion" NEXT="metaviewerposition"/>
+            <FIELD NAME="metaviewerposition" TYPE="char" LENGTH="30" NOTNULL="false" SEQUENCE="false" COMMENT="metaviewerposition" PREVIOUS="notes" NEXT="metaviewersize"/>
             <FIELD NAME="metaviewersize" TYPE="int" LENGTH="4" NOTNULL="false" UNSIGNED="true" SEQUENCE="false" COMMENT="metaviewersize" PREVIOUS="metaviewerposition" NEXT="searchbarcolor"/>
             <FIELD NAME="searchbarcolor" TYPE="char" LENGTH="7" NOTNULL="false" SEQUENCE="false" COMMENT="searchbarcolor" PREVIOUS="metaviewersize" NEXT="searchbarlabel"/>
             <FIELD NAME="searchbarlabel" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="searchbarlabel" PREVIOUS="searchbarcolor" NEXT="searchbarposition"/>
             <FIELD NAME="searchbarposition" TYPE="char" LENGTH="30" NOTNULL="false" SEQUENCE="false" COMMENT="searchbarposition" PREVIOUS="searchbarlabel" NEXT="searchbarscript"/>
             <FIELD NAME="searchbarscript" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="searchbarscript" PREVIOUS="searchbarposition" NEXT="snapshotbitmap"/>
             <FIELD NAME="snapshotbitmap" TYPE="char" LENGTH="6" NOTNULL="false" SEQUENCE="false" COMMENT="snapshotbitmap" PREVIOUS="searchbarscript" NEXT="snapshotscript"/>
-            <FIELD NAME="snapshotscript" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="snapshotscript" PREVIOUS="snapshotbitmap" NEXT="splashmode" />
-            <FIELD NAME="splashmode" TYPE="char" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="snapshotscript" PREVIOUS="snapshotscript" NEXT="langselection" />
-            <FIELD NAME="langselection" TYPE="char" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="snapshotscript" PREVIOUS="snapshotscript" NEXT="completionmediaviewed" />
-            <FIELD NAME="completionmediaviewed" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="If this field is set to 1, then the activity will be marked as 'complete' once the user has watched the full media." PREVIOUS="langselection" />
+            <FIELD NAME="snapshotscript" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="snapshotscript" PREVIOUS="snapshotbitmap"/>
         </FIELDS>
         <KEYS>
             <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
         </KEYS>
         <INDEXES>
             <INDEX NAME="course" UNIQUE="false" FIELDS="course"/>
-        </INDEXES>
-    </TABLE>
-    <TABLE NAME="mplayer_userdata" COMMENT="Full view state" PREVIOUS="mplayer">
-        <FIELDS>
-            <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" COMMENT="id" NEXT="mplayerid"/>
-            <FIELD NAME="mplayerid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" COMMENT="Mplayer ID" PREVIOUS="id" NEXT="userid"/>
-            <FIELD NAME="userid" TYPE="int" LENGTH="11" NOTNULL="true" SEQUENCE="false" COMMENT="name" PREVIOUS="mplayerid" NEXT="clipid"/>
-            <FIELD NAME="clipid" TYPE="int" LENGTH="11" NOTNULL="true" SEQUENCE="false" COMMENT="name" PREVIOUS="mplayerid" NEXT="maxprogress"/>
-            <FIELD NAME="maxprogress" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="name" PREVIOUS="clipid" NEXT="finished"/>
-            <FIELD NAME="finished" TYPE="int" LENGTH="1" NOTNULL="true" SEQUENCE="false" COMMENT="name" PREVIOUS="maxprogress"/>
-        </FIELDS>
-        <KEYS>
-            <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
-        </KEYS>
-        <INDEXES>
-            <INDEX NAME="ix_instanceid" UNIQUE="false" FIELDS="mplayerid"/>
         </INDEXES>
     </TABLE>
   </TABLES>

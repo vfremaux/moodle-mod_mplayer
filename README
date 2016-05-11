@@ -1,34 +1,30 @@
 Media Player Module for Moodle 1.9
 
-Originally Designed and developed by Matt Bury
+Designed and developed by Matt Bury
 
 © Matt Bury 2009 onwards
+
 Website: http://matbury.com/
 
-Redrawn for Moodle 2 by Valery Fremaux (valery.fremaux@gmail.com)
+About Matt: http://blog.matbury.com/about-matt-bury/
 
 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 Installation
 
+How to install the Media Player
 
-Design Notes
-===============
+PLEASE NOTE: THIS MAY NOT BE THE LATEST VERSION OF THE MODULE. PLEASE FIND THE LATEST VERSION AT:
+http://code.google.com/p/moodle-mplayer/downloads/list
 
-The .stm format
+The SWF Activity Module is the most flexible, functional, robust and powerful way to deploy Flash animations and applications in Moodle 1.9. It supports any version of Flash and Actionscript.
 
-STM files are manifests that are used as proxy descriptors for remotely dispatched medias. 
-the effective media file may be stored into an extra storage out of control of Moodle and
-may be delivered from a streamed URL. the manifest file should be usually built by the MPlayer 
-module, after a media upload. the manifest file is an XML file with a simple internal schema :
+    Upload the /mplayer/ directory and all its contents to ***YOUR MOODLE***/mod/
+    Make sure that the directory structure isn't ***YOUR MOODLE***/mod/mplayer/mplayer/... It should be ***YOUR MOODLE***/mod/mplayer/...
+    In Moodle, login as an administrator
+    Go to Site Administration > Notifications
+    The Media Player will install/update itself
+    If any settings have been changed, you'll be asked to save the settings on the Site Administration > Modules > Activities > Media Player page
+    That's it!
 
-<XML version="1.0">
-<Video>
-    <Source>
-        <streamer>wowza</streamer>
-        <streamerurl>rtmp://medias.mysite/com</streamerurl>
-        <appication>/vod</application>
-        <clip>0</clip>
-        <location>mp4:streamedfile.mp4</location>
-    </Source>
-</Video>
+Project site and bug tracker are at: http://code.google.com/p/moodle-mplayer/
