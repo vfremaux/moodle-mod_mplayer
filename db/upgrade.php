@@ -38,6 +38,7 @@ function mplayer_convert_legacy_storage($courseid = 0, $verbose = false) {
 
         $cm = get_coursemodule_from_instance('mplayer', $mplayer->id);
         $context = get_context_instance(CONTEXT_MODULE, $cm->id);
+        $coursecontext = get_context_instance(CONTEXT_COURSE, $mplayer->course);
 
         $legacypath = $CFG->dataroot.'/'.$mplayer->course;
         if (is_dir($legacypath)) {
@@ -50,158 +51,274 @@ function mplayer_convert_legacy_storage($courseid = 0, $verbose = false) {
                     mtrace('converting source media file '.$sourcefile);
                 }
 
+                $basename = basename($mplayer->mplayerfile);
+                $pathname = '/'.dirname($mplayer->mplayerfile).'/';
+                $pathname = preg_replace('#//#', '/', $pathname);
+
+                // Target record
+                $filerec = new StdClass;
+                $filerec->contextid = $context->id;
+                $filerec->component = 'mod_mplayer';
+                $filerec->filearea = 'mplayerfile';
+                $filerec->itemid = 0;
+                $filerec->filepath = '/';
+                $filerec->filename = $basename;
+
                 if (file_exists($sourcefile)) {
-                    $filerec = new StdClass;
-                    $filerec->contextid = $context->id;
-                    $filerec->component = 'mod_mplayer';
-                    $filerec->filearea = 'mplayerfile';
-                    $filerec->itemid = 0;
-                    $filerec->filepath = '/';
-                    $filerec->filename = basename($mplayer->mplayerfile);
-                    if ($verbose) {
-                        mtrace("Building file ");
-                        print_object($filerec);
-                    }
                     $fs->create_file_from_pathname($filerec, $sourcefile);
+                } else {
+                    if (function_exists('debug_trace')) {
+                        debug_trace("Checking converted file as {$coursecontext->id}, 'course', 'legacy', 0, $pathname, $basename for mplayer main file");
+                    }
+                    if ($oldfile = $fs->get_file($coursecontext->id, 'course', 'legacy', 0, $pathname, $basename)) {
+                        if (function_exists('debug_trace')) {
+                            debug_trace("Converting file ");
+                        }
+                        $fs->create_file_from_storedfile($filerec, $oldfile);
+                    } else {
+                        if (function_exists('debug_trace')) {
+                            debug_trace("Missing file $sourcefile for mplayer main file");
+                        }
+                    }
                 }
             }
 
             if (!empty($mplayer->configxml)) {
                 $sourcefile = $legacypath.'/'.$mplayer->configxml;
 
+                $basename = basename($mplayer->configxml);
+                $pathname = '/'.dirname($mplayer->configxml).'/';
+                $pathname = preg_replace('#//#', '/', $pathname);
+
+                $filerec = new StdClass;
+                $filerec->contextid = $context->id;
+                $filerec->component = 'mod_mplayer';
+                $filerec->filearea = 'configxml';
+                $filerec->itemid = 0;
+                $filerec->filepath = '/';
+                $filerec->filename = $basename;
+
                 if (file_exists($coursefile)) {
-                    $filerec = new StdClass;
-                    $filerec->contextid = $context->id;
-                    $filerec->component = 'mod_mplayer';
-                    $filerec->filearea = 'configxml';
-                    $filerec->itemid = 0;
-                    $filerec->filepath = '/';
-                    $filerec->filename = basename($mplayer->configxml);
                     $fs->create_file_from_pathname($filerec, $sourcefile);
+                } elseif($oldfile = $fs->get_file($coursecontext->id, 'course', 'legacy', 0, $pathname, $basename)) {
+                    $fs->create_file_from_storedfile($filerec, $oldfile);
+                } else {
+                    if (function_exists('debug_trace')) {
+                        debug_trace("Missing file $sourcefile for configxml");
+                    }
                 }
             }
-    
+
             if (!empty($mplayer->hdfile)) {
                 $sourcefile = $legacypath.'/'.$mplayer->hdfile;
 
+                $basename = basename($mplayer->hdfile);
+                $pathname = '/'.dirname($mplayer->hdfile).'/';
+                $pathname = preg_replace('#//#', '/', $pathname);
+
+                $filerec = new StdClass;
+                $filerec->contextid = $context->id;
+                $filerec->component = 'mod_mplayer';
+                $filerec->filearea = 'hdfile';
+                $filerec->itemid = 0;
+                $filerec->filepath = '/';
+                $filerec->filename = $basename;
+
                 if (file_exists($sourcefile)) {
-                    $filerec = new StdClass;
-                    $filerec->contextid = $context->id;
-                    $filerec->component = 'mod_mplayer';
-                    $filerec->filearea = 'hdfile';
-                    $filerec->itemid = 0;
-                    $filerec->filepath = '/';
-                    $filerec->filename = basename($mplayer->hdfile);
                     $fs->create_file_from_pathname($filerec, $sourcefile);
+                } elseif($oldfile = $fs->get_file($coursecontext->id, 'course', 'legacy', 0, $pathname, $basename)) {
+                    $fs->create_file_from_storedfile($filerec, $oldfile);
+                } else {
+                    if (function_exists('debug_trace')) {
+                        debug_trace("Missing file $sourcefile for hdfile");
+                    }
                 }
             }
 
             if (!empty($mplayer->image)) {
                 $sourcefile = $legacypath.'/'.$mplayer->image;
 
+                $basename = basename($mplayer->image);
+                $pathname = '/'.dirname($mplayer->image).'/';
+                $pathname = preg_replace('#//#', '/', $pathname);
+
+                $filerec = new StdClass;
+                $filerec->contextid = $context->id;
+                $filerec->component = 'mod_mplayer';
+                $filerec->filearea = 'image';
+                $filerec->itemid = 0;
+                $filerec->filepath = '/';
+                $filerec->filename = $basename;
+
                 if (file_exists($sourcefile)) {
-                    $filerec = new StdClass;
-                    $filerec->contextid = $context->id;
-                    $filerec->component = 'mod_mplayer';
-                    $filerec->filearea = 'image';
-                    $filerec->itemid = 0;
-                    $filerec->filepath = '/';
-                    $filerec->filename = basename($mplayer->image);
                     $fs->create_file_from_pathname($filerec, $sourcefile);
+                } elseif($oldfile = $fs->get_file($coursecontext->id, 'course', 'legacy', 0, $pathname, $basename)) {
+                    $fs->create_file_from_storedfile($filerec, $oldfile);
+                } else {
+                    if (function_exists('debug_trace')) {
+                        debug_trace("Missing file $sourcefile for image ");
+                    }
                 }
             }
-    
+
             if (!empty($mplayer->livestreamfile)) {
                 $sourcefile = $legacypath.'/'.$mplayer->livestreamfile;
 
+                $basename = basename($mplayer->image);
+                $pathname = '/'.dirname($mplayer->image).'/';
+                $pathname = preg_replace('#//#', '/', $pathname);
+
+                $filerec = new StdClass;
+                $filerec->contextid = $context->id;
+                $filerec->component = 'mod_mplayer';
+                $filerec->filearea = 'livestreamfile';
+                $filerec->itemid = 0;
+                $filerec->filepath = '/';
+                $filerec->filename = $basename;
+
                 if (file_exists($sourcefile)) {
-                    $filerec = new StdClass;
-                    $filerec->contextid = $context->id;
-                    $filerec->component = 'mod_mplayer';
-                    $filerec->filearea = 'livestreamfile';
-                    $filerec->itemid = 0;
-                    $filerec->filepath = '/';
-                    $filerec->filename = basename($mplayer->livestreamfile);
                     $fs->create_file_from_pathname($filerec, $sourcefile);
+                } elseif($oldfile = $fs->get_file($coursecontext->id, 'course', 'legacy', 0, $pathname, $basename)) {
+                    $fs->create_file_from_storedfile($filerec, $oldfile);
+                } else {
+                    if (function_exists('debug_trace')) {
+                        debug_trace("Missing file $sourcefile for livestreamfile");
+                    }
                 }
             }
     
             if (!empty($mplayer->livestreamimage)) {
                 $sourcefile = $legacypath.'/'.$mplayer->livestreamimage;
 
+                $basename = basename($mplayer->livestreamimage);
+                $pathname = '/'.dirname($mplayer->livestreamimage).'/';
+                $pathname = preg_replace('#//#', '/', $pathname);
+
+                $filerec = new StdClass;
+                $filerec->contextid = $context->id;
+                $filerec->component = 'mod_mplayer';
+                $filerec->filearea = 'livestreamimagefile';
+                $filerec->itemid = 0;
+                $filerec->filepath = '/';
+                $filerec->filename = $basename;
+
                 if (file_exists($sourcefile)) {
-                    $filerec = new StdClass;
-                    $filerec->contextid = $context->id;
-                    $filerec->component = 'mod_mplayer';
-                    $filerec->filearea = 'livestreamimagefile';
-                    $filerec->itemid = 0;
-                    $filerec->filepath = '/';
-                    $filerec->filename = basename($mplayer->livestreamimage);
                     $fs->create_file_from_pathname($filerec, $sourcefile);
+                } elseif($oldfile = $fs->get_file($coursecontext->id, 'course', 'legacy', 0, $pathname, $basename)) {
+                    $fs->create_file_from_storedfile($filerec, $oldfile);
+                } else {
+                    if (function_exists('debug_trace')) {
+                        debug_trace("Missing file $sourcefile for livestreamimage");
+                    }
                 }
             }
-    
+
             if (!empty($mplayer->audiodescriptionfile)) {
                 $sourcefile = $legacypath.'/'.$mplayer->audiodescriptionfile;
 
+                $basename = basename($mplayer->audiodescriptionfile);
+                $pathname = '/'.dirname($mplayer->audiodescriptionfile).'/';
+                $pathname = preg_replace('#//#', '/', $pathname);
+
+                $filerec = new StdClass;
+                $filerec->contextid = $context->id;
+                $filerec->component = 'mod_mplayer';
+                $filerec->filearea = 'audiodescriptionfile';
+                $filerec->itemid = 0;
+                $filerec->filepath = '/';
+                $filerec->filename = $basename;
+
                 if (file_exists($sourcefile)) {
-                    $filerec = new StdClass;
-                    $filerec->contextid = $context->id;
-                    $filerec->component = 'mod_mplayer';
-                    $filerec->filearea = 'audiodescriptionfile';
-                    $filerec->itemid = 0;
-                    $filerec->filepath = '/';
-                    $filerec->filename = basename($mplayer->audiodescriptionfile);
                     $fs->create_file_from_pathname($filerec, $sourcefile);
+                } elseif($oldfile = $fs->get_file($coursecontext->id, 'course', 'legacy', 0, $pathname, $basename)) {
+                    $fs->create_file_from_storedfile($filerec, $oldfile);
+                } else {
+                    if (function_exists('debug_trace')) {
+                        debug_trace("Missing file $sourcefile for audiodescription");
+                    }
                 }
             }
-    
+
             if (!empty($mplayer->logoboxfile)) {
                 $sourcefile = $legacypath.'/'.$mplayer->logoboxfile;
 
+                $basename = basename($mplayer->logoboxfile);
+                $pathname = '/'.dirname($mplayer->logoboxfile).'/';
+                $pathname = preg_replace('#//#', '/', $pathname);
+
+                $filerec = new StdClass;
+                $filerec->contextid = $context->id;
+                $filerec->component = 'mod_mplayer';
+                $filerec->filearea = 'logoboxfile';
+                $filerec->itemid = 0;
+                $filerec->filepath = '/';
+                $filerec->filename = $basename;
+
                 if (file_exists($sourcefile)) {
-                    $filerec = new StdClass;
-                    $filerec->contextid = $context->id;
-                    $filerec->component = 'mod_mplayer';
-                    $filerec->filearea = 'logoboxfile';
-                    $filerec->itemid = 0;
-                    $filerec->filepath = '/';
-                    $filerec->filename = basename($mplayer->logoboxfile);
                     $fs->create_file_from_pathname($filerec, $sourcefile);
+                } elseif($oldfile = $fs->get_file($coursecontext->id, 'course', 'legacy', 0, $pathname, $basename)) {
+                    $fs->create_file_from_storedfile($filerec, $oldfile);
+                } else {
+                    if (function_exists('debug_trace')) {
+                        debug_trace("Missing file $sourcefile for logobox");
+                    }
                 }
             }
-    
+
             if (!empty($mplayer->logofile)) {
                 $sourcefile = $legacypath.'/'.$mplayer->logofile;
 
+                $basename = basename($mplayer->logofile);
+                $pathname = '/'.dirname($mplayer->logofile).'/';
+                $pathname = preg_replace('#//#', '/', $pathname);
+
+                $filerec = new StdClass;
+                $filerec->contextid = $context->id;
+                $filerec->component = 'mod_mplayer';
+                $filerec->filearea = 'logofile';
+                $filerec->itemid = 0;
+                $filerec->filepath = '/';
+                $filerec->filename = $basename;
+
                 if (file_exists($sourcefile)) {
-                    $filerec = new StdClass;
-                    $filerec->contextid = $context->id;
-                    $filerec->component = 'mod_mplayer';
-                    $filerec->filearea = 'logofile';
-                    $filerec->itemid = 0;
-                    $filerec->filepath = '/';
-                    $filerec->filename = basename($mplayer->logofile);
                     $fs->create_file_from_pathname($filerec, $sourcefile);
+                } elseif($oldfile = $fs->get_file($coursecontext->id, 'course', 'legacy', 0, $pathname, $basename)) {
+                    $fs->create_file_from_storedfile($filerec, $oldfile);
+                } else {
+                    if (function_exists('debug_trace')) {
+                        debug_trace("Missing file $sourcefile for logo ");
+                    }
                 }
             }
-    
+
             if (!empty($mplayer->captionsfile)) {
                 $sourcefile = $legacypath.'/'.$mplayer->captionsfile;
 
+                $basename = basename($mplayer->captionsfile);
+                $pathname = '/'.dirname($mplayer->captionsfile).'/';
+                $pathname = preg_replace('#//#', '/', $pathname);
+
+                $filerec = new StdClass;
+                $filerec->contextid = $context->id;
+                $filerec->component = 'mod_mplayer';
+                $filerec->filearea = 'captionsfile';
+                $filerec->itemid = 0;
+                $filerec->filepath = '/';
+                $filerec->filename = $basename;
+
                 if (file_exists($sourcefile)) {
-                    $filerec = new StdClass;
-                    $filerec->contextid = $context->id;
-                    $filerec->component = 'mod_mplayer';
-                    $filerec->filearea = 'captionsfile';
-                    $filerec->itemid = 0;
-                    $filerec->filepath = '/';
-                    $filerec->filename = basename($mplayer->captionsfile);
                     $fs->create_file_from_pathname($filerec, $sourcefile);
+                } elseif($oldfile = $fs->get_file($coursecontext->id, 'course', 'legacy', 0, $pathname, $basename)) {
+                    $fs->create_file_from_storedfile($filerec, $oldfile);
+                } else {
+                    if (function_exists('debug_trace')) {
+                        debug_trace("Missing file $sourcefile for captions ");
+                    }
                 }
             }
         } else {
             if ($verbose) {
+                if (function_exists('debug_trace')) debug_trace("No legacy path \"$legacypath\" found for course $mplayer->course ");
                 mtrace("No legacy path \"$legacypath\" found for course $mplayer->course ");
             }
         }
