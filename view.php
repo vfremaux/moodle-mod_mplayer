@@ -71,7 +71,7 @@ if (!isset($CFG->mplayer_default_player)) {
 
 $PAGE->requires->jquery();
 if ($mplayer->technology == 'jw') {
-    $PAGE->requires->js('/mod/mplayer/jw/6.9/jwplayer.html5.js');
+    $PAGE->requires->js('/mod/mplayer/jw/6.11/jwplayer.html5.js');
 } else {
     // $PAGE->requires->js('/mod/mplayer/flowplayer/flowplayer.js');
     $PAGE->requires->js('/mod/mplayer/flowplayer6/flowplayer.js');

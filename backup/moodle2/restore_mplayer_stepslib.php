@@ -45,7 +45,7 @@ class restore_mplayer_activity_structure_step extends restore_activity_structure
         $this->add_related_files('mod_mplayer', 'hdfile', null);
         $this->add_related_files('mod_mplayer', 'captionsfile', null);
         $this->add_related_files('mod_mplayer', 'livestreamfile', null);
-        $this->add_related_files('mod_mplayer', 'livestreamimage', null);
+        $this->add_related_files('mod_mplayer', 'livestreamimagefile', null);
         $this->add_related_files('mod_mplayer', 'logoboxfile', null);
         $this->add_related_files('mod_mplayer', 'logofile', null);
     }
