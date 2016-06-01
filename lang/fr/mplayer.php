@@ -17,15 +17,12 @@
  */
 
 $string['mplayer:addinstance'] = 'Ajoute une instance';
-$string['mplayer:editgrades'] = 'Editer les scores';
-$string['mplayer:updategrades'] = 'Modifier les scores';
 $string['mplayer:view'] = 'Voir le média';
-$string['mplayer:viewallgrades'] = 'Voir tous les scores';
-$string['mplayer:viewowngrades'] = 'Voir ses propres scores';
-$string['mplayer:viewreports'] = 'Voir les rapports';
 
 // Default module labels
 $string['backtocourse'] = 'Revenir au cours';
+$string['mediaviewed'] = 'Visionnage';
+$string['completionmediaviewed'] = 'marqué complet quand l\'étudiant a visionné tout le média';
 $string['mplayer'] = 'Media Player';
 $string['pluginname'] = 'Media Player';
 $string['pluginadministration'] = 'Administration du Media Player';
@@ -44,6 +41,9 @@ $string['clearplaylist'] = 'Supprimer le fichier de playlist';
 $string['clearconfigxml'] = 'Supprimer le fichier de configuration XML';
 $string['invalidmplayerid'] = 'Cet ID de player est invalide';
 $string['nomplayers'] = 'Aucun player vidéo dans ce cours';
+$string['technology'] = 'Technologie';
+$string['allowtechnologychoice'] = 'Les auteurs peuvent choisir';
+$string['allowtechnologychoicedesc'] = 'si activé, les auteurs peuvent choisir la technologie du player instance par instance.';
 
 //---------------------------------------------------------------------------------------------
 // Labels for mod/mplayer/mod_form.php
@@ -52,6 +52,10 @@ $string['mplayersource'] = 'Source Media';
 $string['mplayerfile'] = 'fichier Media';
 $string['type'] = 'Type';
 $string['streamer'] = 'Serveur de flux';
+$string['external'] = 'Url Externe';
+
+//Cuelists
+$string['cuelists'] = 'Cue lists';
 
 // Playlists
 $string['playlists'] = 'Playlist';
@@ -69,6 +73,12 @@ $string['above'] = 'Au dessus';
 // Configxml
 $string['config'] = 'Config XML';
 $string['configxml'] = 'Fichier';
+
+// Track file
+$string['track'] = 'Sous-titres';
+$string['trackfile'] = 'Fichier';
+$string['trackfilegroup'] = 'Fichier de sous-titres';
+$string['cleartrackfile'] = 'Vider la zone de fichiers';
 
 // Appearance
 $string['appearance'] = 'Apparence';
@@ -198,17 +208,6 @@ $string['nohtml5'] = '<h2>La vidéeo HTML5 n\'est pas supportée par votre navig
 //---------------------------------------------------------------------------------------------
 global $CFG;
 
-$string['mplayer_advanced'] = 'Fonctionalités avancées';
-$string['mplayer_advanced_help'] = '
-<div class="indent">
-  <p><strong>Flash Player Version</strong>: minimum Flash Player version required by JW FLV Player.</p>
-  <p><strong>Trace Call</strong>: (for development and debugging purposes only)</p>
-<p>Activity Module Developed by Matt Bury - <a href="http://matbury.com/" target="_blank">http://matbury.com/</a></p>
-<p>JW FLV Player Developed By Jeroen Wijering - <a href="http://www.longtailvideo.com/" target="_blank">http://www.longtailvideo.com/</a></p>
-<p align="center"><a href="help.php?module=swf&amp;file=index.html">Help Files Index</a></p>
-</div>
-';
-
 $string['mplayer_appearance'] = 'Apparence';
 $string['mplayer_appearance_help'] = '
 <div class="indent">
@@ -243,35 +242,17 @@ $string['mplayer_appearance_help'] = '
 $string['mplayer_audiodescription'] = 'Description audio';
 $string['mplayer_audiodescription_help'] = '
 <div class="indent">
-  <p><strong>MP3 File</strong>: Audio file that is synchronised with video playback.</p>
-  <p><strong>Auto Start</strong>: start playing audio file as soon as web page has loaded</p>
-  <p><strong>Volume</strong>: volume of audio playback</p>
-<p>Activity Module Developed by Matt Bury - <a href="http://matbury.com/" target="_blank">http://matbury.com/</a></p>
-<p>JW FLV Player Developed By Jeroen Wijering - <a href="http://www.longtailvideo.com/" target="_blank">http://www.longtailvideo.com/</a></p>
-<p align="center"><a href="help.php?module=swf&amp;file=index.html">Help Files Index</a></p>
 </div>
 ';
 
 $string['mplayer_behaviour'] = 'Comportement';
 $string['mplayer_behaviour_help'] = '
 <div class="indent">
-  <p><strong>Auto Start</strong>: start playing video as soon as page loads</p>
-  <p><strong>Full Screen</strong>: allow users to switch video to take up the whole screen</p>
-  <p><strong>Stretching</strong>: </p>
-  <ul>
-    <li>none = no stretching</li>
-    <li>uniform = largest possible while maintaining aspect ratio, no cropping</li>
-    <li>exactfit = ignore aspect ratio</li>
-    <li>fill = fill the player window, some cropping may occur</li>
-  </ul>
-  <p><strong>Volume</strong>: audio volume (users adjust it on control bar)</p>
-  <p><strong>Mute</strong>: mute audio (users can turn it on on control bar)</p>
-  <p><strong>Start</strong>: start position of video in seconds (This option works for HTTP pseudostreaming, RTMP streaming, MP3 and YouTube files. It does not work for regular videos.)</p>
-  <p><strong>Buffer Length</strong>: number of seconds of video to pre-download before playing (set this to higher values for users with slow/unreliable/intermittent internet connections)</p>
-  <p><strong>Plugins</strong>: add additional functions to the video player. See:   <a href="http://www.longtailvideo.com/addons/plugins">http://www.longtailvideo.com/addons/plugins</a></p>
-<p>Activity Module Developed by Matt Bury - <a href="http://matbury.com/" target="_blank">http://matbury.com/</a></p>
-<p>JW FLV Player Developed By Jeroen Wijering - <a href="http://www.longtailvideo.com/" target="_blank">http://www.longtailvideo.com/</a></p>
-<p align="center"><a href="help.php?module=swf&amp;file=index.html">Help Files Index</a></p>
+  <p><strong>Auto Start</strong>: démarre la vidéo dès la publication sur la page. Incompatible avec le mode Splash.</p>
+  <p><strong>Full Screen</strong>: autorise l\'utilisateur à passer en mode plein écran</p>
+  <p><strong>Mode Splash</strong>: Permet de charger le player sur demande, et de n\'en jouer qu\'un à la fois sur une même page. Incompatible avec le mode AutoStart.</p>
+  <p><strong>Volume</strong>: volume audio (les utilisateurs peuvent toujours ajuster le volume par le curseur de contrôle)</p>
+  <p><strong>Mute</strong>: mute audio (les utilisateurs peuvent enlever le mute sur la barre de contrôle audio)</p>
 </div>
 ';
 
@@ -335,7 +316,7 @@ $string['mplayer_infobox_help'] = '
 </div>
 ';
 
-$string['mplayer_livestream'] = 'Distribution de flux continue';
+$string['mplayer_livestream'] = 'Distribution de flux continu';
 $string['mplayer_livestream_help'] = '
 <div class="indent">
   <p><strong>RTMP Stream</strong>: name of RTMP stream to check and load</p>
@@ -447,39 +428,6 @@ $string['mplayer_playlist_help'] = '
 </div>
 ';
 
-$string['mplayer_searchbar'] = 'Barre de recherche';
-$string['mplayer_searchbar_help'] = '
-<div class="indent">
-  <p><strong>Color</strong>: color of search button (hexidecimal number)</p>
-  <p><strong>Label</strong>: text on search button</p>
-  <p><strong>Position</strong>:</p>
-  <ul>
-    <li>none = no search bar</li>
-    <li>top = above video window</li>
-    <li>bottom = under video window</li>
-  </ul>
-  <p><strong>Script</strong>: default is YouTube.com API. Custom search scripts can also be used. Contact your IT support for more details.</p>
-  <p>NB: Requires playlist to display results. If no playlist parameters are set, it creates a default playlist.</p>
-  <p>For more information see:   <a href="http://developer.longtailvideo.com/trac/wiki/PluginsSearchbar">http://developer.longtailvideo.com/trac/wiki/PluginsSearchbar</a></p>
-<p>Activity Module Developed by Matt Bury - <a href="http://matbury.com/" target="_blank">http://matbury.com/</a></p>
-<p>JW FLV Player Developed By Jeroen Wijering - <a href="http://www.longtailvideo.com/" target="_blank">http://www.longtailvideo.com/</a></p>
-<p align="center"><a href="help.php?module=swf&amp;file=index.html">Help Files Index</a></p>
-</div>
-';
-
-$string['mplayer_snapshot'] = 'Capture';
-$string['mplayer_snapshot_help'] = '
-<div class="indent">
-  <p><strong>WARNING! Experimental plugin which is not secure. This should not be deployed on a publicly accessible server.</strong></p>
-  <p><strong>Bitmap</strong>: either sends bitmap image to server (implemented) or sends position of video frame to server for server-side snapshot (not implemented)</p>
-  <p><strong>Script</strong>: script to receive and write snapshots on server</p>
-  <p>For more information see:   <a href="http://developer.longtailvideo.com/trac/wiki/PluginsSnapshot">http://developer.longtailvideo.com/trac/wiki/PluginsSnapshot</a></p>
-  <p>Activity Module Developed by Matt Bury - <a href="http://matbury.com/" target="_blank">http://matbury.com/</a></p>
-<p>JW FLV Player Developed By Jeroen Wijering - <a href="http://www.longtailvideo.com/" target="_blank">http://www.longtailvideo.com/</a></p>
-<p align="center"><a href="help.php?module=swf&amp;file=index.html">Help Files Index</a></p>
-</div>
-';
-
 $string['mplayer_source'] = 'Source';
 $string['mplayer_source_help'] = '
 <div class="indent">
@@ -509,4 +457,49 @@ $string['mplayer_source_help'] = '
 <p>JW FLV Player Developed By Jeroen Wijering - <a href="http://www.longtailvideo.com/" target="_blank">http://www.longtailvideo.com/</a></p>
 <p align="center"><a href="help.php?module=swf&amp;file=index.html">Help Files Index</a></p>
 </div>
+';
+
+$string['cue_list'] = 'Cuelists';
+$string['cue_list_help'] = '
+<div class="indent">
+  <p>Une "cuelist" est une liste d\'évenements positionnée sur la ligne de temps de la vidéo et pouvant
+  déclencher des actions pendant la lecture de la vidéo.</p>
+  <p><strong>video|timestamp1|url|timestamp2;</strong></p>
+  <ul>
+    <li>video = numero de la video dans la playlist</li>
+    <li>timestamp1 = instant de déclenchemnt (en secondes.dixièmmes)</li>
+    <li>url = URL à déclencher</li>
+    <li>timestamp2 = optionnel :
+        <ul>
+            <li>0 : la vidéo repart au début lorsque la fenêtre est refermée</li>
+            <li>timestamp : la fenêtre est refermée et la vidéo est jouée après le délai défini</li>
+            <li>empty : pas d\'action spécifique</li>
+        </ul>
+    </li>
+  </ul>
+</div>';
+
+$string['mplayer_track'] = 'sous-titres';
+$string['mplayer_track_help'] = '
+Admits a VTT file which is a simply text formatted file that gives subtitles 
+mapped to timestamps.
+
+----
+WEBVTT FILE
+
+1
+00:00:01.000 --> 00:00:04.000
+The first subtitle from 1 seconds to 4 seconds
+This is a second line
+And a third one
+
+2
+00:00:05.000 --> 00:00:06.000
+<b>Bold</b>, <i>italic</i> and <u>underlines</u> are supported
+
+...
+----
+
+Refer to http://www.delphiki.com/webvtt/ for a full format specification.
+
 ';

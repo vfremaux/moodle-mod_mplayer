@@ -17,15 +17,12 @@
  */
 
 $string['mplayer:addinstance'] = 'Add an instance';
-$string['mplayer:editgrades'] = 'Edit grades';
-$string['mplayer:updategrades'] = 'Update grades';
 $string['mplayer:view'] = 'View';
-$string['mplayer:viewallgrades'] = 'View All Grades';
-$string['mplayer:viewowngrades'] = 'View own Grades';
-$string['mplayer:viewreports'] = 'View reports';
 
 // Default module labels
 $string['backtocourse'] = 'Back to course';
+$string['mediaviewed'] = 'Viewing media';
+$string['completionmediaviewed'] = 'marked when student has finished to view the full media';
 $string['mplayer'] = 'Media Player';
 $string['player'] = 'Player';
 $string['pluginname'] = 'Media Player';
@@ -33,6 +30,7 @@ $string['pluginadministration'] = 'Media Player Administration';
 $string['modulename'] = 'Media Player';
 $string['modulenameplural'] = 'Media Players';
 $string['video'] = 'Video';
+$string['external'] = 'External Url';
 // Titles for mod/mplayer/mod_form.php sections
 $string['mplayername'] = 'Name';
 $string['mplayerintro'] = 'Description';
@@ -43,7 +41,10 @@ $string['playlistthumb'] = 'Play list thumb images';
 $string['clearplaylist'] = 'Clear play list file';
 $string['clearconfigxml'] = 'Clear XML config file';
 $string['invalidmplayerid'] = 'This player ID is invalid';
-$string['nomplayers'] = 'There are no mplayers in thsi course';
+$string['nomplayers'] = 'There are no mplayers in this course';
+$string['technology'] = 'Technology';
+$string['allowtechnologychoice'] = 'Authors can choose';
+$string['allowtechnologychoicedesc'] = 'If enabled, authors can override the site level technology choice per instance.';
 //---------------------------------------------------------------------------------------------
 // Labels for mod/mplayer/mod_form.php
 //// Source
@@ -51,6 +52,9 @@ $string['mplayersource'] = 'Media Source';
 $string['mplayerfile'] = 'Media File';
 $string['type'] = 'Type';
 $string['streamer'] = 'Streamer';
+
+//Cuelists
+$string['cuelists'] = 'Cue lists';
 
 //// Playlists
 $string['playlists'] = 'Playlist';
@@ -69,6 +73,12 @@ $string['above'] = 'Above';
 //// Configxml
 $string['config'] = 'Config XML';
 $string['configxml'] = 'File';
+
+//// SubtitleTracks
+$string['track'] = 'Subtitle track';
+$string['trackfile'] = 'Track file';
+$string['trackfilegroup'] = 'Track file';
+$string['cleartrackfile'] = 'clear track file area';
 
 //// Appearance
 $string['appearance'] = 'Appearance';
@@ -509,4 +519,46 @@ $string['mplayer_source_help'] = '
 <p>JW FLV Player Developed By Jeroen Wijering - <a href="http://www.longtailvideo.com/" target="_blank">http://www.longtailvideo.com/</a></p>
 <p align="center"><a href="help.php?module=swf&amp;file=index.html">Help Files Index</a></p>
 </div>
+';
+$string['cue_list'] = 'Cuelists';
+$string['cue_list_help'] = '
+<div class="indent">
+  <p><strong>video|timestamp1|url|timestamp2;</strong></p>
+  <ul>
+    <li>video = numero video in play list </li>
+    <li>timestamp1 = timestamp cuepoint</li>
+    <li>url = url cuepoint</li>
+    <li>timestamp2 = not required:
+        <ul>
+            <li>0: video re-played when popup it closed</li>
+            <li>timestamp: popup it closed and video re-played after timestamp</li>
+            <li>empty: no specific action</li>
+        </ul>
+    </li>
+  </ul>
+</div>';
+
+$string['mplayer_track'] = 'Subtitles';
+$string['mplayer_track_help'] = '
+Admits a VTT file which is a simply text formatted file that gives subtitles 
+mapped to timestamps.
+
+----
+WEBVTT FILE
+
+1
+00:00:01.000 --> 00:00:04.000
+The first subtitle from 1 seconds to 4 seconds
+This is a second line
+And a third one
+
+2
+00:00:05.000 --> 00:00:06.000
+<b>Bold</b>, <i>italic</i> and <u>underlines</u> are supported
+
+...
+----
+
+Refer to http://www.delphiki.com/webvtt/ for a full format specification.
+
 ';

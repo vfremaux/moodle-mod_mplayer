@@ -33,7 +33,26 @@ if (! $course = $DB->get_record('course', array('id' => $id))) {
 
 require_login($course->id);
 
-add_to_log($course->id, 'mplayer', 'view all', 'index.php?id='.$course->id, '');
+if ($CFG->branch <= 26) {
+    // Add view to Moodle log
+    add_to_log($course->id, 'mplayer', 'view all', 'index.php?id='.$course->id, '');
+} else {
+    require_once($CFG->libdir.'/completionlib.php');
+    $context = context_module::instance($cm->id);
+    require_capability('mod/mplayer:viewall', $context);
+
+    // Trigger module viewed event.
+    $event = \mod_mplayer\event\mplayer_viewedall::create(array(
+        'objectid' => $course->id,
+        'context' => $context,
+        'other' => array(
+            'objectname' => $mplayer->name
+        )
+    ));
+    $event->add_record_snapshot('course_modules', $cm);
+    $event->add_record_snapshot('course', $course);
+    $event->trigger();
+}
 
 // Get all required stringsmplayer.
 

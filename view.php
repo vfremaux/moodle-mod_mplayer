@@ -23,7 +23,7 @@
  *    You should have received a copy of the GNU General Public License
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-require_once('../../config.php');
+require('../../config.php');
 require_once($CFG->dirroot.'/mod/mplayer/lib.php');
 
 $id = optional_param('id', 0, PARAM_INT); // Course Module ID, or
@@ -61,8 +61,29 @@ if ($CFG->mplayer_default_player == 'jw') {
 }
 
 require_login($course->id);
+if ($CFG->branch <= 26) {
+    add_to_log($course->id, 'mplayer', 'view', "view.php?id=$cm->id", "$mplayer->name", $cm->id); // Add view to Moodle log
+} else {
+    // Trigger module viewed event.
+    $context = context_module::instance($cm->id);
+    require_capability('mod/mplayer:view', $context);
 
-add_to_log($course->id, 'mplayer', 'view', "view.php?id=$cm->id", "$mplayer->name", $cm->id); // Add view to Moodle log
+    $event = \mod_mplayer\event\mplayer_viewed::create(array(
+        'objectid' => $cm->id,
+        'context' => $context,
+        'other' => array(
+            'objectname' => $mplayer->name
+        )
+    ));
+    $event->add_record_snapshot('course_modules', $cm);
+    $event->add_record_snapshot('course', $course);
+    $event->add_record_snapshot('mplayer', $mplayer);
+    $event->trigger();
+}
+
+$completion = new completion_info($course);
+$completion->set_module_viewed($cm);
+
 // Print the page header.
 $strmplayers = get_string('modulenameplural', 'mplayer');
 $strmplayer  = get_string('modulename', 'mplayer');
@@ -80,8 +101,10 @@ $renderer = $PAGE->get_renderer('mplayer');
 
 echo $renderer->print_body($mplayer); // mod/mplayer/lib.php
 
-if ($COURSE->format != 'singleactivity') {
+if ($COURSE->format != 'singleactivity' && !($COURSE->format == 'page' && optional_param('aspage', false, PARAM_INT))) {
     echo '<center>';
+    require_once($CFG->dirroot.'/course/format/page/xlib.php');
+    page_print_page_format_navigation($cm, false);
     echo $OUTPUT->single_button(new moodle_url('/course/view.php', array('id' => $course->id)), get_string('backtocourse', 'mplayer'));
     echo '</center>';
 }

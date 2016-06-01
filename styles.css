@@ -2,3 +2,49 @@
     font-weight:bolder;
     color:white;
 }
+
+div.flowplayer video,
+div.flowplayer canvas,
+div.flowplayer audio {
+    width:100%;
+}
+
+div.flowplayer {
+    width:100%;
+}
+
+div.mod-mplayer.progressbar{
+    height:24px;
+    margin-bottom:10px;
+}
+
+.dots div.mod-mplayer.progressbar-outer{
+    max-width:700px;
+}
+
+div.mod-mplayer.progressbar-outer{
+    height:22px;
+    border:2px solid #606060;
+    border-radius:4px;
+    text-align:left;
+}
+
+div.mod-mplayer.progressbar-inner{
+    height:20px;
+    border:1px solid #606060;
+    border-radius:4px;
+    background-image:url();
+    background-color:#00A000;
+    background-position:0% 50%; 
+}
+
+div.mod-mplayer.progressbar-inner2{
+    height:20px;
+    border:1px solid #606060;
+    border-radius:4px;
+    background-image:url();
+    background-color:#00E000;
+    background-position:0% 50%;
+    position:relative;
+    top:-22px;
+}

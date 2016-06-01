@@ -1,19 +1,19 @@
-#dots{
+.dots{
     max-width:700px;
 }
 
-#dots.is-loading{
+.dots.is-loading{
     /* override background image when clip changes */
     background:#333
 }
 
 @media all and (min-width: 600px) {
-    #dots .fp-playlist{
+    .dots .fp-playlist{
         opacity:0;
         filter:progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
     }
 
-    #dots hgroup {
+    .dots hgroup {
         /* info box */
         background-color:rgba(0,0,0,0.3);
         position:absolute;top:3%;left:2%;
@@ -33,25 +33,25 @@
         z-index:1;
     }
 
-    #dots hgroup h1{
+    .dots hgroup h1{
         font-size:20;
         line-height:27px;
     }
 }
 
-#dots hgroup h2{
+.dots hgroup h2{
     color:#fff;
     font-weight:bold;
     line-height:1.5;
 }
 
 @media all and (min-width: 500px) and (max-width: 600px){
-    #dots .fp-playlist{
+    .dots .fp-playlist{
         opacity:0.5;
         filter:progid:DXImageTransform.Microsoft.Alpha(Opacity=0.5);
     }
 
-    #dots hgroup{
+    .dots hgroup{
         background-color:rgba(0,0,0,0.3);
         position:absolute;top:3%;left:2%;
         width:200px;
@@ -69,12 +69,12 @@
         transition:opacity .5s;
         z-index:1;
     }
-    #dots hgroup h1{
+    .dots hgroup h1{
         font-size:15px
         line-height:21px;
     }
 
-    #dots .fp-playlist a{
+    .dots .fp-playlist a{
         width:12px;
         height:12px;
         -webkit-border-radius:12px;
@@ -84,12 +84,12 @@
 }
 
 @media all and (max-width: 500px) {
-    #dots .fp-playlist{
+    .dots .fp-playlist{
         opacity:0.5;
         filter:progid:DXImageTransform.Microsoft.Alpha(Opacity=0.5);
     }
 
-    #dots hgroup{
+    .dots hgroup{
         /* info box */
         background-color:rgba(0,0,0,0.3);
         position:absolute;top:3%;left:2%;
@@ -109,12 +109,12 @@
         z-index:1;
     }
 
-    #dots hgroup h1{
+    .dots hgroup h1{
         font-size:10px;
         line-height:14px;
     }
 
-    #dots .fp-playlist a{
+    .dots .fp-playlist a{
         width:12px;
         height:12px;
         -webkit-border-radius:12px;
@@ -123,7 +123,7 @@
     }
 }
 @media all and (min-width: 600px) {
-    #dots .fp-playlist a{
+    .dots .fp-playlist a{
         width:20px;
         height:20px;
         -webkit-border-radius:20px;
@@ -132,15 +132,15 @@
     }
 }
 
-#dots.is-playing video{
+.dots.is-playing video{
     top:0px !important;
 }
 
-#dots .fp-embed{
+.dots .fp-embed{
     /* embedding disabled */
     display:none
 }
-#dots .fp-playlist{
+.dots .fp-playlist{
     /* small dots on bottom right */
     position:absolute;
     bottom:10%;
@@ -150,7 +150,7 @@
     -moz-transition:opacity 1s .5s;
     transition:opacity 1s .5s;
 }
-#dots .fp-playlist a{
+.dots .fp-playlist a{
     display:block;
     float:left;
     margin-right:8px;
@@ -158,61 +158,61 @@
     cursor:pointer;
     border:1px solid #e8e8e8;
 }
-#dots .fp-playlist a:hover{
+.dots .fp-playlist a:hover{
     background-color:#000
 }
-#dots .fp-playlist a.is-active{
+.dots .fp-playlist a.is-active{
     background-color:#000 !important
 }
-#dots.is-mouseover hgroup,#dots.is-mouseover .fp-playlist{
+.dots.is-mouseover hgroup,.dots.is-mouseover .fp-playlist{
     opacity:1;
     filter:progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
     -webkit-transition-delay:0;
     -moz-transition-delay:0;
     transition-delay:0
 }
-#dots.video0 .info0{
+.dots.video0 .info0{
     display:block
 }
-#dots.video1 .info1{
+.dots.video1 .info1{
     display:block
 }
-#dots.video2 .info2{
+.dots.video2 .info2{
     display:block
 }
-#dots.video3 .info3{
-    display:block
-}
-
-#dots.video4 .info4{
+.dots.video3 .info3{
     display:block
 }
 
-#dots.video5 .info5{
+.dots.video4 .info4{
     display:block
 }
 
-#dots.video6 .info6{
+.dots.video5 .info5{
     display:block
 }
 
-#dots.video7 .info7{
+.dots.video6 .info6{
     display:block
 }
 
-#dots.video8 .info8{
+.dots.video7 .info7{
     display:block
 }
 
-#dots.video9 .info9{
+.dots.video8 .info8{
     display:block
 }
 
-#dots.video10 .info10{
+.dots.video9 .info9{
     display:block
 }
 
-#dots hgroup{
+.dots.video10 .info10{
+    display:block
+}
+
+.dots hgroup{
     font-size: 10px;
     font-weight: bold;
     color: #e8e8e8;

@@ -51,8 +51,26 @@ if ($id) {
 }
 // Make sure the user's logged in
 require_login($course->id);
-// Insert a record into Moodle log
-add_to_log($course->id, 'mplayer', 'view', 'view.php?id='.$cm->id, "$mplayer->id");
+
+if ($CFG->branch <= 26) {
+    // Insert a record into Moodle log
+    add_to_log($course->id, 'mplayer', 'view', 'view.php?id='.$cm->id, "$mplayer->id");
+} else {
+    $context = context_module::instance($cm->id);
+    require_capability('mod/mplayer:view', $context);
+    $event = \mod_mplayer\event\mplayer_viewed::create(array(
+        'objectid' => $cm->id,
+        'context' => $context,
+        'other' => array(
+            'objectname' => $mplayer->name
+        )
+    ));
+    $event->add_record_snapshot('course_modules', $cm);
+    $event->add_record_snapshot('course', $course);
+    $event->add_record_snapshot('mplayer', $mplayer);
+    $event->trigger();
+}
+
 // Add instance ID to mplayer object
 $mplayer->instance = $id;
 // Don't print a Moodle header since this page will be included in another Moodle page as an iframe

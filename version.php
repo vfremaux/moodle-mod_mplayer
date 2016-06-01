@@ -8,7 +8,7 @@
  * @licence http://www.gnu.org/copyleft/gpl.html GNU Public Licence
  * @package mplayer
  **/
- 
+
 /**    Copyright (C) 2009  Matt Bury
  *
  *    This program is free software: you can redistribute it and/or modify
@@ -25,8 +25,8 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-$plugin->version  = 2014112900;  // The current module version (Date: YYYYMMDDXX)
-$plugin->release = "Moodle 2.6.0 (Build 2014081100)";
+$plugin->version  = 2015010500;  // The current module version (Date: YYYYMMDDXX)
+$plugin->release = "Moodle 2.6.0 (Build 2015010500)";
 $plugin->requires = 2012120300;
 $plugin->component = 'mod_mplayer';
 $plugin->maturity = MATURITY_BETA;

@@ -63,9 +63,9 @@ function mplayer_get_file_location(&$mplayer, $filearea, $context = null) {
 
 /**
  * Gives the file url of a complementary file
- * sotred into mplayer fileareas.
+ * stored into mplayer fileareas.
  */
-function mplayer_get_file_url(&$mplayer, $filearea, $context = null) {
+function mplayer_get_file_url(&$mplayer, $filearea, $context = null, $array = false) {
     global $CFG;
 
     $url = false;
@@ -79,9 +79,16 @@ function mplayer_get_file_url(&$mplayer, $filearea, $context = null) {
     $fs = get_file_storage();
 
     if (!$fs->is_area_empty($context->id, 'mod_mplayer', $filearea, 0, true)) {
-        if ($areafiles = $fs->get_area_files($context->id, 'mod_mplayer', $filearea, 0)) {
-            $storedfile = array_pop($areafiles);
-            $url = $CFG->wwwroot.'/pluginfile.php/'.$context->id.'/mod_mplayer/'.$filearea.'/0/'.$storedfile->get_filename();
+        if ($areafiles = $fs->get_area_files($context->id, 'mod_mplayer', $filearea, 0, 'itemid, filepath,filename', false)) {
+            if ($array) {
+                $url = array();
+                foreach ($areafiles as $areafile) {
+                    $url[] = $CFG->wwwroot.'/pluginfile.php/'.$context->id.'/mod_mplayer/'.$filearea.'/0/'.$areafile->get_filename();
+                }
+            } else {
+                $storedfile = array_pop($areafiles);
+                $url = $CFG->wwwroot.'/pluginfile.php/'.$context->id.'/mod_mplayer/'.$filearea.'/0/'.$storedfile->get_filename();
+            }
         }
     }
     return $url;
@@ -131,7 +138,7 @@ function mplayer_check_jquery() {
  * Get all file areas used in module
  */
 function mplayer_get_fileareas() {
-    return array('intro', 'mplayerfile', 'playlistfile', 'playlistthumb', 'configxml', 'image', 'audiodescriptionfile', 'captionsfile', 'hdfile', 'livestreamfile', 'livestreamimage', 'logoboxfile', 'logofile');
+    return array('intro', 'mplayerfile', 'playlistfile', 'playlistthumb', 'configxml', 'trackfile', 'image', 'audiodescriptionfile', 'captionsfile', 'hdfile', 'livestreamfile', 'livestreamimage', 'logoboxfile', 'logofile');
 }
 
 /**
@@ -280,15 +287,35 @@ function mplayer_list_linktarget() {
  * @return array
  */
 function mplayer_list_type() {
-    return array('video' => 'Video',
-                'youtube' => 'YouTube',
-                'url' => 'Full URL',
-                'xml' => 'XML Playlist',
-                'sound' => 'Sound',
-                'image' => 'Image',
-                'http' => 'HTTP (pseudo) Streaming',
-                'lighttpd' => 'Lighttpd Streaming',
-                'rtmp' => 'RTMP Streaming');
+    global $CFG;
+    
+    if ($CFG->mplayer_default_player == 'jw') {
+        return array('video' => 'Video',
+                    'youtube' => 'YouTube',
+                    'url' => 'Full URL',
+                    'xml' => 'XML Playlist',
+                    'sound' => 'Sound',
+                    'image' => 'Image',
+                    'http' => 'HTTP (pseudo) Streaming',
+                    'lighttpd' => 'Lighttpd Streaming',
+                    'rtmp' => 'RTMP Streaming');
+    } else {
+        return array('video' => 'Video',
+                    'url' => 'Full URL',
+                    'http' => 'HTTP (pseudo) Streaming');
+    }
+}
+
+/**
+ * Define available technologies
+ * @return array
+ */
+function mplayer_list_technologies() {
+    global $CFG;
+
+    return array('flowplayer' => 'Flowplayer',
+                'jw' => 'JW PLayer'
+    );
 }
 
 /**

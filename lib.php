@@ -28,6 +28,35 @@ require_once($CFG->dirroot.'/mod/mplayer/locallib.php');
  */
 
 /**
+ * @uses FEATURE_GROUPS
+ * @uses FEATURE_GROUPINGS
+ * @uses FEATURE_GROUPMEMBERSONLY
+ * @uses FEATURE_MOD_INTRO
+ * @uses FEATURE_COMPLETION_TRACKS_VIEWS
+ * @uses FEATURE_GRADE_HAS_GRADE
+ * @uses FEATURE_GRADE_OUTCOMES
+ * @param string $feature FEATURE_xx constant for requested feature
+ * @return mixed True if module supports feature, null if doesn't know
+ */
+function mplayer_supports($feature) {
+    switch($feature) {
+        case FEATURE_GROUPS:                  return false;
+        case FEATURE_GROUPINGS:               return false;
+        case FEATURE_GROUPMEMBERSONLY:        return true;
+        case FEATURE_MOD_INTRO:               return true;
+        case FEATURE_COMPLETION_TRACKS_VIEWS: return true;
+        case FEATURE_COMPLETION_HAS_RULES:    return true;
+        case FEATURE_GRADE_HAS_GRADE:         return false;
+        case FEATURE_GRADE_OUTCOMES:          return false;
+        case FEATURE_BACKUP_MOODLE2:          return true;
+        case FEATURE_SHOW_DESCRIPTION:        return true;
+        case FEATURE_MOD_ARCHETYPE:           return MOD_ARCHETYPE_RESOURCE;
+
+        default: return null;
+    }
+}
+
+/**
  * Given an object containing all the necessary data, 
  * (defined by the form in mod.html) this function 
  * will create a new instance and return the id number 
@@ -39,12 +68,31 @@ require_once($CFG->dirroot.'/mod/mplayer/locallib.php');
 function mplayer_add_instance($mplayer) {
     global $DB;
 
+    $config = get_config('mplayer');
+
     $mplayer->timecreated = time();
 
     // saves draft customization image files into definitive filearea
     $instancefiles = mplayer_get_fileareas();
+
+    if (!empty($mplayer->configxmlgroup['clearconfigxml'])) {
+        mplayer_clear_area($mplayer, 'configxml');
+    } else {
+        $mplayer->configxml = @$mplayer->configxmlgroup['configxml'];
+    }
+
+    if (!empty($mplayer->trackfilegroup['cleartrackfile'])) {
+        mplayer_clear_area($mplayer, 'trackfile');
+    } else {
+        $mplayer->trackfile = @$mplayer->trackfilegroup['trackfile'];
+    }
+
     foreach ($instancefiles as $if) {
         mplayer_save_draft_file($mplayer, $if);
+    }
+
+    if (empty($mplayer->technology)) {
+        $mplayer->technology = $config->default_player;
     }
 
     $notes = $mplayer->notes;
@@ -65,6 +113,8 @@ function mplayer_add_instance($mplayer) {
 function mplayer_update_instance($mplayer) {
     global $DB;
 
+    $config = get_config('mplayer');
+
     $mplayer->timemodified = time();
     $mplayer->id = $mplayer->instance;
 
@@ -74,10 +124,25 @@ function mplayer_update_instance($mplayer) {
         $mplayer->playlistfile = $mplayer->playlistgroup['playlistfile'];
     }
 
+    if (empty($config->default_player)) {
+        set_config('default_player', 'flowplayer', 'mplayer');
+        $config->default_player = 'flowplayer';
+    }
+
+    if (empty($mplayer->technology)) {
+        $mplayer->technology = $config->default_player;
+    }
+
     if (!empty($mplayer->configxmlgroup['clearconfigxml'])) {
         mplayer_clear_area($mplayer, 'configxml');
     } else {
-        $mplayer->configxml = $mplayer->configxmlgroup['configxml'];
+        $mplayer->configxml = @$mplayer->configxmlgroup['configxml'];
+    }
+
+    if (!empty($mplayer->trackfilegroup['cleartrackfile'])) {
+        mplayer_clear_area($mplayer, 'trackfile');
+    } else {
+        $mplayer->trackfile = @$mplayer->trackfilegroup['trackfile'];
     }
 
     // Saves draft customization image files into definitive filearea.
@@ -114,8 +179,8 @@ function mplayer_delete_instance($id) {
         return false;
     }
 
-    $context = get_context_instance(CONTEXT_MODULE, $cm->id);
-    
+    $context = context_module::instance($cm->id);
+
     $fs = get_file_storage();
     $fs->delete_area_files($context->id);
 
@@ -856,4 +921,35 @@ function mplayer_set_paths(&$mplayer) {
         $mplayer->snapshotscript = '';
     }
     return $mplayer;
+}
+
+/**
+ * Obtains the automatic completion state for this module based on any conditions
+ * in mplayer settings.
+ *
+ * @param object $course Course
+ * @param object $cm Course-module
+ * @param int $userid User ID
+ * @param bool $type Type of comparison (or/and; can be used as return value if no conditions)
+ * @return bool True if completed, false if not, $type if conditions not set.
+ */
+function mplayer_get_completion_state($course, $cm, $userid, $type) {
+    global $CFG, $DB;
+
+    $mplayerinstance = $DB->get_record('mplayer', array('id' => $cm->instance));
+
+    // If completion option is enabled, evaluate it and return true/false.
+    if ($mplayerinstance->completionmediaviewed) {
+        $finished = $DB->count_records('mplayer_userdata', array('userid' => $userid, 'mplayerid' => $cm->instance, 'finished' => 1));
+        if ($type == COMPLETION_AND) {
+            $result = $result && $finished;
+        } else {
+            $result = $result || $finished;
+        }
+    } else {
+        // Completion option is not enabled so just return $type.
+        return $type;
+    }
+
+    return $result;
 }
