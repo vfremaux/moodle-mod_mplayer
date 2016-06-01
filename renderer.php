@@ -668,6 +668,7 @@ class mod_mplayer_renderer extends plugin_renderer_base {
         if (1) {
             switch ($mplayer->type) {
                 case 'video':
+                case 'sound':
                     $urlArray = mplayer_get_file_url($mplayer, 'mplayerfiles', $context, '/medias/', true);
                     break;
                 case 'url':
@@ -696,7 +697,7 @@ class mod_mplayer_renderer extends plugin_renderer_base {
         <div id="jw-player">Loading the player ...</div>
         <script type="text/javascript">
             jwplayer("jw-player").setup({
-                //file: "'.mplayer_get_file_url($mplayer, 'mplayerfiles', $context, '/medias/').'",
+                //file: "'.$urlArray[0].'",
                 playlist: '.json_encode($_playlist).',
                 height: "'.$mplayer->height.'",
                 width: "'.$mplayer->width.'",
