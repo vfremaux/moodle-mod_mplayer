@@ -578,3 +578,10 @@ And a third one
 Refer to http://www.delphiki.com/webvtt/ for a full format specification.
 
 ';
+
+$string['modulename_help'] = 'the MPlayer module offers a rich, flexible and full featured way to integrate videos 
+into a Moodle course with strong pedagogic interaction.
+
+You may publish video as local files, remote URLs, make playlists, display subtitles and break the video flow 
+with pedagogic cuepoints.
+';

@@ -531,3 +531,13 @@ une troisième ligne
 voir : http://www.delphiki.com/webvtt/ pour une spécification complète du format.
 
 ';
+
+$string['modulename_help'] = 'La ressource MPlayer offre une intégration vidéo complète, flexible, et riche en fonctionnalités
+pédagogiques ajoutées.
+
+Vous pouvez publier vos vidéo comme des fichiers locaux (plutot déconseillé), mais aussi sous forme de ressources distantes à travers
+des URLs ou des serveurs de flux déportés.
+
+Vous pouvez gérer des listes de chapitrage, des sous-titres en plusieurs langues ainsi que des points d\'arrêts pédagogiques qui peuvent 
+intercaler des actvitiés pédagogiques au milieu du visionnage.
+';
