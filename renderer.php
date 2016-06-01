@@ -663,13 +663,15 @@ class mod_mplayer_renderer extends plugin_renderer_base {
      * @return string
      */
     function jwplayer_body($mplayer, $cm, $context) {
+        global $CFG;
+
         $listbar = $mplayer->playlist ? $mplayer->playlist : 'none';
 
         if (1) {
             switch ($mplayer->type) {
                 case 'video':
                 case 'sound':
-                    $urlArray = mplayer_get_file_url($mplayer, 'mplayerfiles', $context, '/medias/', true);
+                    $urlArray = mplayer_get_file_url($mplayer, 'mplayerfiles', $context, '/medias/0/', true);
                     break;
                 case 'url':
                     $urlArray = explode(';', ' ;' . $mplayer->external);
@@ -681,7 +683,7 @@ class mod_mplayer_renderer extends plugin_renderer_base {
             $_playlist = array();
             if (is_array($urlArray)) {
                 foreach ($urlArray as $index => $url) {
-                    if ($index && $url) {
+                    if ($index !== '' && $url) {
                         $_playlist[] = array(
                             'file'  => $url,
                             'image' => isset($playlistthumb[$index]) ? $playlistthumb[$index] : '',
@@ -692,23 +694,22 @@ class mod_mplayer_renderer extends plugin_renderer_base {
             }
         }
 
-        $jw_body = '<script type="text/javascript" src="jw/6.11/jwplayer.js"></script>
+        $jw_body = '<script type="text/javascript" src="'.$CFG->wwwroot.'/mod/mplayer/jw/6.11/jwplayer.js"></script>
         <script type="text/javascript">jwplayer.key="pZDZgizUElLVj2BEBWMBql9bbp9Bnckbg7qQxw==";</script>
-        <div id="jw-player">Loading the player ...</div>
+        <div id="jw-player">'.get_string('loadingplayer', 'mplayer').'</div>
         <script type="text/javascript">
             jwplayer("jw-player").setup({
-                //file: "'.$urlArray[0].'",
-                playlist: '.json_encode($_playlist).',
-                height: "'.$mplayer->height.'",
-                width: "'.$mplayer->width.'",
-                //image: "'.mplayer_get_file_url($mplayer, 'mplayerfiles', $context, '/posters/').'",
+                "file" : "'.$urlArray[0].'",
+                "image": "'.mplayer_get_file_url($mplayer, 'mplayerfiles', $context, '/posters/').'",
+                "playlist" : '.json_encode($_playlist).',
+                "height" : "'.$mplayer->height.'",
+                "width" : "'.$mplayer->width.'",
                 volume: "'.$mplayer->volume.'",
                 autostart: "'.$mplayer->autostart.'",
                 listbar: {
                     position: "'.$listbar.'",
                     size: "'.$mplayer->playlistsize.'"
-
-                  }
+                }
             });
         </script>';
 

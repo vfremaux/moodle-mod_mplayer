@@ -56,6 +56,7 @@ $string['langfreechoice'] = 'Langue au choix';
 $string['langteacherchoice'] = 'Langue au choix de l\'enseignant';
 $string['langforced'] = 'Langue forcée';
 $string['showdebugcode'] = 'Afficher le code de deboggage';
+$string['loadingplayer'] = 'Chargement en cours...';
 
 //---------------------------------------------------------------------------------------------
 // Labels for mod/mplayer/mod_form.php
