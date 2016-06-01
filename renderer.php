@@ -82,6 +82,10 @@ class mod_mplayer_renderer extends plugin_renderer_base {
             $mplayer_body = $this->jwplayer_body($mplayer, $cm, $context);
         }
 
+        if (!empty($mplayer->notes)) {
+            $mplayer_body .= '<div class="mplayer-notes"><p>'.$mplayer->notes.'</p></div>';
+        }
+
         return $mplayer_body;
     }
 
