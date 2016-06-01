@@ -49,12 +49,12 @@ class backup_mplayer_activity_structure_step extends backup_activity_structure_s
         $mplayer->annotate_files('mod_mplayer', 'mplayerfiles', null);
 
         // These play for JWplayer
-        $mplayer->annotate_files('mod_mplayer', 'configxml', 'null');
+        $mplayer->annotate_files('mod_mplayer', 'configxml', null);
         $mplayer->annotate_files('mod_mplayer', 'audiodescriptionfile', null);
         $mplayer->annotate_files('mod_mplayer', 'hdfile', null);
         $mplayer->annotate_files('mod_mplayer', 'captionsfile', null);
         $mplayer->annotate_files('mod_mplayer', 'livestreamfile', null);
-        $mplayer->annotate_files('mod_mplayer', 'livestreamimage', null);
+        $mplayer->annotate_files('mod_mplayer', 'livestreamimagefile', null);
         $mplayer->annotate_files('mod_mplayer', 'logoboxfile', null);
         $mplayer->annotate_files('mod_mplayer', 'logofile', null);
 
