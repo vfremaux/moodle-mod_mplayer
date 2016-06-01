@@ -48,7 +48,7 @@ function mplayer_convert_legacy_storage($courseid = 0, $verbose = false) {
             if (!empty($mplayer->mplayerfile)) {
                 $sourcefile = $legacypath.'/'.$mplayer->mplayerfile;
                 if ($verbose) {
-                    mtrace('converting source media file '.$sourcefile);
+                    mtrace('converting source media file '.$sourcefile."\n");
                 }
 
                 $basename = basename($mplayer->mplayerfile);
@@ -65,17 +65,29 @@ function mplayer_convert_legacy_storage($courseid = 0, $verbose = false) {
                 $filerec->filename = $basename;
 
                 if (file_exists($sourcefile)) {
+                    if ($verbose) {
+                        mtrace("Creating file from legacy moodledata course storage \n");
+                    }
                     $fs->create_file_from_pathname($filerec, $sourcefile);
                 } else {
+                    if ($verbose) {
+                        mtrace("Checking converted file as {$coursecontext->id}, 'course', 'legacy', 0, $pathname, $basename for mplayer main file \n");
+                    }
                     if (function_exists('debug_trace')) {
-                        debug_trace("Checking converted file as {$coursecontext->id}, 'course', 'legacy', 0, $pathname, $basename for mplayer main file");
+                        debug_trace("Checking converted file as {$coursecontext->id}, 'course', 'legacy', 0, $pathname, $basename for mplayer main file \n");
                     }
                     if ($oldfile = $fs->get_file($coursecontext->id, 'course', 'legacy', 0, $pathname, $basename)) {
+                        if ($verbose) {
+                            mtrace("Converting file \n");
+                        }
                         if (function_exists('debug_trace')) {
                             debug_trace("Converting file ");
                         }
                         $fs->create_file_from_storedfile($filerec, $oldfile);
                     } else {
+                        if ($verbose) {
+                            mtrace("Missing file $sourcefile for mplayer main file \n");
+                        }
                         if (function_exists('debug_trace')) {
                             debug_trace("Missing file $sourcefile for mplayer main file");
                         }
@@ -103,6 +115,9 @@ function mplayer_convert_legacy_storage($courseid = 0, $verbose = false) {
                 } elseif($oldfile = $fs->get_file($coursecontext->id, 'course', 'legacy', 0, $pathname, $basename)) {
                     $fs->create_file_from_storedfile($filerec, $oldfile);
                 } else {
+                    if ($verbose) {
+                        mtrace("Missing file $sourcefile for configxml \n");
+                    }
                     if (function_exists('debug_trace')) {
                         debug_trace("Missing file $sourcefile for configxml");
                     }
@@ -129,6 +144,9 @@ function mplayer_convert_legacy_storage($courseid = 0, $verbose = false) {
                 } elseif($oldfile = $fs->get_file($coursecontext->id, 'course', 'legacy', 0, $pathname, $basename)) {
                     $fs->create_file_from_storedfile($filerec, $oldfile);
                 } else {
+                    if ($verbose) {
+                        mtrace("Missing file $sourcefile for hdfile \n");
+                    }
                     if (function_exists('debug_trace')) {
                         debug_trace("Missing file $sourcefile for hdfile");
                     }
@@ -155,6 +173,9 @@ function mplayer_convert_legacy_storage($courseid = 0, $verbose = false) {
                 } elseif($oldfile = $fs->get_file($coursecontext->id, 'course', 'legacy', 0, $pathname, $basename)) {
                     $fs->create_file_from_storedfile($filerec, $oldfile);
                 } else {
+                    if ($verbose) {
+                        mtrace("Missing file $sourcefile for image \n");
+                    }
                     if (function_exists('debug_trace')) {
                         debug_trace("Missing file $sourcefile for image ");
                     }
@@ -181,6 +202,9 @@ function mplayer_convert_legacy_storage($courseid = 0, $verbose = false) {
                 } elseif($oldfile = $fs->get_file($coursecontext->id, 'course', 'legacy', 0, $pathname, $basename)) {
                     $fs->create_file_from_storedfile($filerec, $oldfile);
                 } else {
+                    if ($verbose) {
+                        mtrace("Missing file $sourcefile for livestreamfile \n");
+                    }
                     if (function_exists('debug_trace')) {
                         debug_trace("Missing file $sourcefile for livestreamfile");
                     }
@@ -207,6 +231,9 @@ function mplayer_convert_legacy_storage($courseid = 0, $verbose = false) {
                 } elseif($oldfile = $fs->get_file($coursecontext->id, 'course', 'legacy', 0, $pathname, $basename)) {
                     $fs->create_file_from_storedfile($filerec, $oldfile);
                 } else {
+                    if ($verbose) {
+                        mtrace("Missing file $sourcefile for livestreamimage \n");
+                    }
                     if (function_exists('debug_trace')) {
                         debug_trace("Missing file $sourcefile for livestreamimage");
                     }
@@ -233,6 +260,9 @@ function mplayer_convert_legacy_storage($courseid = 0, $verbose = false) {
                 } elseif($oldfile = $fs->get_file($coursecontext->id, 'course', 'legacy', 0, $pathname, $basename)) {
                     $fs->create_file_from_storedfile($filerec, $oldfile);
                 } else {
+                    if ($verbose) {
+                        mtrace("Missing file $sourcefile for audiodescription \n");
+                    }
                     if (function_exists('debug_trace')) {
                         debug_trace("Missing file $sourcefile for audiodescription");
                     }
@@ -259,6 +289,9 @@ function mplayer_convert_legacy_storage($courseid = 0, $verbose = false) {
                 } elseif($oldfile = $fs->get_file($coursecontext->id, 'course', 'legacy', 0, $pathname, $basename)) {
                     $fs->create_file_from_storedfile($filerec, $oldfile);
                 } else {
+                    if ($verbose) {
+                        mtrace("Missing file $sourcefile for logobox \n");
+                    }
                     if (function_exists('debug_trace')) {
                         debug_trace("Missing file $sourcefile for logobox");
                     }
@@ -285,6 +318,9 @@ function mplayer_convert_legacy_storage($courseid = 0, $verbose = false) {
                 } elseif($oldfile = $fs->get_file($coursecontext->id, 'course', 'legacy', 0, $pathname, $basename)) {
                     $fs->create_file_from_storedfile($filerec, $oldfile);
                 } else {
+                    if ($verbose) {
+                        mtrace("Missing file $sourcefile for logo \n");
+                    }
                     if (function_exists('debug_trace')) {
                         debug_trace("Missing file $sourcefile for logo ");
                     }
@@ -311,6 +347,9 @@ function mplayer_convert_legacy_storage($courseid = 0, $verbose = false) {
                 } elseif($oldfile = $fs->get_file($coursecontext->id, 'course', 'legacy', 0, $pathname, $basename)) {
                     $fs->create_file_from_storedfile($filerec, $oldfile);
                 } else {
+                    if ($verbose) {
+                        mtrace("Missing file $sourcefile for captions \n");
+                    }
                     if (function_exists('debug_trace')) {
                         debug_trace("Missing file $sourcefile for captions ");
                     }
@@ -318,8 +357,10 @@ function mplayer_convert_legacy_storage($courseid = 0, $verbose = false) {
             }
         } else {
             if ($verbose) {
-                if (function_exists('debug_trace')) debug_trace("No legacy path \"$legacypath\" found for course $mplayer->course ");
-                mtrace("No legacy path \"$legacypath\" found for course $mplayer->course ");
+                mtrace("No legacy path \"$legacypath\" found for course $mplayer->course \n");
+            }
+            if (function_exists('debug_trace')) {
+                debug_trace("No legacy path \"$legacypath\" found for course $mplayer->course ");
             }
         }
     }
