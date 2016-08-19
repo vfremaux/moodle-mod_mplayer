@@ -27,7 +27,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version  = 2016033100;  // The current module version (Date: YYYYMMDDXX)
+$plugin->version  = 2016033101;  // The current module version (Date: YYYYMMDDXX)
 $plugin->release = "Moodle 3.0.0 (Build 2015110105)";
 $plugin->requires = 2015111100;
 $plugin->component = 'mod_mplayer';
