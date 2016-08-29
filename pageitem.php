@@ -48,24 +48,20 @@ function mplayer_set_instance(&$block) {
     $renderer = $PAGE->get_renderer('mplayer');
     $str .= $renderer->print_body($mplayer);
 
-    if ($CFG->branch <= 26) {
-        add_to_log($mplayer->course, 'mplayer', 'view', "view.php?id=".$block->cm->id, "$mplayer->name", $block->cm->id); // Add view to Moodle log
-    } else {
-        // Trigger module viewed event.
-        $context = context_module::instance($block->cm->id);
-        require_capability('mod/mplayer:view', $context);
+    // Trigger module viewed event.
+    $context = context_module::instance($block->cm->id);
+    require_capability('mod/mplayer:view', $context);
 
-        $event = \mod_mplayer\event\mplayer_viewed::create(array(
-            'objectid' => $block->cm->id,
-            'context' => $context,
-            'other' => array(
-                'objectname' => $mplayer->name
-            )
-        ));
-        $event->add_record_snapshot('course_modules', $block->cm);
-        $event->add_record_snapshot('mplayer', $mplayer);
-        $event->trigger();
-    }
+    $event = \mod_mplayer\event\mplayer_viewed::create(array(
+        'objectid' => $block->cm->id,
+        'context' => $context,
+        'other' => array(
+            'objectname' => $mplayer->name
+        )
+    ));
+    $event->add_record_snapshot('course_modules', $block->cm);
+    $event->add_record_snapshot('mplayer', $mplayer);
+    $event->trigger();
 
     $course = $DB->get_record('course', array('id' => $mplayer->course));
     $completion = new completion_info($course);
