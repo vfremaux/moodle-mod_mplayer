@@ -28,8 +28,13 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->version  = 2016033101;  // The current module version (Date: YYYYMMDDXX)
-$plugin->release = "Moodle 3.0.0 (Build 2015110105)";
+$plugin->release = "Moodle 3.0.0 (Build 2016033101)";
 $plugin->requires = 2015111100;
 $plugin->component = 'mod_mplayer';
-$plugin->maturity = MATURITY_BETA;
+$plugin->maturity = MATURITY_RC;
 $plugin->cron     = 0;           // Period for cron to check this module (secs)
+
+// Non Moodle fields
+// This fields will help overmanagement code builders without forcing upgrade to play
+$plugin->codeversion = 2016082900.01;
+$plugin->codeincrement = 1;

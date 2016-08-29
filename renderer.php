@@ -39,12 +39,14 @@ class mod_mplayer_renderer extends plugin_renderer_base {
     /**
      *
      */
-    function intro($mplayer) {
+    function notes($mplayer) {
         $str = '';
 
-        $str .= '<div class="mplayer intro">';
-        $str .= format_text($mplayer->intro, $mplayer->introformat);
-        $str .= '</div>';
+        if (!empty($mplayer->notes)) {
+            $str .= '<div class="mplayer-notes">';
+            $str .= format_text($mplayer->notes, $mplayer->notesformat);
+            $str .= '</div>';
+        }
 
         return $str;
     }
@@ -93,10 +95,6 @@ class mod_mplayer_renderer extends plugin_renderer_base {
             }
         } else {
             $mplayer_body = $this->jwplayer_body($mplayer, $cm, $context);
-        }
-
-        if (!empty($mplayer->notes)) {
-            $mplayer_body .= '<div class="mplayer-notes"><p>'.$mplayer->notes.'</p></div>';
         }
 
         return $mplayer_body;
