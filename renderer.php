@@ -37,21 +37,6 @@ require_once($CFG->dirroot . '/mod/mplayer/locallib.php');
 class mod_mplayer_renderer extends plugin_renderer_base {
 
     /**
-     *
-     */
-    function notes($mplayer) {
-        $str = '';
-
-        if (!empty($mplayer->notes)) {
-            $str .= '<div class="mplayer-notes">';
-            $str .= format_text($mplayer->notes, $mplayer->notesformat);
-            $str .= '</div>';
-        }
-
-        return $str;
-    }
-
-    /**
      * Construct Javascript SWFObject embed code for <body> section of view.php
      * Please note: some URLs append a '?'.time(); query to prevent browser caching
      *
@@ -95,6 +80,10 @@ class mod_mplayer_renderer extends plugin_renderer_base {
             }
         } else {
             $mplayer_body = $this->jwplayer_body($mplayer, $cm, $context);
+        }
+
+        if (!empty($mplayer->notes)) {
+            $mplayer_body .= '<div class="mplayer-notes"><p>'.$mplayer->notes.'</p></div>';
         }
 
         return $mplayer_body;

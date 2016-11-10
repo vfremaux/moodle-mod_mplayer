@@ -38,8 +38,6 @@ require_once($CFG->dirroot.'/mod/mplayer/locallib.php');
 
 class mod_mplayer_mod_form extends moodleform_mod {
 
-    var $descriptionoptions;
-
     function definition() {
         global $CFG, $COURSE, $USER;
 
@@ -56,11 +54,6 @@ class mod_mplayer_mod_form extends moodleform_mod {
         if (empty($instance->technology)) {
             $instance->technology = 'flowplayer';
         }
-
-        $maxfiles = 99;                // TODO: add some setting
-        $maxbytes = $COURSE->maxbytes; // TODO: add some setting
-        $modcontext = $this->context;
-        $this->descriptionoptions = array('trusttext' => true, 'subdirs' => false, 'maxfiles' => $maxfiles, 'maxbytes' => $maxbytes, 'context' => $modcontext);
 
         //-------------------------------------------------------------------------------
 
@@ -186,8 +179,8 @@ class mod_mplayer_mod_form extends moodleform_mod {
         $mform->addHelpButton('appearance', 'mplayer_appearance', 'mplayer');
 
         // notes
-        $mform->addElement('editor', 'notes_editor', get_string('notes', 'mplayer'), null, $this->descriptionoptions);
-        $mform->setType('notes_editor', PARAM_RAW);
+        $mform->addElement('editor', 'notes', get_string('notes', 'mplayer'), array('canUseHtmlEditor' => 'detect', 'rows' => 10, 'cols' => 65, 'width' => 0,'height' => 0));
+        $mform->setType('notes', PARAM_RAW);
 
         // width
         $mform->addElement('text', 'width', get_string('width', 'mplayer'), $mplayer_int_array);
@@ -796,20 +789,20 @@ class mod_mplayer_mod_form extends moodleform_mod {
         $this->add_action_buttons();
     }
 
-    public function set_data($defaults) {
+    public function set_data($data) {
 
-        if ($defaults->coursemodule) {
+        if ($data->coursemodule) {
             // This is when updating
-            $context = context_module::instance($defaults->coursemodule);
+            $context = context_module::instance($data->coursemodule);
 
             $fs = get_file_storage();
             if ($fs->is_area_empty($context->id, 'mod_mplayer', 'mplayerfiles', 0)) {
                 $cm = new StdClass();
-                $cm->id = $defaults->coursemodule;
+                $cm->id = $data->coursemodule;
                 mplayer_init_storage($cm);
             }
 
-            $defaults = file_prepare_standard_editor($defaults, 'notes', $this->descriptionoptions, $context, 'mod_techproject', 'notes', $defaults->id);
+            $maxbytes = -1;
 
             // Saves draft customization image files into definitive filearea.
             $instancefiles = array('mplayerfiles', 'playlistfiles', 'configxml', 'audiodescriptionfile', 'captionsfile', 'hdfile', 'livestreamfile', 'livestreamimage', 'logoboxfile', 'logofile');
@@ -817,16 +810,16 @@ class mod_mplayer_mod_form extends moodleform_mod {
                 $draftitemid = file_get_submitted_draft_itemid($if);
                 $maxfiles = ($if == 'mplayerfiles') ? -1 : 1;
                 $subdirs = ($if == 'mplayerfiles') ? true : false;
-                file_prepare_draft_area($draftitemid, $context->id, 'mod_mplayer', $if, 0, $this->descriptionoptions);
+                file_prepare_draft_area($draftitemid, $context->id, 'mod_mplayer', $if, 0, array('subdirs' => $subdirs, 'maxbytes' => $maxbytes, 'maxfiles' => $maxfiles));
                 if($if == 'configxml') {
-                    $defaults->configxmlgroup['configxml'] = $draftitemid;
+                    $data->configxmlgroup['configxml'] = $draftitemid;
                 } else {
-                    $defaults->$if = $draftitemid;
+                    $data->$if = $draftitemid;
                 }
             }
         }
 
-        parent::set_data($defaults);
+        parent::set_data($data);
     }
 
     function definition_after_data() {

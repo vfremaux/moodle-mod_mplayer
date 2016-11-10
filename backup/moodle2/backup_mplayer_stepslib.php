@@ -47,7 +47,6 @@ class backup_mplayer_activity_structure_step extends backup_activity_structure_s
         // Define file annotations
         $mplayer->annotate_files('mod_mplayer', 'intro', null); // This file areas haven't itemid
         $mplayer->annotate_files('mod_mplayer', 'mplayerfiles', null);
-        $mplayer->annotate_files('mod_mplayer', 'notes', null);
 
         // These play for JWplayer
         $mplayer->annotate_files('mod_mplayer', 'configxml', null);
