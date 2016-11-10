@@ -37,6 +37,21 @@ require_once($CFG->dirroot . '/mod/mplayer/locallib.php');
 class mod_mplayer_renderer extends plugin_renderer_base {
 
     /**
+     *
+     */
+    function notes($mplayer) {
+        $str = '';
+
+        if (!empty($mplayer->notes)) {
+            $str .= '<div class="mplayer-notes">';
+            $str .= format_text($mplayer->notes, $mplayer->notesformat);
+            $str .= '</div>';
+        }
+
+        return $str;
+    }
+
+    /**
      * Construct Javascript SWFObject embed code for <body> section of view.php
      * Please note: some URLs append a '?'.time(); query to prevent browser caching
      *
@@ -80,10 +95,6 @@ class mod_mplayer_renderer extends plugin_renderer_base {
             }
         } else {
             $mplayer_body = $this->jwplayer_body($mplayer, $cm, $context);
-        }
-
-        if (!empty($mplayer->notes)) {
-            $mplayer_body .= '<div class="mplayer-notes"><p>'.$mplayer->notes.'</p></div>';
         }
 
         return $mplayer_body;
@@ -676,6 +687,9 @@ class mod_mplayer_renderer extends plugin_renderer_base {
                 case 'url':
                     $urlArray = explode(';', ' ;' . $mplayer->external);
                     break;
+                case 'youtube':
+                    $urlArray = explode(';', $mplayer->external);
+                    break;
                 default: $urlArray = array();
                 break;
             }
@@ -737,5 +751,55 @@ class mod_mplayer_renderer extends plugin_renderer_base {
         $str .= '</div>';
 
         return $str;
+    }
+
+
+    /**
+     * plays a soundcard 
+     * @param reference $flashcard
+     * @param string $soundname the local name of the sound file. Should be wav or any playable sound format.
+     * @param string $autostart if 'true' the sound starts playing immediately
+     * @uses $CFG
+     * @uses $COURSE
+     * @see mod_flashcard
+     * NOT USED YET
+     */
+    function play_sound(&$mplayer, $clipid, $autostart = 'false', $htmlname = '') {
+        global $CFG, $COURSE, $OUTPUT;
+
+        $strmissingsound = get_string('missingsound', 'mplayer');
+
+        $fs = get_file_storage();
+
+        // New way : probably no effective fieldids storage needed anymore.
+        $cm = get_coursemodule_from_instance('mplayer', $mplayer->id);
+        $context = context_module::instance($cm->id);
+        $contextid = $context->id;
+        $soundfiles = $fs->get_directory_files($context->id, 'mod_mplayer', $filearea, 0, '/media/');
+
+        if (empty($soundfiles)) {
+            $soundfileurl = $OUTPUT->pix_url('notfound', 'mod_mplayer');
+            $soundhtml = "<img src=\"{$soundfileurl}\" />";
+            return $soundhtml;
+        }
+
+        $soundfile = array_pop($soundfiles);
+        $filename = $soundfile->get_filename();
+
+        $magic = rand(0,100000);
+        if ($htmlname == '') {
+            $htmlname = "bell_{$magic}";
+        }
+
+        $soundfileurl = $CFG->wwwroot."/pluginfile.php/{$contextid}/mod_mplayer/{$filearea}/0/media/{$clipid}/{$filename}";
+
+        if (!preg_match('/\.mp3$/i', $filename)) {
+            $soundhtml = "<embed src=\"{$soundfileurl}\" autostart=\"{$autostart}\" hidden=\"false\" id=\"{$htmlname}_player\" height=\"20\" width=\"200\" />";
+            $soundhtml .= "<a href=\"{$soundfileurl}\" autostart=\"{$autostart}\" hidden=\"false\" id=\"{$htmlname}\" height=\"20\" width=\"200\" />";
+        } else {
+            $soundhtml = flashcard_mp3_dewplayer($flashcard, $soundfileurl, $htmlname);
+        }
+
+        return $soundhtml;
     }
 }
