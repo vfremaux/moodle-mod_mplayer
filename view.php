@@ -113,8 +113,6 @@ $renderer = $PAGE->get_renderer('mod_mplayer');
 
 echo $renderer->print_body($mplayer); // mod/mplayer/lib.php
 
-echo $renderer->notes($mplayer);
-
 if ($COURSE->format != 'singleactivity' && !($COURSE->format == 'page' && optional_param('aspage', false, PARAM_INT))) {
     echo '<center>';
     require_once($CFG->dirroot.'/course/format/page/xlib.php');
