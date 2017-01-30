@@ -37,19 +37,6 @@ require_once($CFG->dirroot . '/mod/mplayer/locallib.php');
 class mod_mplayer_renderer extends plugin_renderer_base {
 
     /**
-     *
-     */
-    function intro($mplayer) {
-        $str = '';
-
-        $str .= '<div class="mplayer intro">';
-        $str .= format_text($mplayer->intro, $mplayer->introformat);
-        $str .= '</div>';
-
-        return $str;
-    }
-
-    /**
      * Construct Javascript SWFObject embed code for <body> section of view.php
      * Please note: some URLs append a '?'.time(); query to prevent browser caching
      *
