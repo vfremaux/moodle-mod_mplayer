@@ -18,17 +18,17 @@
  * Library of functions and constants for module mplayer
  * For more information on the parameters used by JW FLV Player see documentation: http://developer.longtailvideo.com/trac/wiki/FlashVars
  * 
- * @package  mod_mplayer
- * @category mod
- * @author   Matt Bury - matbury@gmail.com
- * @author   Valery Fremaux <valery.fremaux@gmail.com>
- * @licence  http://www.gnu.org/copyleft/gpl.html GNU Public Licence
+ * @package     mod_mplayer
+ * @category    mod
+ * @author      Matt Bury - matbury@gmail.com
+ * @author      Valery Fremaux <valery.fremaux@gmail.com>
+ * @licence     http://www.gnu.org/copyleft/gpl.html GNU Public Licence
  */
 defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->dirroot.'/mod/mplayer/locallib.php');
 
-/*    Copyright (C) 2009  Matt Bury
+/**    Copyright (C) 2009  Matt Bury
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU General Public License as published by
@@ -79,20 +79,21 @@ function mplayer_supports($feature) {
             return true;
         case FEATURE_MOD_ARCHETYPE:
             return MOD_ARCHETYPE_RESOURCE;
-        default: 
+
+        default:
             return null;
     }
 }
 
 /**
- * Given an object containing all the necessary data, 
- * (defined by the form in mod.html) this function 
- * will create a new instance and return the id number 
+ * Given an object containing all the necessary data,
+ * (defined by the form in mod.html) this function
+ * will create a new instance and return the id number
  * of the new instance.
  *
  * @param object $instance An object from the form in mod.html
  * @return int The id of the newly inserted mplayer record
- **/
+ */
 function mplayer_add_instance($mplayer) {
     global $DB;
 
@@ -131,8 +132,8 @@ function mplayer_add_instance($mplayer) {
 }
 
 /**
- * Given an object containing all the necessary data, 
- * (defined by the form in mod.html) this function 
+ * Given an object containing all the necessary data,
+ * (defined by the form in mod.html) this function
  * will update an existing instance with new data.
  *
  * @param object $instance An object from the form in mod.html
@@ -182,7 +183,7 @@ function mplayer_update_instance($mplayer) {
         mplayer_convert_storage_for_streamer($mplayer);
     }
 
-    $notes = $mplayer->notes_editor;
+    $notes = $mplayer->notes;
     $mplayer->notes = $notes['text'];
     $mplayer->notesformat = $notes['format'];
 
@@ -190,9 +191,9 @@ function mplayer_update_instance($mplayer) {
 }
 
 /**
- * Given an ID of an instance of this module, 
- * this function will permanently delete the instance 
- * and any data that depends on it. 
+ * Given an ID of an instance of this module,
+ * this function will permanently delete the instance
+ * and any data that depends on it.
  *
  * @param int $id Id of the module instance
  * @return boolean Success/Failure
@@ -200,7 +201,7 @@ function mplayer_update_instance($mplayer) {
 function mplayer_delete_instance($id) {
     global $DB;
 
-    if (!$mplayer = $DB->get_record('mplayer', array('id' => "$id"))) {
+    if (!$mplayer = $DB->get_record('mplayer', array('id' => $id))) {
         return false;
     }
     $result = true;
@@ -214,14 +215,14 @@ function mplayer_delete_instance($id) {
     $fs = get_file_storage();
     $fs->delete_area_files($context->id);
 
-    if (! $DB->delete_records("mplayer", array("id" => "$mplayer->id"))) {
+    if (! $DB->delete_records("mplayer", array('id' => $mplayer->id))) {
         $result = false;
     }
     return $result;
 }
 
 /**
- * Return a small object with summary information about what a 
+ * Return a small object with summary information about what a
  * user has done with a given particular instance of this module
  * Used for user activity reports.
  * $return->time = the time they did it
@@ -231,6 +232,7 @@ function mplayer_delete_instance($id) {
  * @todo Finish documenting this function
  */
 function mplayer_user_outline($course, $user, $mod, $mplayer) {
+
     $return->time = time();
     $return->info = '';
 
@@ -238,7 +240,7 @@ function mplayer_user_outline($course, $user, $mod, $mplayer) {
 }
 
 /**
- * Print a detailed representation of what a user has done with 
+ * Print a detailed representation of what a user has done with
  * a given particular instance of this module, for user activity reports.
  *
  * @return boolean
@@ -249,11 +251,10 @@ function mplayer_user_complete($course, $user, $mod, $mplayer) {
 }
 
 /**
- * Given a course and a time, this module should find recent activity 
- * that has occurred in mplayer activities and print it out. 
- * Return true if there was output, or false is there was none. 
+ * Given a course and a time, this module should find recent activity
+ * that has occurred in mplayer activities and print it out.
+ * Return true if there was output, or false is there was none.
  *
- * @uses $CFG
  * @return boolean
  * @todo Finish documenting this function
  */
@@ -264,6 +265,8 @@ function mplayer_print_recent_activity($course, $isteacher, $timestart) {
 }
 
 /**
+ *
+ *
  * @return array
  */
 function mplayer_get_view_actions() {
@@ -271,6 +274,7 @@ function mplayer_get_view_actions() {
 }
 
 /**
+ *
  * @return array
  */
 function mplayer_get_post_actions() {
@@ -279,13 +283,15 @@ function mplayer_get_post_actions() {
 
 /**
  * Function to be run periodically according to the moodle cron
- * This function searches for things that need to be done, such 
+ * This function searches for things that need to be done, such
  * as sending out mail, toggling flags etc.
  *
  * @return boolean
  * @todo Finish documenting this function
  */
 function mplayer_cron() {
+    global $CFG;
+
     return true;
 }
 
@@ -293,7 +299,7 @@ function mplayer_cron() {
  * Serves the files included in mplayer. Implements needed access control ;-)
  *
  * There are several situations in general where the files will be sent.
- * 1) filearea = '', 
+ * 1) filearea = '',
  *
  * @param object $course
  * @param object $cm
@@ -338,14 +344,15 @@ function mplayer_pluginfile($course, $cm, $context, $filearea, $args, $forcedown
         // Case for fileareas possibly holding more than one file.
         $relativepath = implode('/', $args);
         $fullpath = "/$context->id/mod_mplayer/$filearea/0/$relativepath";
-        if ($file = $fs->get_file_by_hash(sha1($fullpath)) or $file->is_directory()) {
+        if (($file = $fs->get_file_by_hash(sha1($fullpath))) && !$file->is_directory()) {
             send_stored_file($file, 0, 0, $forcedownload);
         }
     } else {
-        if ($files = $fs->get_area_files($context->id, 'mod_mplayer', $filearea, $itemid, "sortorder, itemid, filepath, filename", false)) {
+        $sort = "sortorder, itemid, filepath, filename";
+        if ($files = $fs->get_area_files($context->id, 'mod_mplayer', $filearea, $itemid, $sort, false)) {
             $file = array_pop($files);
 
-            // finally send the file.
+            // Finally send the file.
             send_stored_file($file, 0, 0, $forcedownload);
         }
     }
@@ -354,7 +361,7 @@ function mplayer_pluginfile($course, $cm, $context, $filearea, $args, $forcedown
 }
 
 /**
- * Must return an array of grades for a given instance of this module, 
+ * Must return an array of grades for a given instance of this module,
  * indexed by user.  It also returns a maximum allowed grade.
  * 
  * Example:
@@ -436,7 +443,8 @@ function mplayer_get_completion_state($course, $cm, $userid, $type) {
 
     // If completion option is enabled, evaluate it and return true/false.
     if (@$mplayerinstance->completionmediaviewed) {
-        $finished = $DB->count_records('mplayer_userdata', array('userid' => $userid, 'mplayerid' => $cm->instance, 'finished' => 1));
+        $params = array('userid' => $userid, 'mplayerid' => $cm->instance, 'finished' => 1);
+        $finished = $DB->count_records('mplayer_userdata', $params);
         if ($type == COMPLETION_AND) {
             $result = $result && $finished;
         } else {
