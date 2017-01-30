@@ -1,25 +1,23 @@
 <?php
-
-/**    Copyright (C) 2009  Matt Bury
- *
- *    This program is free software: you can redistribute it and/or modify
- *    it under the terms of the GNU General Public License as published by
- *    the Free Software Foundation, either version 3 of the License, or
- *    (at your option) any later version.
- *
- *    This program is distributed in the hope that it will be useful,
- *    but WITHOUT ANY WARRANTY; without even the implied warranty of
- *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *    GNU General Public License for more details.
- *
- *    You should have received a copy of the GNU General Public License
- *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 $string['mplayer:addinstance'] = 'Add an instance';
 $string['mplayer:view'] = 'View';
 
-// Default module labels
+// Default module labels.
 $string['backtocourse'] = 'Back to course';
 $string['mediaviewed'] = 'Viewing media';
 $string['completionmediaviewed'] = 'marked when student has finished to view the full media';
@@ -35,7 +33,9 @@ $string['xmlplaylist'] = 'XML Playlist';
 $string['httpxmlplaylist'] = 'Remote XML Playlist (by http)';
 $string['external'] = 'External Url';
 $string['none'] = 'None';
-// Titles for mod/mplayer/mod_form.php sections
+$string['videomplayer'] = 'Video';
+
+// Titles for mod/mplayer/mod_form.php sections.
 $string['mplayername'] = 'Name';
 $string['mplayerintro'] = 'Description';
 $string['summary'] = 'Description';
@@ -58,15 +58,17 @@ $string['langforced'] = 'Force language';
 $string['showdebugcode'] = 'Show debug code';
 $string['loadingplayer'] = 'Loading player...';
 
-//---------------------------------------------------------------------------------------------
-// Labels for mod/mplayer/mod_form.php
-//// Source
+/*---------------------------------------------------------------------------------------------
+ * Labels for mod/mplayer/mod_form.php
+ */
+// Source.
 $string['mplayerresources'] = 'Media Resources';
 $string['mplayerfiles'] = 'Media definition files';
 $string['type'] = 'Type';
 $string['streamer'] = 'Streamer';
+$string['youtube'] = 'Youtube';
 
-//// Playlists
+// Playlists.
 $string['playlists'] = 'Playlist';
 $string['playlist'] = 'Position';
 $string['playlistsize'] = 'Size (pixels)';
@@ -80,11 +82,11 @@ $string['right'] = 'At right';
 $string['over'] = 'Over';
 $string['above'] = 'Above';
 
-//// Configxml
+// Configxml.
 $string['config'] = 'Config XML';
 $string['configxml'] = 'File';
 
-//// Appearance
+// Appearance.
 $string['appearance'] = 'Appearance';
 $string['notes'] = 'Notes';
 $string['width'] = 'Width';
@@ -100,7 +102,7 @@ $string['frontcolor'] = 'Front Color';
 $string['lightcolor'] = 'Light Color';
 $string['screencolor'] = 'Screen Color';
 
-//// Behaviour
+// Behaviour.
 $string['behaviour'] = 'Behaviour';
 $string['autostart'] = 'Auto Start';
 $string['fullscreen'] = 'Full Screen';
@@ -125,7 +127,7 @@ $string['nosplash'] = 'Disabled';
 $string['videomedia'] = 'Media Video';
 $string['uploadtomediapool'] = 'Upload to media pool';
 
-//// Metadata
+// Metadata.
 $string['metadata'] = 'Metadata';
 $string['author'] = 'Source';
 $string['mplayerdate'] = 'Added';
@@ -133,33 +135,33 @@ $string['title'] = 'Title';
 $string['description'] = 'Media Description';
 $string['tags'] = 'Tags';
 
-//// audiodescription 
+// Audiodescription.
 $string['audiodescription'] = 'Audio Description';
 $string['audiodescriptionfile'] = 'MP3 File';
 $string['audiodescriptionstate'] = 'Auto Start';
 $string['audiodescriptionvolume'] = 'Volume';
 
-//// captions 
+// Captions.
 $string['captions'] = 'Captions';
 $string['captionsback'] = 'Transparent Background';
 $string['captionsfile'] = 'Captions File';
 $string['captionsfontsize'] = 'Font Size';
 $string['captionsstate'] = 'Show Captions';
 
-//// HD
+// HD.
 $string['hd'] = 'HD Video';
 $string['hdbitrate'] = 'Bitrate';
 $string['hdfile'] = 'HD Video File';
 $string['hdfullscreen'] = 'Switch to HD on Fullscreen';
 $string['hdstate'] = 'Default HD';
 
-//// infobox 
+// Infobox.
 $string['infobox'] = 'Info Box';
 $string['infoboxcolor'] = 'Background Color';
 $string['infoboxposition'] = 'Position';
 $string['infoboxsize'] = 'Size';
 
-//// Livestream
+// Livestream.
 $string['livestream'] = 'Live Stream';
 $string['livestreamfile'] = 'RTMP Stream';
 $string['livestreamimage'] = 'Image';
@@ -168,7 +170,7 @@ $string['livestreammessage'] = 'Message';
 $string['livestreamstreamer'] = 'Streamer';
 $string['livestreamtags'] = 'Tags';
 
-//// Logo Box
+// Logo Box.
 $string['logobox'] = 'Logo Box';
 $string['logoboxalign'] = 'Align';
 $string['logoboxfile'] = 'Image';
@@ -176,42 +178,42 @@ $string['logoboxlink'] = 'Link';
 $string['logoboxmargin'] = 'Margin';
 $string['logoboxposition'] = 'Position';
 
-//// Metaviewer 
+// Metaviewer.
 $string['metaviewer'] = 'Metaviewer';
 $string['metaviewerposition'] = 'Position';
 $string['metaviewersize'] = 'Size';
 
-//// Searchbar 
+// Searchbar.
 $string['searchbar'] = 'Search Bar';
 $string['searchbarcolor'] = 'Color';
 $string['searchbarlabel'] = 'Label';
 $string['searchbarposition'] = 'Position';
 $string['searchbarscript'] = 'Script';
 
-//// Snapshot 
+// Snapshot.
 $string['snapshot'] = 'Snapshot';
 $string['snapshotbitmap'] = 'Bitmap';
 $string['snapshotscript'] = 'Script';
 
-//// Logo
+// Logo.
 $string['logo'] = 'Logo (licenced players only)';
 $string['logofile'] = 'Image';
 $string['logolink'] = 'Link';
 $string['logohide'] = 'Auto Hide';
 $string['logoposition'] = 'Position';
 
-// Advanced
+// Advanced.
 $string['advanced'] = 'Advanced';
 $string['fpversion'] = 'Flash Player Version';
 $string['tracecall'] = 'Trace Call (debugging)';
 
-// Cues
+// Cues.
 $string['cuelaunch'] = 'Launch the {$a}';
 $string['cueininvite'] = 'Before continuing watching this video, you are proposed to execute a {$a->type} activity.<br/><br/>{$a->link}';
 $string['cueininviteoptional'] = 'Before continuing watching this video, you are proposed to execute a {$a->type} activity.<br/><br/>{$a->link}<br/><a href="javascript:cuepoint_resume_from_id(\'{$a->playerid}\')">Resume now</a>';
 $string['resumefromcue'] = 'You can now resume your video.';
 
-// storages
+// Storages.
 $string['httpmediaserver'] = 'HTTP media server';
 $string['httpmediapath'] = 'HTTP media path';
 $string['httpmediacontentdir'] = 'HTTP storage dir';
@@ -226,14 +228,17 @@ $string['wowzacontentdir'] = 'Content Directory';
 $string['configwowzacontentdir'] = 'This content dir should be a remote mounted network storage volume on the streaming server';
 
 
-//---------------------------------------------------------------------------------------------
-//---------------------------------------------------------------------------------------------
-// SWF embed alternative content error message for mod/swf/view.php
+/*
+ * ---------------------------------------------------------------------------------------------
+ */
+// SWF embed alternative content error message for mod/swf/view.php.
 $string['embederror1'] = '<h3>Oops! There\'s a problem.</h3>
 <h4>Flash Player ';
 $string['embederror2'] = ' or later is required.</h4>';
 $string['nohtml5'] = '<h2>HTML5 video is not supported by your browser.</h2>';
-//---------------------------------------------------------------------------------------------
+/*
+ * ---------------------------------------------------------------------------------------------
+ */
 global $CFG;
 
 $string['mplayer_advanced'] = 'Advanced features';

@@ -15,8 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Code fragment to define the version of mplayer
- * This fragment is called by moodle_needs_upgrading() and /admin/index.php
+ * Version Details.
  *
  * @author Matt Bury - matbury@gmail.com - http://matbury.com/
  * @version $Id: version.php,v 0.3 2009/11/25 matbury Exp $
@@ -27,9 +26,11 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version  = 2016033100;  // The current module version (Date: YYYYMMDDXX)
-$plugin->release = "Moodle 2.7.0 (Build 2015110105)";
+$plugin->version  = 2016033101;  // The current module version (Date: YYYYMMDDXX).
+$plugin->release = 'Moodle 2.7.0 (Build 2015110105)';
 $plugin->requires = 2014050800;
 $plugin->component = 'mod_mplayer';
 $plugin->maturity = MATURITY_BETA;
-$plugin->cron     = 0;           // Period for cron to check this module (secs)
+
+// Non moodle attributes
+$plugin->codeincrement = '2.7.0001';

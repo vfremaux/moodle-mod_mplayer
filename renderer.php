@@ -14,8 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * This file contains a renderer for the assignment class
  *
@@ -25,6 +23,7 @@ defined('MOODLE_INTERNAL') || die();
  * @author   Valery Fremaux <valery.fremaux@gmail.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->dirroot . '/mod/mplayer/locallib.php');
 
@@ -35,6 +34,19 @@ require_once($CFG->dirroot . '/mod/mplayer/locallib.php');
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class mod_mplayer_renderer extends plugin_renderer_base {
+
+    /**
+     *
+     */
+    function intro($mplayer) {
+        $str = '';
+
+        $str .= '<div class="mplayer intro">';
+        $str .= format_text($mplayer->intro, $mplayer->introformat);
+        $str .= '</div>';
+
+        return $str;
+    }
 
     /**
      * Construct Javascript SWFObject embed code for <body> section of view.php
@@ -351,7 +363,8 @@ class mod_mplayer_renderer extends plugin_renderer_base {
             if (!empty($clip->thumb)) {
                 $listitemcontent = '<img src="'.$clip->thumb.'" />';
             }
-            $str .=' <a href="'.$clip->sources[0].'" alt="'.@$clip->title.'" title="'.@$clip->title.'" id="item'.$i.'">'.$listitemcontent.'</a>';
+            $cliplink = '<a href="'.$clip->sources[0].'" alt="'.@$clip->title.'" title="'.@$clip->title.'" id="item'.$i.'">'.$listitemcontent.'</a>';
+            $str .= $cliplink;
 
             $hgroups .=' <hgroup class="info'.$i.'">
             <h1 class="fp-playlist-info">'.@$clip->title.'</h1>
@@ -387,7 +400,7 @@ class mod_mplayer_renderer extends plugin_renderer_base {
         if ($clipsnum = count($clips)) {
             $width = 100 / $clipsnum - 1;
             foreach (array_keys($clips) as $clipix) {
-                $str .= ' <div class="mplayer-completion" id="mplayer-progress-'.$mplayer->id.'_'.$clipix.'" style="width:'.$width.'%"></div>';
+                $str .= ' <div class="mplayer-completion" id="mplayer-progress-'.$mplayer->id.'_'.$clipix.'" title="'.@$clips[$clipix]->title.'" style="width:'.$width.'%"></div>';
             }
         }
         $str .= '</div>';
@@ -676,6 +689,9 @@ class mod_mplayer_renderer extends plugin_renderer_base {
                 case 'url':
                     $urlArray = explode(';', ' ;' . $mplayer->external);
                     break;
+                case 'youtube':
+                    $urlArray = explode(';', $mplayer->external);
+                    break;
                 default: $urlArray = array();
                 break;
             }
@@ -737,5 +753,55 @@ class mod_mplayer_renderer extends plugin_renderer_base {
         $str .= '</div>';
 
         return $str;
+    }
+
+
+    /**
+     * plays a soundcard 
+     * @param reference $flashcard
+     * @param string $soundname the local name of the sound file. Should be wav or any playable sound format.
+     * @param string $autostart if 'true' the sound starts playing immediately
+     * @uses $CFG
+     * @uses $COURSE
+     * @see mod_flashcard
+     * NOT USED YET
+     */
+    function play_sound(&$mplayer, $clipid, $autostart = 'false', $htmlname = '') {
+        global $CFG, $COURSE, $OUTPUT;
+
+        $strmissingsound = get_string('missingsound', 'mplayer');
+
+        $fs = get_file_storage();
+
+        // New way : probably no effective fieldids storage needed anymore.
+        $cm = get_coursemodule_from_instance('mplayer', $mplayer->id);
+        $context = context_module::instance($cm->id);
+        $contextid = $context->id;
+        $soundfiles = $fs->get_directory_files($context->id, 'mod_mplayer', $filearea, 0, '/media/');
+
+        if (empty($soundfiles)) {
+            $soundfileurl = $OUTPUT->pix_url('notfound', 'mod_mplayer');
+            $soundhtml = "<img src=\"{$soundfileurl}\" />";
+            return $soundhtml;
+        }
+
+        $soundfile = array_pop($soundfiles);
+        $filename = $soundfile->get_filename();
+
+        $magic = rand(0,100000);
+        if ($htmlname == '') {
+            $htmlname = "bell_{$magic}";
+        }
+
+        $soundfileurl = $CFG->wwwroot."/pluginfile.php/{$contextid}/mod_mplayer/{$filearea}/0/media/{$clipid}/{$filename}";
+
+        if (!preg_match('/\.mp3$/i', $filename)) {
+            $soundhtml = "<embed src=\"{$soundfileurl}\" autostart=\"{$autostart}\" hidden=\"false\" id=\"{$htmlname}_player\" height=\"20\" width=\"200\" />";
+            $soundhtml .= "<a href=\"{$soundfileurl}\" autostart=\"{$autostart}\" hidden=\"false\" id=\"{$htmlname}\" height=\"20\" width=\"200\" />";
+        } else {
+            $soundhtml = flashcard_mp3_dewplayer($flashcard, $soundfileurl, $htmlname);
+        }
+
+        return $soundhtml;
     }
 }
