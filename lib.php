@@ -14,8 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Library of functions and constants for module mplayer
  * For more information on the parameters used by JW FLV Player see documentation: http://developer.longtailvideo.com/trac/wiki/FlashVars
@@ -26,9 +24,11 @@ defined('MOODLE_INTERNAL') || die();
  * @author   Valery Fremaux <valery.fremaux@gmail.com>
  * @licence  http://www.gnu.org/copyleft/gpl.html GNU Public Licence
  */
+defined('MOODLE_INTERNAL') || die();
+
 require_once($CFG->dirroot.'/mod/mplayer/locallib.php');
 
-/**    Copyright (C) 2009  Matt Bury
+/*    Copyright (C) 2009  Matt Bury
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU General Public License as published by
@@ -57,19 +57,30 @@ require_once($CFG->dirroot.'/mod/mplayer/locallib.php');
  */
 function mplayer_supports($feature) {
     switch($feature) {
-        case FEATURE_GROUPS:                  return false;
-        case FEATURE_GROUPINGS:               return false;
-        case FEATURE_GROUPMEMBERSONLY:        return true;
-        case FEATURE_MOD_INTRO:               return true;
-        case FEATURE_COMPLETION_TRACKS_VIEWS: return true;
-        case FEATURE_COMPLETION_HAS_RULES:    return true;
-        case FEATURE_GRADE_HAS_GRADE:         return false;
-        case FEATURE_GRADE_OUTCOMES:          return false;
-        case FEATURE_BACKUP_MOODLE2:          return true;
-        case FEATURE_SHOW_DESCRIPTION:        return true;
-        case FEATURE_MOD_ARCHETYPE:           return MOD_ARCHETYPE_RESOURCE;
-
-        default: return null;
+        case FEATURE_GROUPS:
+            return false;
+        case FEATURE_GROUPINGS:
+            return false;
+        case FEATURE_GROUPMEMBERSONLY:
+            return true;
+        case FEATURE_MOD_INTRO:
+            return true;
+        case FEATURE_COMPLETION_TRACKS_VIEWS:
+            return true;
+        case FEATURE_COMPLETION_HAS_RULES:
+            return true;
+        case FEATURE_GRADE_HAS_GRADE:
+            return false;
+        case FEATURE_GRADE_OUTCOMES:
+            return false;
+        case FEATURE_BACKUP_MOODLE2:
+            return true;
+        case FEATURE_SHOW_DESCRIPTION:
+            return true;
+        case FEATURE_MOD_ARCHETYPE:
+            return MOD_ARCHETYPE_RESOURCE;
+        default: 
+            return null;
     }
 }
 
@@ -89,7 +100,7 @@ function mplayer_add_instance($mplayer) {
 
     $mplayer->timecreated = time();
 
-    // saves draft customization image files into definitive filearea
+    // Saves draft customization image files into definitive filearea.
     $instancefiles = mplayer_get_fileareas();
 
     if (!empty($mplayer->configxmlgroup['clearconfigxml'])) {
@@ -102,7 +113,7 @@ function mplayer_add_instance($mplayer) {
         mplayer_save_draft_file($mplayer, $if);
     }
 
-    // May never arrive if RTMP not enabled
+    // May never arrive if RTMP not enabled.
     if (!empty($mplayer->streamer)) {
         // Get the uploaded video mediafiles and move them to wooza storage.
         mplayer_convert_storage_for_streamer($mplayer);
@@ -126,7 +137,7 @@ function mplayer_add_instance($mplayer) {
  *
  * @param object $instance An object from the form in mod.html
  * @return boolean Success/Fail
- **/
+ */
 function mplayer_update_instance($mplayer) {
     global $DB;
 
@@ -165,13 +176,13 @@ function mplayer_update_instance($mplayer) {
         mplayer_save_draft_file($mplayer, $ci);
     }
 
-    // May never arrive if RTMP not enabled
+    // May never arrive if RTMP not enabled.
     if (!empty($mplayer->streamer)) {
         // Get the uploaded mediafile and convert them to remote storage. Set up the stream access URL.
         mplayer_convert_storage_for_streamer($mplayer);
     }
 
-    $notes = $mplayer->notes;
+    $notes = $mplayer->notes_editor;
     $mplayer->notes = $notes['text'];
     $mplayer->notesformat = $notes['format'];
 
@@ -222,18 +233,8 @@ function mplayer_delete_instance($id) {
 function mplayer_user_outline($course, $user, $mod, $mplayer) {
     $return->time = time();
     $return->info = '';
+
     return $return;
-    /*
-    if($logs = $DB->get_records_select("log", "userid = '$user->id' AND module = 'mplayer' AND action = 'view' AND info = '$mplayer->id'", "time ASC")) {
-        $numviews = count($logs);
-        $lastlog = array_pop($logs);
-        $result = new stdClass();
-        $result->info = get_string("numviews", "", $numviews);
-        $result->time = $lastlog->time;
-        return $result;
-    }
-    return NULL;
-    */
 }
 
 /**
@@ -259,13 +260,10 @@ function mplayer_user_complete($course, $user, $mod, $mplayer) {
 function mplayer_print_recent_activity($course, $isteacher, $timestart) {
     global $CFG;
 
-    return false;  //  True if anything was printed, otherwise false 
+    return false;  //  True if anything was printed, otherwise false.
 }
 
 /**
- *
- *
- * @uses $CFG
  * @return array
  */
 function mplayer_get_view_actions() {
@@ -273,8 +271,6 @@ function mplayer_get_view_actions() {
 }
 
 /**
- *
- * @uses $CFG
  * @return array
  */
 function mplayer_get_post_actions() {
@@ -286,13 +282,10 @@ function mplayer_get_post_actions() {
  * This function searches for things that need to be done, such 
  * as sending out mail, toggling flags etc.
  *
- * @uses $CFG
  * @return boolean
  * @todo Finish documenting this function
  */
 function mplayer_cron() {
-    global $CFG;
-
     return true;
 }
 
@@ -402,11 +395,7 @@ function mplayer_get_participants($mplayerid) {
  */
 function mplayer_scale_used($mplayerid, $scaleid) {
     $return = false;
-    //$rec = get_record("mplayer","id","$mplayerid","scale","-$scaleid");
-    //
-    //if (!empty($rec)  && !empty($scaleid)) {
-    //    $return = true;
-    //}
+
     return $return;
 }
 
@@ -429,513 +418,6 @@ function mplayer_scale_used_anywhere($scaleid) {
  */
 
 /**
- * Set moodledata path in $mplayer object
- *
- * @param $mplayer
- * @return $mplayer
- */
- /*
-function mplayer_set_moodledata($mplayer) {
-    global $CFG, $COURSE;
-
-    $cm = get_coursemodule_from_instance('mplayer', $mplayer->id);
-    $context = context_module::instance($cm->id);
-    $mplayer->moodledata = $CFG->wwwroot.'/pluginfile.php/'.$context->id.'/mod_mplayer/';
-    return $mplayer;
-}
-*/
-
-/**
- * Assign the correct path to the file parameter (media source) in $mplayer object
- *
- * @param obj $mplayer
- * @return obj $mplayer
- */
- /*
-function mplayer_set_type($mplayer) {
-    switch($mplayer->type) {
-
-        // Video, sound, image and xml (SMIL playlists) are all served from moodledata course directories.
-        case 'video':
-        $mplayer->prefix = $mplayer->moodledata;
-        //$mplayer->test_variable = 'case video';
-        break;
-        case 'sound':
-        $mplayer->prefix = $mplayer->moodledata;
-        //$mplayer->test_variable = 'case sound';
-        break;
-        case 'image':
-        $mplayer->prefix = $mplayer->moodledata;
-        //$mplayer->test_variable = 'case image';
-        break;
-        case 'xml':
-        $mplayer->type = ''; // JW FLV Player doesn't recognise 'xml' as a valid parameter
-        $mplayer->prefix = $mplayer->moodledata;
-        //$mplayer->test_variable = 'case playlist';
-        break;
-        case 'youtube':
-        $mplayer->prefix = '';
-        //$mplayer->test_variable = 'case youtube';
-        break;
-        case 'url':
-        $mplayer->type = ''; // JW FLV Player doesn't recognise 'url' as a valid parameter
-        $mplayer->prefix = '';
-        //$mplayer->test_variable = 'case url';
-        break;
-        case 'http':
-        $mplayer->prefix = '';
-        //$mplayer->test_variable = 'case http';
-        break;
-        case 'lighttpd':
-        $mplayer->prefix = '';
-        //$mplayer->test_variable = 'case lighttpd';
-        break;
-        case 'rtmp':
-        $mplayer->prefix = '';
-        //$mplayer->test_variable = 'case rtmp';
-        break;
-        default;
-        $mplayer->type = ''; // Prevent failures due to errant parameters getting passed in
-        $mplayer->prefix = '';
-        //$mplayer->test_variable = 'default';
-    }
-    return $mplayer;
-}
-*/
-
-/**
- * Assign the correct path to the file parameter (media source) in $mplayer object
- *
- * @param $mplayer
- * @return $mplayer
- */
- /*
-function mplayer_set_paths(&$mplayer) {
-    global $CFG;
-
-    $fs = get_file_storage();
-    $cm = get_coursemodule_from_instance('mplayer', $mplayer->id);
-    $context = context_module::instance($cm->id);
-
-    // Check if there is a playlist.
-    if ($playlisturl = mplayer_get_file_url($mplayer, 'playlistfiles', $context)) {
-        $mplayer->mplayerfile = '&file='.$playlisturl;
-    } else {
-        $mplayer->mplayerfile = '&file='.mplayer_get_file_url($mplayer, 'mplayerfiles', $context);
-    }
-
-    // Set wwwroot.
-    $mplayer->wwwroot = $CFG->wwwroot;
-
-    // Only need to call time() function once
-    $mplayer_time = time();
-
-    // Check for type.
-    if ($mplayer->type != '') {
-        $mplayer->type = '&provider='.$mplayer->type; // parameter name has changed to provider
-    }
-
-    // Check for streamer.
-    if ($mplayer->streamer != '') {
-        $mplayer->streamer = '&streamer='.$mplayer->streamer;
-    }
-
-    // Check for playlist.
-    if ($mplayer->playlist == 'none') {
-        $mplayer->playlist = '';
-        $mplayer->playlistsize = '';
-        $mplayer->item = '';
-        $mplayer->mplayerrepeat = '';
-        $mplayer->shuffle = '';
-    } else {
-        $mplayer->playlist = '&playlist='.$mplayer->playlist;
-
-        // Repeat.
-        if($mplayer->mplayerrepeat != 'none') {
-            $mplayer->mplayerrepeat = '&repeat='.$mplayer->mplayerrepeat;
-        } else {
-            $mplayer->mplayerrepeat = '';
-        }
-
-        // Shuffle.
-        if ($mplayer->shuffle == 'true') {
-            $mplayer->shuffle = '&shuffle='.$mplayer->shuffle;
-        } else {
-            $mplayer->shuffle = '';
-        }
-
-        // Playlistsize.
-        if ($mplayer->playlistsize != '180')
-        {
-            $mplayer->playlistsize = '&playlistsize='.$mplayer->playlistsize;
-        } else {
-            $mplayer->playlistsize = '';
-        }
-
-        // Item.
-        if ($mplayer->item != '0') {
-            $mplayer->item = '&item='.$mplayer->item;
-        } else {
-            $mplayer->item = '';
-        }
-    }
-
-    // Check for configuration XML file URL.
-    if ($url = mplayer_get_file_url($mplayer, 'configxml', $context)) {
-        $mplayer->configxml = '$config='.$url.'?'.$mplayer_time;
-    }
-
-    // Check for skin.
-    if ($mplayer->skin != '') {
-        $mplayer->skin = '&skin='.$mplayer->wwwroot.'/mod/mplayer/skins/'.$mplayer->skin;
-    }
-
-    // Check for image.
-    $mplayer->image = '';
-    if ($url = mplayer_get_file_url($mplayer, 'image', $context)) {
-        $mplayer->image = '&image='.$url;
-    }
-
-    // Check for icons.
-    if ($mplayer->icons == 'false') {
-        $mplayer->icons = '&icons='.$mplayer->icons;
-    } else {
-        $mplayer->icons = '';
-    }
-
-    // Check for controlbar.
-    if ($mplayer->controlbar != 'bottom') {
-        $mplayer->controlbar = '&controlbar='.$mplayer->controlbar;
-    } else {
-        $mplayer->controlbar = '';
-    }
-
-    // Check for backcolor.
-    if ($mplayer->backcolor != '') {
-        $mplayer->backcolor = '&backcolor='.$mplayer->backcolor;
-    }
-
-    // Check for frontcolor.
-    if ($mplayer->frontcolor != '') {
-        $mplayer->frontcolor = '&frontcolor='.$mplayer->frontcolor;
-    }
-
-    // Check for lightcolor.
-    if ($mplayer->lightcolor != '') {
-        $mplayer->lightcolor = '&lightcolor='.$mplayer->lightcolor;
-    }
-
-    // Check for screencolor.
-    if ($mplayer->screencolor != '') {
-        $mplayer->screencolor = '&screencolor='.$mplayer->screencolor;
-    }
-
-    // Check for smoothing.
-    if ($mplayer->smoothing == 'false') {
-        $mplayer->smoothing = '&smoothing='.$mplayer->smoothing;
-    } else {
-        $mplayer->smoothing = '';
-    }
-
-    // Check for quality.
-    if ($mplayer->quality != 'best') {
-        $mplayer->quality = '&quality='.$mplayer->quality;
-    } else {
-        $mplayer->quality = '';
-    }
-
-    // Check for resizing.
-    if ($mplayer->resizing != '') {
-        $mplayer->resizing = '&resizing='.$mplayer->resizing;
-    }
-    // deprecated
-    $mplayer->resizing = '';
-
-//// --------------------------------------------------------- BEHAVIOUR ---------------------------------------------------------
-    // Check for autostart.
-    if ($mplayer->autostart == 'true') {
-        $mplayer->autostart = '&autostart='.$mplayer->autostart;
-    } else {
-        $mplayer->autostart = '';
-    }
-
-    // Check for stretching.
-    if ($mplayer->stretching != 'uniform') {
-        $mplayer->stretching = '&stretching='.$mplayer->stretching;
-    } else {
-        $mplayer->stretching = '';
-    }
-
-    // Check for volume.
-    if ($mplayer->volume != '90') {
-        $mplayer->volume = '&volume='.$mplayer->volume;
-    } else {
-        $mplayer->volume = '';
-    }
-
-    // Check for mute.
-    if ($mplayer->mute == 'true') {
-        $mplayer->mute = '&mute='.$mplayer->mute;
-    } else {
-        $mplayer->mute = '';
-    }
-
-    // Check for mplayerstart.
-    if ($mplayer->mplayerstart != '0') {
-        $mplayer->mplayerstart = '&start='.$mplayer->mplayerstart;
-    } else {
-        $mplayer->mplayerstart = '';
-    }
-
-    // Check for bufferlength.
-    if ($mplayer->bufferlength != '1') {
-        $mplayer->bufferlength = '&bufferlength='.$mplayer->bufferlength;
-    } else {
-        $mplayer->bufferlength = '';
-    }
-
-    // Check for plugins.
-    if ($mplayer->plugins != '') {
-        $mplayer->plugins = '&plugins='.$mplayer->plugins;
-    } else {
-        $mplayer->plugins = '';
-    }
-
-    // Check for author - author is always present in FlashVars embed code and should start without the & symbol.
-    if ($mplayer->author != '') {
-        $mplayer->author = 'author='.$mplayer->author;
-    }
-
-    // Check for mplayerdate.
-    if ($mplayer->mplayerdate != '') {
-        $mplayer->mplayerdate = '&date='.$mplayer->mplayerdate;
-    }
-
-    // Check for title.
-    if ($mplayer->title != '') {
-        $mplayer->title = '&title='.$mplayer->title;
-    }
-
-    // Check for description.
-    if ($mplayer->description != '') {
-        $mplayer->description = '&description='.$mplayer->description;
-    }
-
-    // Check for tags.
-    if ($mplayer->tags != '') {
-        $mplayer->tags = '&tags='.$mplayer->tags;
-    }
-
-//// --------------------------------------------------------- AUDIO DESCRIPTION ---------------------------------------------------------
-
-    // Check for audiodescriptionfile.
-    if ($url = mplayer_get_file_url($mplayer, 'audiodescriptionfile', $context)) {
-        $mplayer->audiodescriptionfile = '&audiodescription.file='.$url;
-        $mplayer->audiodescriptionstate = '&audiodescription.state='.$mplayer->audiodescriptionstate;
-        $mplayer->audiodescriptionvolume = '&audiodescription.volume='.$mplayer->audiodescriptionvolume;
-
-        // Add the audiodescription plugin.
-        if ($mplayer->plugins != '') {
-            $mplayer->plugins = $mplayer->plugins.',audiodescription';
-        } else {
-            $mplayer->plugins = '&plugins=audiodescription';
-        }
-    } else {
-        $mplayer->audiodescriptionfile = '';
-        $mplayer->audiodescriptionstate = '';
-        $mplayer->audiodescriptionvolume = '';
-    }
-
-    // Check for captions.
-    if ($url = mplayer_get_file_url($mplayer, 'captionsfile', $context)) {
-        // There's a bug in the captions.back parameter so we'll compensate for that.
-        if ($mplayer->captionsback == 'true') {
-            $mplayer->captionsback = '&captions.back='.$mplayer->captionsback;
-        } else {
-            $mplayer->captionsback = '';
-        }
-        $mplayer->captionsfile = '&captions.file='.$url;
-        $mplayer->captionsfontsize = '&captions.fontsize='.$mplayer->captionsfontsize;
-        $mplayer->captionsstate = '&captions.state='.$mplayer->captionsstate; // this doesn't work
-
-        // Add captions plugin parameter.
-        if ($mplayer->plugins != '') {
-            $mplayer->plugins = '&plugins='.$mplayer->plugins.',captions';
-        } else {
-            $mplayer->plugins = '&plugins=captions';
-        }
-    } else {
-        $mplayer->captionsback = '';
-        $mplayer->captionsfile = '';
-        $mplayer->captionsfontsize = '';
-        $mplayer->captionsstate = '';
-    }
-
-    // As of 21/01/2010, there's a bug in the HD plugin that prevents switching 
-    // between HD and normal when either of the files has downloaded completely
-    // Check for hdfile
-    if ($url = mplayer_get_file_url($mplayer, 'hdfile', $context)) {
-        $mplayer->hdbitrate = '&hd.bitrate='.$mplayer->hdbitrate;
-        $mplayer->hdfile = '&hd.file='.$url.'?'.$mplayer_time;
-        $mplayer->hdfullscreen = '&hd.fullscreen='.$mplayer->hdfullscreen;
-        $mplayer->hdstate = '&hd.state='.$mplayer->hdstate;
-
-        // Add hd plugin parameter.
-        if ($mplayer->plugins != '') {
-            $mplayer->plugins = $mplayer->plugins.',hd';
-        } else {
-            $mplayer->plugins = '&plugins=hd';
-        }
-    } else {
-        $mplayer->hdbitrate = '';
-        $mplayer->hdfile = '';
-        $mplayer->hdfullscreen = '';
-        $mplayer->hdstate = '';
-    }
-
-    // Check for tracecall.
-    if ($mplayer->tracecall != '') {
-        $mplayer->tracecall = '&tracecall='.$mplayer->tracecall;
-    }
-
-    // Check for infobox.
-    if ($mplayer->infoboxposition != 'none') {
-        $mplayer->infoboxcolor = '&infobox.color='.$mplayer->infoboxcolor;
-        $mplayer->infoboxposition = '&infobox.position='.$mplayer->infoboxposition;
-        $mplayer->infoboxsize = '&infobox.size='.$mplayer->infoboxsize;
-        // Add infobox plugin parameter.
-        if ($mplayer->plugins != '') {
-            $mplayer->plugins = $mplayer->plugins.',infobox';
-        } else {
-            $mplayer->plugins = '&plugins=infobox';
-        }
-    } else {
-        $mplayer->infoboxcolor = '';
-        $mplayer->infoboxposition = '';
-        $mplayer->infoboxsize = '';
-    }
-
-    // Check for livestream.
-    if ($url = mplayer_get_file_url($mplayer, 'livestreamfile', $context)) {
-        $mplayer->livestreamfile = '&livestream.file='.$url;
-        $imageurl = mplayer_get_file_url($mplayer, 'livestreamimage', $context);
-        $mplayer->livestreamimage = '&livestream.image='.$imageurl;
-        $mplayer->livestreaminterval = '&livestream.interval='.$mplayer->livestreaminterval;
-        $mplayer->livestreammessage = '&livestream.message='.$mplayer->livestreammessage;
-        $mplayer->livestreamstreamer = '&livestream.streamer='.$mplayer->livestreamstreamer;
-        $mplayer->livestreamtags = '&livestream.tags='.$mplayer->livestreamtags;
-        // Add livestream plugin parameter.
-        if ($mplayer->plugins != '') {
-            $mplayer->plugins = $mplayer->plugins.',livestream';
-        } else {
-            $mplayer->plugins = '&plugins=livestream';
-        }
-    } else {
-        $mplayer->livestreamfile = '';
-        $mplayer->livestreamimage = '';
-        $mplayer->livestreaminterval = '';
-        $mplayer->livestreammessage = '';
-        $mplayer->livestreamstreamer = '';
-        $mplayer->livestreamtags = '';
-    }
-
-    // Check for logobox.
-    if ($url = mplayer_get_file_url($mplayer, 'logoboxfile', $context)) {
-        $mplayer->logoboxalign = '&logobox.align='.$mplayer->logoboxalign;
-        $mplayer->logoboxfile = '&logobox.file='.$url;
-        $mplayer->logoboxlink = '&logobox.link='.$mplayer->logoboxlink;
-        $mplayer->logoboxmargin = '&logobox.margin='.$mplayer->logoboxmargin;
-        $mplayer->logoboxposition = '&logobox.position='.$mplayer->logoboxposition;
-        // add logobox plugin parameter
-        if ($mplayer->plugins != '') {
-            $mplayer->plugins = $mplayer->plugins.',logobox';
-        } else {
-            $mplayer->plugins = '&plugins=logobox';
-        }
-    } else {
-        $mplayer->logoboxalign = '';
-        $mplayer->logoboxfile = '';
-        $mplayer->logoboxlink = '';
-        $mplayer->logoboxmargin = '';
-        $mplayer->logoboxposition = '';
-    }
-
-    // Check for logo
-    if ($url = mplayer_get_file_url($mplayer, 'logofile', $context)) {
-        $mplayer->logofile = '&logo.file='.$url;
-        $mplayer->logolink = '&logo.link='.$mplayer->logolink;
-        $mplayer->logohide = '&logo.hide='.$mplayer->logohide;
-        $mplayer->logoposition = '&logo.position='.$mplayer->logoposition;
-    } else {
-        $mplayer->logofile = '';
-        $mplayer->logolink = '';
-        $mplayer->logohide = '';
-        $mplayer->logoposition = '';
-    }
-
-    // Check for metaviewer
-    if ($mplayer->metaviewerposition != '') {
-        $mplayer->metaviewerposition = '&metaviewer.position='.$mplayer->metaviewerposition;
-        $mplayer->metaviewersize = '&metaviewer.size='.$mplayer->metaviewersize;
-        // add metaviewer plugin parameter
-        if ($mplayer->plugins != '') {
-            $mplayer->plugins = $mplayer->plugins.',metaviewer';
-        } else {
-            $mplayer->plugins = '&plugins=metaviewer';
-        }
-    } else {
-        $mplayer->metaviewerposition = '';
-        $mplayer->metaviewersize = '';
-    }
-
-    // Check for searchbar
-    if ($mplayer->searchbarposition != 'none') {
-        $mplayer->searchbarlabel = '&searchbar.label='.$mplayer->searchbarlabel;
-        $mplayer->searchbarposition = '&searchbar.position='.$mplayer->searchbarposition;
-        $mplayer->searchbarscript = '&searchbar.script='.$mplayer->searchbarscript;
-        if ($mplayer->searchbarcolor != '') {
-            $mplayer->searchbarcolor = '&searchbar.color='.$mplayer->searchbarcolor;
-        } else {
-            $mplayer->searchbarcolor = '';
-        }
-        // if playlist isn't set up, set up a default
-        if ($mplayer->playlist == '') {
-            $mplayer->playlist = '&playlist=right';
-            $mplayer->playlistsize = '&playlistsize=300';
-            $mplayer->item = '&item=0';
-        }
-        // add searchbar plugin parameter
-        if ($mplayer->plugins != '') {
-            $mplayer->plugins = $mplayer->plugins.',searchbar';
-        } else {
-            $mplayer->plugins = '&plugins=searchbar';
-        }
-    } else {
-        $mplayer->searchbarcolor = '';
-        $mplayer->searchbarlabel = '';
-        $mplayer->searchbarposition = '';
-        $mplayer->searchbarscript = '';
-    }
-
-    // Check for snapshotscript
-    if ($mplayer->snapshotscript != 'none') {
-        $mplayer->snapshotbitmap = '&snapshot.bitmap='.$mplayer->snapshotbitmap;
-        $mplayer->snapshotscript = '&snapshot.script='.$mplayer->snapshotscript.'?id='.$mplayer->instance.'';
-        // add snapshot plugin parameter
-        if ($mplayer->plugins != '') {
-            $mplayer->plugins = $mplayer->plugins.',snapshot';
-        } else {
-            $mplayer->plugins = '&plugins=snapshot';
-        }
-    } else {
-        $mplayer->snapshotbitmap = '';
-        $mplayer->snapshotscript = '';
-    }
-    return $mplayer;
-}
-*/
-
-/**
  * Obtains the automatic completion state for this module based on any conditions
  * in mplayer settings.
  *
@@ -950,7 +432,7 @@ function mplayer_get_completion_state($course, $cm, $userid, $type) {
 
     $mplayerinstance = $DB->get_record('mplayer', array('id' => $cm->instance));
 
-    $result = $type; // default return value;
+    $result = $type; // Default return value.
 
     // If completion option is enabled, evaluate it and return true/false.
     if (@$mplayerinstance->completionmediaviewed) {
