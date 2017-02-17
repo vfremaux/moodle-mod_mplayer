@@ -27,8 +27,8 @@
 require('../../config.php');
 require_once($CFG->dirroot.'/mod/mplayer/lib.php');
 
-$id = optional_param('id', 0, PARAM_INT); // Course Module ID, or.
-$a  = optional_param('a', 0, PARAM_INT); // Mplayer ID.
+$id = optional_param('id', 0, PARAM_INT); // Course Module ID, or
+$a  = optional_param('a', 0, PARAM_INT);  // mplayer ID
 
 if ($id) {
     if (! $cm = $DB->get_record('course_modules', array('id' => $id))) {
@@ -51,9 +51,7 @@ if ($id) {
         print_error('invalidcoursemodule');
     }
 }
-
 // Security.
-
 require_login($course->id);
 
 $context = context_module::instance($cm->id);
@@ -65,17 +63,17 @@ $event = \mod_mplayer\event\mplayer_viewed::create(array(
         'objectname' => $mplayer->name
     )
 ));
+$event->add_record_snapshot('course_modules', $cm);
+$event->add_record_snapshot('course', $course);
 $event->add_record_snapshot('mplayer', $mplayer);
 $event->trigger();
 
-// Add instance ID to mplayer object.
+// Add instance ID to mplayer object
 
 $mplayer->instance = $id;
 
-/*
- * Don't print a Moodle header since this page will be included in another Moodle page as an iframe
- * Print the Media Player Flash embed code
- */
+// Don't print a Moodle header since this page will be included in another Moodle page as an iframe
+// Print the Media Player Flash embed code
 
 echo mplayer_print_body($mplayer);
 

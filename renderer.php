@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+defined('MOODLE_INTERNAL') || die();
+
 /**
  * This file contains a renderer for the assignment class
  *
@@ -23,7 +25,6 @@
  * @author   Valery Fremaux <valery.fremaux@gmail.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->dirroot . '/mod/mplayer/locallib.php');
 
@@ -38,12 +39,12 @@ class mod_mplayer_renderer extends plugin_renderer_base {
     /**
      *
      */
-    function intro($mplayer) {
+    function notes($mplayer) {
         $str = '';
 
-        if (!empty($mplayer->intro)) {
-            $str .= '<div class="mplayer intro">';
-            $str .= format_text($mplayer->intro, $mplayer->introformat);
+        if (!empty($mplayer->notes)) {
+            $str .= '<div class="mplayer-notes">';
+            $str .= format_text($mplayer->notes, $mplayer->notesformat);
             $str .= '</div>';
         }
 
@@ -94,10 +95,6 @@ class mod_mplayer_renderer extends plugin_renderer_base {
             }
         } else {
             $mplayer_body = $this->jwplayer_body($mplayer, $cm, $context);
-        }
-
-        if (!empty($mplayer->notes)) {
-            $mplayer_body .= '<div class="mplayer-notes"><p>'.$mplayer->notes.'</p></div>';
         }
 
         return $mplayer_body;
@@ -365,8 +362,7 @@ class mod_mplayer_renderer extends plugin_renderer_base {
             if (!empty($clip->thumb)) {
                 $listitemcontent = '<img src="'.$clip->thumb.'" />';
             }
-            $cliplink = '<a href="'.$clip->sources[0].'" alt="'.@$clip->title.'" title="'.@$clip->title.'" id="item'.$i.'">'.$listitemcontent.'</a>';
-            $str .= $cliplink;
+            $str .=' <a href="'.$clip->sources[0].'" alt="'.@$clip->title.'" title="'.@$clip->title.'" id="item'.$i.'">'.$listitemcontent.'</a>';
 
             $hgroups .=' <hgroup class="info'.$i.'">
             <h1 class="fp-playlist-info">'.@$clip->title.'</h1>
@@ -402,7 +398,7 @@ class mod_mplayer_renderer extends plugin_renderer_base {
         if ($clipsnum = count($clips)) {
             $width = 100 / $clipsnum - 1;
             foreach (array_keys($clips) as $clipix) {
-                $str .= ' <div class="mplayer-completion" id="mplayer-progress-'.$mplayer->id.'_'.$clipix.'" title="'.@$clips[$clipix]->title.'" style="width:'.$width.'%"></div>';
+                $str .= ' <div class="mplayer-completion" id="mplayer-progress-'.$mplayer->id.'_'.$clipix.'" style="width:'.$width.'%"></div>';
             }
         }
         $str .= '</div>';

@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+defined('MOODLE_INTERNAL') || die();
+
 /**
  * Library of functions and constants for module mplayer
  * For more information on the parameters used by JW FLV Player see documentation: http://developer.longtailvideo.com/trac/wiki/FlashVars
@@ -24,7 +26,6 @@
  * @author   Valery Fremaux <valery.fremaux@gmail.com>
  * @licence  http://www.gnu.org/copyleft/gpl.html GNU Public Licence
  */
-defined('MOODLE_INTERNAL') || die();
 
 /**
  * Saves all draft files received from instance setup
@@ -117,14 +118,14 @@ function mplayer_load_remote_file($mplayer, $url, $context) {
 
     $raw = curl_exec($ch);
 
-    // Check for curl errors.
+    // check for curl errors
     $curlerrno = curl_errno($ch);
     if ($curlerrno != 0) {
         debugging("Request for $uri failed with curl error $curlerrno");
         return;
     } 
 
-    // Check HTTP error code.
+    // check HTTP error code
     $info =  curl_getinfo($ch);
     if (!empty($info['http_code']) and ($info['http_code'] != 200)) {
         debugging("Request for $uri failed with HTTP code ".$info['http_code']);
@@ -216,7 +217,7 @@ function mplayer_get_clips_from_files(&$mplayer) {
                     $filename = $storedfile->get_filename();
                     if ($filepath == '/medias/') {
                         $ix = 0;
-                    } else if (preg_match('#^/medias/(\d+)#', $filepath, $matches)) {
+                    } elseif (preg_match('#^/medias/(\d+)#', $filepath, $matches)) {
                         $ix = $matches[1];
                     } else {
                         // Ignore
@@ -224,7 +225,7 @@ function mplayer_get_clips_from_files(&$mplayer) {
                     }
 
                     if (preg_match('/\.stm$/', $filename)) {
-                        // This is a stream manifest. Get url from it.
+                        // This is a stream manifest. Get url from it
                         $contenthash = $storedfile->get_contenthash();
                         $l1 = $contenthash[0].$contenthash[1];
                         $l2 = $contenthash[2].$contenthash[3];
@@ -232,7 +233,7 @@ function mplayer_get_clips_from_files(&$mplayer) {
                         $streamed_obj = simplexml_load_file($manifestlocation);
 
                         if (!$streamed_obj) {
-                            // Manifest not readable. Continue.
+                            // Manifest not readable. COntinue.
                             continue;
                         }
 
@@ -274,7 +275,7 @@ function mplayer_get_clips_from_files(&$mplayer) {
                         } elseif(preg_match('#^(\d+)#', $filename, $matches)) {
                             $ix = $matches[1];
                         } else {
-                            // Ignore.
+                            // Ignore
                             continue;
                         }
                         if (array_key_exists($ix, $clips)) {
@@ -286,15 +287,15 @@ function mplayer_get_clips_from_files(&$mplayer) {
         }
     }
 
-    // Open captions file and get clip titles from caption. there should be only one file.
+    // Open captions file and get clip titles from caption. there should be only one file 
     if ($captionfiles = $fs->get_directory_files($context->id, 'mod_mplayer', 'mplayerfiles', 0, '/captions/', true, false, 'filepath, filename')) {
         $captionfile = array_pop($captionfiles);
         $captions = $captionfile->get_content();
         $titlearray = explode("\n", $captions);
         $ix = 0;
         foreach ($titlearray as $t) {
-            if (is_object($clips[$ix])) {
-                $clips[$ix]->title .= $t;
+            if (array_key_exists($ix, $clips)) {
+                $clips[$ix]->title = $t;
             }
             $ix++;
         }
@@ -397,17 +398,105 @@ function mplayer_get_fileareas() {
  * @return string
  */
 function mplayer_print_header_js($mplayer) {
-    // Build Javascript code for view.php print_header() function.
+    // Build Javascript code for view.php print_header() function
     $mplayer_header_js = '<script type="text/javascript" src="swfobject/swfobject.js"></script>
         <script type="text/javascript">
             swfobject.registerObject("jwPlayer", "'.$mplayer->fpversion.'");
         </script>';
-    // Don't show default dotted outline around Flash Player window in Firefox 3.
+    // Don't show default dotted outline around Flash Player window in Firefox 3
     $mplayer_header_js .= '<style type="text/css" media="screen">
             object { outline:none; }
         </style>';
     return $mplayer_header_js;
 }
+
+/**
+ * Print alternative FlashVars embed parameters
+ * OBSOLETE : not called
+ * @param $mplayer
+ * @return string
+ */
+ /*
+function mplayer_print_body_flashvars($mplayer) {
+    // Build URL to moodledata directory
+    $mplayer = mplayer_set_moodledata($mplayer);
+    // Assign the correct path to the file parameter (media source)
+    $mplayer = mplayer_set_type($mplayer);
+    // Build URLs for FlashVars embed parameters
+    $mplayer = mplayer_set_paths($mplayer);
+
+    $mplayer_flashvars = '<param name="flashvars" value="'.
+                $mplayer->author.
+                $mplayer->autostart.
+                $mplayer->audiodescriptionfile.
+                $mplayer->audiodescriptionstate.
+                $mplayer->audiodescriptionvolume.
+                $mplayer->backcolor.
+                $mplayer->bufferlength.
+                $mplayer->captionsback.
+                $mplayer->captionsfile.
+                $mplayer->captionsfontsize.
+                $mplayer->captionsstate.
+                $mplayer->configxml.
+                $mplayer->controlbar.
+                $mplayer->mplayerdate.
+                $mplayer->description.
+                $mplayer->mplayerfile.
+                $mplayer->frontcolor.
+                $mplayer->hdbitrate.
+                $mplayer->hdfile.
+                $mplayer->hdfullscreen.
+                $mplayer->hdstate.
+                $mplayer->icons.
+                $mplayer->image.
+                $mplayer->item.
+                $mplayer->lightcolor.
+                $mplayer->infoboxcolor.
+                $mplayer->infoboxposition.
+                $mplayer->infoboxsize.
+                $mplayer->livestreamfile.
+                $mplayer->livestreamimage.
+                $mplayer->livestreaminterval.
+                $mplayer->livestreammessage.
+                $mplayer->livestreamstreamer.
+                $mplayer->livestreamtags.
+                $mplayer->logoboxalign.
+                $mplayer->logoboxfile.
+                $mplayer->logoboxlink.
+                $mplayer->logoboxmargin.
+                $mplayer->logoboxposition.
+                $mplayer->logofile.
+                $mplayer->logolink.
+                $mplayer->logohide.
+                $mplayer->logoposition.
+                $mplayer->metaviewerposition.
+                $mplayer->metaviewersize.
+                $mplayer->mute.
+                $mplayer->playlist.
+                $mplayer->playlistsize.
+                $mplayer->plugins.
+                $mplayer->mplayerrepeat.
+                $mplayer->resizing.
+                $mplayer->screencolor.
+                $mplayer->searchbarcolor.
+                $mplayer->searchbarlabel.
+                $mplayer->searchbarposition.
+                $mplayer->searchbarscript.
+                $mplayer->shuffle.
+                $mplayer->skin.
+                $mplayer->snapshotbitmap.
+                $mplayer->snapshotscript.
+                $mplayer->mplayerstart.
+                $mplayer->streamer.
+                $mplayer->stretching.
+                $mplayer->tags.
+                $mplayer->title.
+                $mplayer->tracecall.
+                $mplayer->type.
+                $mplayer->volume.'" />';
+    return $mplayer_flashvars;
+}
+*/
 
 /* functions for Form */
 
@@ -440,8 +529,8 @@ function mplayer_list_quality() {
  */
 function mplayer_list_linktarget() {
     return array('_blank' => 'new window',
-                 '_self' => 'same page',
-                 'none' => 'none');
+                '_self' => 'same page',
+                'none' => 'none');
 }
 
 /**
@@ -501,11 +590,9 @@ function mplayer_list_langchoiceoptions() {
  * @return array
  */
 function mplayer_list_availablelangoptions() {
-    /*
-     * This is a first approach that takes only activated languages in Moodle. Other languages
-     * Will be ignored.
-     * TODO : Extend language choice to wider list.
-     */
+    // This is a first approach that takes only activated languages in Moodle. Other languages
+    // Will be ignored.
+    // TODO : Extend language choice to wider list.
     return get_string_manager()->get_list_of_translations();
 }
 
@@ -798,7 +885,7 @@ function mplayer_list_volume() {
 }
 
 /**
- * converts the local storage into a local proxy and remote storage.
+ * converts the local storage into a local proxy and remote storage. 
  * this function will process the whole filearea keeping no video files inside.
  * video files are removed from Moodle storage after having been copied to the remote streming storage.
  * A proxy descriptor is stored using similar filename with .stm extension which is added to the original file's fullname
@@ -891,7 +978,7 @@ function mplayer_flowplayer_get_type(&$mplayer, $url) {
 
 /**
  * Builds a storage hierarchy in mplayerfiles file area.
- * the hierarchy has top directories as :
+ * the hierarchy has top directories as : 
  * - medias : several files as alternative sources for the clip
  * - thumbs : one file as thumb
  * - posters : one file as static poster (when video is staled or loading)
@@ -899,9 +986,9 @@ function mplayer_flowplayer_get_type(&$mplayer, $url) {
  * - cues : one file with cue list
  *
  * Each directory can have one single file, or a set of numbers clips subdirs. All
- * files present at root will be used as clip 1 and appended to the first clip subdir
- * content. Clip subdirs follow the content restrictions of the "single clip" case.
- * That is, if the mplayer plays two clips :
+ * files present at root will be used as clip 1 and appended to the first clip subdir 
+ * content. Clip subdirs follow the content restrictions of the "single clip" case. 
+ * That is, if the mplayer plays two clips : 
  *
  * - medias
  *    - 0 : set of media files of clip 1
@@ -966,12 +1053,12 @@ function mplayer_upgrade_storage($mplayer) {
             $newrec->itemid = 0;
             $filename = $storedfile->get_filename();
 
-            // Get clip prefix.
+            // Get clip prefix
             if (preg_match('/^(\d+)_(.*)$/', $filename, $matches)) {
                 $ix = $matches[1];
                 $filename = $matches[2];
             } else {
-                // Get clip prefix, other pattern possible.
+                // Get clip prefix, other pattern possible
                 if (preg_match('/_(\\d+)_$/', $filename, $matches)) {
                     $ix = $matches[1];
                 } else {
@@ -982,13 +1069,13 @@ function mplayer_upgrade_storage($mplayer) {
             $newrec->filepath = '/medias/'.$ix.'/';
             $newrec->filename = $filename;
 
-            // TODO (possibly) : If filename is numerically prefixed (clipped), move it to clip folder.
+            // TODO (possibly) : If filename is numerically prefixed (clipped), move it to clip folder. 
             $fs->create_file_from_storedfile($newrec, $storedfile);
         }
         $fs->delete_area_files($context->id, 'mod_mplayer', 'mplayerfile');
     }
 
-    // Move old thumbs to mplayerfiles area.
+    // Move old thumbs to mplayerfiles area
     if ($oldfiles = $fs->get_area_files($context->id, 'mod_mplayer', 'playlistthumb', 0, 'itemid,filepath,filename', false)) {
         foreach ($oldfiles as $storedfile) {
             $newrec = new StdClass();
@@ -998,7 +1085,7 @@ function mplayer_upgrade_storage($mplayer) {
             $newrec->itemid = 0;
             $filename = $storedfile->get_filename();
 
-            // Get clip prefix.
+            // Get clip prefix
             if (preg_match('/^(\d+)_(.*)$/', $filename, $matches)) {
                 $ix = $matches[1];
                 $filename = $matches[2];
@@ -1014,7 +1101,7 @@ function mplayer_upgrade_storage($mplayer) {
         $fs->delete_area_files($context->id, 'mod_mplayer', 'playlistthumb');
     }
 
-    // Move old tracks to mplayerfiles area.
+    // Move old tracks to mplayerfiles area
     if ($oldfiles = $fs->get_area_files($context->id, 'mod_mplayer', 'trackfile', 0, 'itemid,filepath,filename', false)) {
         foreach ($oldfiles as $storedfile) {
             $newrec = new StdClass();
@@ -1024,7 +1111,7 @@ function mplayer_upgrade_storage($mplayer) {
             $newrec->itemid = 0;
             $filename = $storedfile->get_filename();
 
-            // Get clip prefix.
+            // Get clip prefix
             if (preg_match('/^(\d+)_(.*)$/', $filename, $matches)) {
                 $ix = $matches[1];
                 $filename = $matches[2];
@@ -1040,7 +1127,7 @@ function mplayer_upgrade_storage($mplayer) {
         $fs->delete_area_files($context->id, 'mod_mplayer', 'trackfile');
     }
 
-    // Move old posters to mplayerfiles area.
+    // Move old posters to mplayerfiles area
     if ($oldfiles = $fs->get_area_files($context->id, 'mod_mplayer', 'image', 0, 'itemid,filepath,filename', false)) {
         foreach ($oldfiles as $storedfile) {
             $newrec = new StdClass();
@@ -1058,7 +1145,7 @@ function mplayer_upgrade_storage($mplayer) {
         $fs->delete_area_files($context->id, 'mod_mplayer', 'image');
     }
 
-    // Move old playlist file to mplayerfiles area.
+    // Move old playlist file to mplayerfiles area
     if ($oldfiles = $fs->get_area_files($context->id, 'mod_mplayer', 'playlist', 0, 'itemid,filepath,filename', false)) {
         foreach ($oldfiles as $storedfile) {
             $newrec = new StdClass();
