@@ -26,7 +26,8 @@
 require('../../config.php');
 require_once($CFG->dirroot.'/mod/mplayer/lib.php');
 
-$id = required_param('id', PARAM_INT);   // course
+$id = required_param('id', PARAM_INT);   // Course ID.
+
 if (!$course = $DB->get_record('course', array('id' => $id))) {
     print_error('coursemisconf');
 }
@@ -47,8 +48,6 @@ $event = \mod_mplayer\event\mplayer_viewedall::create(array(
         'objectname' => $mplayer->name
     )
 ));
-$event->add_record_snapshot('course_modules', $cm);
-$event->add_record_snapshot('course', $course);
 $event->trigger();
 
 // Get all required stringsmplayer.
@@ -69,7 +68,7 @@ echo $OUTPUT->header();
 
 // Get all the appropriate data.
 
-if (! $mplayers = get_all_instances_in_course('mplayer', $course)) {
+if (!$mplayers = get_all_instances_in_course('mplayer', $course)) {
     echo $OUTPUT->notification(get_string('nomplayers', 'mplayer'), new moodle_url('/course/view.php', array('id' => $course->id)));
     echo $OUTPUT->footer();
     die;
@@ -85,7 +84,7 @@ $strtopic  = get_string('topic');
 if ($course->format == 'weeks') {
     $table->head  = array ($strweek, $strname);
     $table->align = array ('center', 'left');
-} elseif ($course->format == 'topics') {
+} else if ($course->format == 'topics') {
     $table->head  = array ($strtopic, $strname);
     $table->align = array ('center', 'left', 'left', 'left');
 } else {
@@ -111,6 +110,5 @@ foreach ($mplayers as $mplayer) {
 echo '<br />';
 echo html_writer::table($table);
 
-// Finish the page
+// Finish the page.
 echo $OUTPUT->footer($course);
-
