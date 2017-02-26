@@ -17,20 +17,21 @@
 /**
  * Version details.
  *
- * @package     mod_mplayer
- * @category    mod
- * @author      Matt Bury - matbury@gmail.com - http://matbury.com/
- * @licence     http://www.gnu.org/copyleft/gpl.html GNU Public Licence
- * @copyright   (C) 2009  Matt Bury
+ * @package    mod_mplayer
+ * @category   mod
+ * @author     Matt Bury - matbury@gmail.com - http://matbury.com/
+ * @copyright  (C) 2009  Matt Bury
+ * @copyright  (C) 2015  Valery Fremaux (valery.fremaux@gmail.com)
+ * @licence    http://www.gnu.org/copyleft/gpl.html GNU Public Licence
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version  = 2016033101;  // The current module version (Date: YYYYMMDDXX)
-$plugin->release = "Moodle 3.0.0 (Build 2016033101)";
+$plugin->version  = 2016033101;  // The current module version (Date: YYYYMMDDXX).
 $plugin->requires = 2015111100;
 $plugin->component = 'mod_mplayer';
-$plugin->maturity = MATURITY_RC;
+$plugin->release = 'Moodle 3.0.0 (Build 2016033101)';
+$plugin->maturity = MATURITY_BETA;
 
 // Non Moodle attributes.
 $plugin->codeincrement = '3.0.0001';
