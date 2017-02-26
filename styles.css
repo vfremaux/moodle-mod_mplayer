@@ -73,3 +73,7 @@ div.mod-mplayer.progressbar-inner2{
     -moz-transition:opacity .5s;
     transition:opacity .5s;
 }
+
+.jwplayer {
+    top:20px;
+}
