@@ -1,6 +1,10 @@
 <?php
 /**
+<<<<<<< HEAD
  * Capability definitions for SWF Activity Module.
+=======
+ * Capability definitions for Mplayer Activity Module.
+>>>>>>> MOODLE_32_STABLE
  *
  * For naming conventions, see lib/db/access.php.
  * 
@@ -30,6 +34,7 @@ $capabilities = array(
             'manager' => CAP_ALLOW
         )
     ),
+<<<<<<< HEAD
     
     // View user's own swf grades.
     // For students+
@@ -102,5 +107,8 @@ $capabilities = array(
             'manager' => CAP_ALLOW
         )
     )
+=======
+
+>>>>>>> MOODLE_32_STABLE
 );
 

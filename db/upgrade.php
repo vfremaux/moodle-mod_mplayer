@@ -1,7 +1,16 @@
+<<<<<<< HEAD
 <?php  //$Id: upgrade.php,v 1.2 2007/08/08 22:36:54 stronk7 Exp $
 // This file keeps track of upgrades to the mplayer module
 //
 // The commands in here will all be database-neutral, using the functions defined in lib/ddllib.php
+=======
+<?php
+// This file keeps track of upgrades to the mplayer module
+//
+// The commands in here will all be database-neutral, using the functions defined in lib/ddllib.php
+require_once($CFG->dirroot.'/mod/mplayer/locallib.php');
+
+>>>>>>> MOODLE_32_STABLE
 function xmldb_mplayer_upgrade($oldversion=0) {
     global $CFG, $THEME, $DB;
 
@@ -36,5 +45,136 @@ function xmldb_mplayer_upgrade($oldversion=0) {
         upgrade_mod_savepoint(true, 2014112900, 'mplayer');
     }
 
+<<<<<<< HEAD
+=======
+    if ($oldversion < 2014121000) {
+        // Add new fields to mplayer table
+        $table = new xmldb_table('mplayer');
+        $field = new xmldb_field('completionviewed');
+        $field->set_attributes(XMLDB_TYPE_INTEGER, 2, XMLDB_UNSIGNED, XMLDB_NOTNULL, null, 0, 'splashmode');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Mplayer savepoint reached
+        upgrade_mod_savepoint(true, 2014121000, 'mplayer');
+    }
+
+    if ($oldversion < 2014122700) {
+        // Add new fields to mplayer table
+        $table = new xmldb_table('mplayer');
+        $field = new xmldb_field('external');
+        $field->set_attributes(XMLDB_TYPE_TEXT, 'medium', null, null, null, null, 'mplayerfile');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        $field = new xmldb_field('cuelists');
+        $field->set_attributes(XMLDB_TYPE_TEXT, 'medium', null, null, null, null, 'external');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Mplayer savepoint reached
+        upgrade_mod_savepoint(true, 2014122700, 'mplayer');
+    }
+
+    if ($oldversion < 2015010200) {
+        // Add new fields to mplayer table
+        $table = new xmldb_table('mplayer');
+        $field = new xmldb_field('technology');
+        $field->set_attributes(XMLDB_TYPE_TEXT, 'medium', null, null, null, null, 'timemodified');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Mplayer savepoint reached
+        upgrade_mod_savepoint(true, 2015010200, 'mplayer');
+    }
+
+    if ($oldversion < 2015010500) {
+        // MPlayer savepoint reached
+        // Add new fields to mplayer table
+        $table = new xmldb_table('mplayer');
+        $field = new xmldb_field('completionviewed', XMLDB_TYPE_INTEGER, 2, XMLDB_UNSIGNED, XMLDB_NOTNULL, null, 0);
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->rename_field($field, 'completionmediaviewed');
+        }
+
+        upgrade_mod_savepoint(true, 2015010500, 'mplayer');
+    }
+
+    if ($oldversion < 2015072000) {
+
+        // Define table mplayer_userdata to be created.
+        $table = new xmldb_table('mplayer_userdata');
+
+        // Adding fields to table mplayer_userdata.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('mplayerid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0');
+        $table->add_field('userid', XMLDB_TYPE_INTEGER, '11', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('maxprogress', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('finished', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, null);
+
+        // Adding keys to table mplayer_userdata.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+
+        // Adding indexes to table mplayer_userdata.
+        $table->add_index('ix_instanceid', XMLDB_INDEX_NOTUNIQUE, array('mplayerid'));
+
+        // Conditionally launch create table for mplayer_userdata.
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+        // Mplayer savepoint reached.
+        upgrade_mod_savepoint(true, 2015072000, 'mplayer');
+    }
+
+    if ($oldversion < 2015110104) {
+        mtrace('Converting storage');
+        $allplayers = $DB->get_records('mplayer', array());
+        if ($allplayers) {
+            foreach($allplayers as $mplayer) {
+                mtrace('Converting storage '.$mplayer->id);
+                mplayer_upgrade_storage($mplayer);
+            }
+        } else {
+            mtrace('Converting storage : No player instances');
+        }
+
+        // Mplayer savepoint reached.
+        upgrade_mod_savepoint(true, 2015110104, 'mplayer');
+    }
+
+    if ($oldversion < 2015110105) {
+        // Define table mplayer_userdata.
+        $table = new xmldb_table('mplayer_userdata');
+
+        // Add field clipid to separate completion tracking for each clip
+        $field = new xmldb_field('clipid');
+        $field->set_attributes(XMLDB_TYPE_INTEGER, 4, null, XMLDB_NOTNULL, null, 0, 'userid');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        upgrade_mod_savepoint(true, 2015110105, 'mplayer');
+    }
+
+    if ($oldversion < 2015110602) {
+        // Define table mplayer_userdata.
+        $table = new xmldb_table('mplayer');
+
+        // Add field clipid to separate completion tracking for each clip
+        $field = new xmldb_field('langselection');
+        $field->set_attributes(XMLDB_TYPE_INTEGER, 4, null, XMLDB_NOTNULL, null, 0, 'snapshotscript');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        upgrade_mod_savepoint(true, 2015110602, 'mplayer');
+    }
+
+>>>>>>> MOODLE_32_STABLE
     return $result;
 }
