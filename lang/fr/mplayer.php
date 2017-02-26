@@ -1,4 +1,18 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**    Copyright (C) 2009  Matt Bury
  *
@@ -19,7 +33,7 @@
 $string['mplayer:addinstance'] = 'Ajoute une instance';
 $string['mplayer:view'] = 'Voir le média';
 
-// Default module labels
+// Default module labels.
 $string['backtocourse'] = 'Revenir au cours';
 $string['mediaviewed'] = 'Visionnage';
 $string['completionmediaviewed'] = 'marqué complet quand l\'étudiant a visionné tout le média';
@@ -28,7 +42,8 @@ $string['pluginname'] = 'Media Player';
 $string['pluginadministration'] = 'Administration du Media Player';
 $string['modulename'] = 'Media Player';
 $string['modulenameplural'] = 'Media Players';
-// Titles for mod/mplayer/mod_form.php sections
+
+// Titles for mod/mplayer/mod_form.php sections.
 $string['player'] = 'Player';
 $string['mplayername'] = 'Nom';
 $string['mplayerintro'] = 'Description';
@@ -59,16 +74,15 @@ $string['showdebugcode'] = 'Afficher le code de deboggage';
 $string['loadingplayer'] = 'Chargement en cours...';
 $string['videomplayer'] = 'Video';
 
-//---------------------------------------------------------------------------------------------
-// Labels for mod/mplayer/mod_form.php
-// Source
+// Labels for mod/mplayer/mod_form.php.
+// Source.
 $string['mplayerresources'] = 'Resources Media';
 $string['mplayerfiles'] = 'Fichiers de Media';
 $string['type'] = 'Type';
 $string['streamer'] = 'Serveur de flux';
 $string['external'] = 'Url Externe';
 
-// Playlists
+// Playlists.
 $string['playlists'] = 'Playlist';
 $string['playlist'] = 'Position';
 $string['playlistsize'] = 'Taille (pixels)';
@@ -81,17 +95,17 @@ $string['right'] = 'A droite';
 $string['over'] = 'En surimpression';
 $string['above'] = 'Au dessus';
 
-// Configxml
+// Configxml.
 $string['config'] = 'Config XML';
 $string['configxml'] = 'Fichier';
 
-// Track file
+// Track file.
 $string['track'] = 'Sous-titres';
 $string['trackfile'] = 'Fichier';
 $string['trackfilegroup'] = 'Fichier de sous-titres';
 $string['cleartrackfile'] = 'Vider la zone de fichiers';
 
-// Appearance
+// Appearance.
 $string['appearance'] = 'Apparence';
 $string['notes'] = 'Notes';
 $string['width'] = 'Largeur';
@@ -107,7 +121,7 @@ $string['frontcolor'] = 'Couleur de premier plan';
 $string['lightcolor'] = 'Couleur claire';
 $string['screencolor'] = 'Couleur d\'écran';
 
-// Behaviour
+// Behaviour.
 $string['behaviour'] = 'Comportement';
 $string['autostart'] = 'Exécution auto';
 $string['fullscreen'] = 'Plein écran';
@@ -129,7 +143,7 @@ $string['splashmode'] = 'Mode splash (flowplayer)';
 $string['splashenabled'] = 'Actif';
 $string['nosplash'] = 'Inactif';
 
-// Metadata
+// Metadata.
 $string['metadata'] = 'Métadonnées';
 $string['author'] = 'Source';
 $string['mplayerdate'] = 'Ajouté';
@@ -137,33 +151,33 @@ $string['title'] = 'Titre';
 $string['description'] = 'Description du média';
 $string['tags'] = 'Tags';
 
-// audiodescription 
+// Audiodescription.
 $string['audiodescription'] = 'Description audio';
 $string['audiodescriptionfile'] = 'Fichier MP3';
 $string['audiodescriptionstate'] = 'Démarrage auto';
 $string['audiodescriptionvolume'] = 'Volume';
 
-// captions 
+// Captions.
 $string['captions'] = 'Sous-titres';
 $string['captionsback'] = 'Fond transparent';
 $string['captionsfile'] = 'Fichier de sous-titres';
 $string['captionsfontsize'] = 'Taille de police';
 $string['captionsstate'] = 'Afficher les sous-titres';
 
-// HD
+// HD.
 $string['hd'] = 'Video HD';
 $string['hdbitrate'] = 'Débit';
 $string['hdfile'] = 'Fichier Video HD';
 $string['hdfullscreen'] = 'Passer en haute résolution plein écran';
 $string['hdstate'] = 'HD par défaut';
 
-// infobox 
+// Infobox.
 $string['infobox'] = 'Fenêtre d\'information';
 $string['infoboxcolor'] = 'Couleur de fond';
 $string['infoboxposition'] = 'Position';
 $string['infoboxsize'] = 'Taille';
 
-// Livestream
+// Livestream.
 $string['livestream'] = 'Lecture continue de flux';
 $string['livestreamfile'] = 'Flux RTMP';
 $string['livestreamimage'] = 'Image';
@@ -172,7 +186,7 @@ $string['livestreammessage'] = 'Message';
 $string['livestreamstreamer'] = 'Serveur de flux';
 $string['livestreamtags'] = 'Tags';
 
-// Logo Box
+// Logo Box.
 $string['logobox'] = 'Incrustation Logo';
 $string['logoboxalign'] = 'Alignement';
 $string['logoboxfile'] = 'Image';
@@ -180,43 +194,43 @@ $string['logoboxlink'] = 'Lien';
 $string['logoboxmargin'] = 'Marge';
 $string['logoboxposition'] = 'Position';
 
-// Metaviewer 
+// Metaviewer.
 $string['metaviewer'] = 'Affichage des métadonnées';
 $string['metaviewerposition'] = 'Position';
 $string['metaviewersize'] = 'Taille';
 
-// Searchbar 
+// Searchbar.
 $string['searchbar'] = 'Barre de recherche';
 $string['searchbarcolor'] = 'couleur';
 $string['searchbarlabel'] = 'Label';
 $string['searchbarposition'] = 'Position';
 $string['searchbarscript'] = 'Script';
 
-// Snapshot 
+// Snapshot.
 $string['snapshot'] = 'Capture';
 $string['snapshotbitmap'] = 'Bitmap';
 $string['snapshotscript'] = 'Script';
 
-// Logo
+// Logo.
 $string['logo'] = 'Logo (seulement avec licence)';
 $string['logofile'] = 'Image';
 $string['logolink'] = 'Url';
 $string['logohide'] = 'Masquage automatique';
 $string['logoposition'] = 'Position';
 
-// Advanced
+// Advanced.
 $string['advanced'] = 'Configuration Avancée';
 $string['fpversion'] = 'Version de player flash';
 $string['tracecall'] = 'Trace d\'appels (déboggage)';
 
-// Cues
+// Cues.
 $string['cuelaunch'] = 'Lancer le {$a}';
 $string['cueininvite'] = 'Avant de continuer la projection de cette vidéo, vous êtes invité à participer à un {$a->type}.<br/><br/>{$a->link}';
 $string['cueininviteoptional'] = 'Avant de continuer la projection de cette vidéo, vous êtes invité à participer à un {$a->type}.<br/><br/>{$a->link}<br/><a href="javascript:cuepoint_resume_from_id(\'{$a->playerid}\')">Reprendre la lecture</a>';
 $string['resumefromcue'] = 'Vous pouvez maintenant reprendre la lecture.';
 
 
-// storage
+// Storage.
 $string['httpmediaserver'] = 'Serveur de média HTTP';
 $string['httpmediapath'] = 'Chemin HTTP aux media';
 $string['httpmediacontentdir'] = 'Répertoire de stockage des medias HTTP';
@@ -230,14 +244,12 @@ $string['configwowzaserver'] = 'rtmp://your.server.name';
 $string['configwowzaapplication'] = '/vod';
 $string['configwowzacontentdir'] = 'Ce répertoire est un montage système d\'un répertoire distant du serveur de flux.';
 
-//---------------------------------------------------------------------------------------------
-//---------------------------------------------------------------------------------------------
-// SWF embed alternative content error message for mod/swf/view.php
+// SWF embed alternative content error message for mod/swf/view.php.
 $string['embederror1'] = '<h3>Oups ! Il y a un problème.</h3>
 <h4>Un Player Flash de version ';
 $string['embederror2'] = ' ou plus récente est demandé.</h4>';
 $string['nohtml5'] = '<h2>La vidéeo HTML5 n\'est pas supportée par votre navigateur.</h2>';
-//---------------------------------------------------------------------------------------------
+
 global $CFG;
 
 $string['mplayer_appearance'] = 'Apparence';

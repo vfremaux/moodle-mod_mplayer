@@ -25,7 +25,7 @@
  */
 defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->dirroot . '/mod/mplayer/locallib.php');
+require_once($CFG->dirroot.'/mod/mplayer/locallib.php');
 
 /**
  * A custom renderer class that extends the plugin_renderer_base and is used by the assign module.
@@ -36,9 +36,9 @@ require_once($CFG->dirroot . '/mod/mplayer/locallib.php');
 class mod_mplayer_renderer extends plugin_renderer_base {
 
     /**
-     *
+     * @param objectref &$mplayer
      */
-    function intro($mplayer) {
+    public function intro(&$mplayer) {
         $str = '';
 
         if (!empty($mplayer->intro)) {
@@ -54,14 +54,14 @@ class mod_mplayer_renderer extends plugin_renderer_base {
      * Construct Javascript SWFObject embed code for <body> section of view.php
      * Please note: some URLs append a '?'.time(); query to prevent browser caching
      *
-     * @param $mplayer (mdl_mplayer DB record for current mplayer module instance)
+     * @param objectref &$mplayer (mdl_mplayer DB record for current mplayer module instance)
      * @return string
      */
-    function print_body(&$mplayer) {
+    public function print_body(&$mplayer) {
         global $CFG;
 
-        //a nice small tiny library for detecting mobile devices.
-        require_once ($CFG->dirroot."/mod/mplayer/Mobile_Detect.php");
+        // A nice small tiny library for detecting mobile devices.
+        require_once ($CFG->dirroot.'/mod/mplayer/Mobile_Detect.php');
 
         $detect = new Mobile_Detect;
 
@@ -75,12 +75,12 @@ class mod_mplayer_renderer extends plugin_renderer_base {
 
     /**
      * prints the body of the player 
-     * @param objectref $mplayer the MPlayer instance
-     * @param objectref $cm the associated course module
-     * @param objectref $context the associated context
+     * @param objectref &$mplayer the MPlayer instance
+     * @param objectref &$cm the associated course module
+     * @param objectref &$context the associated context
      * @return a complete HTML string with all flow player code.
      */
-    function get_device_based_mplayer(&$mplayer, &$cm, &$context) {
+    public function get_device_based_mplayer(&$mplayer, &$cm, &$context) {
         global $CFG;
 
         $isplaylist = false;
@@ -105,13 +105,14 @@ class mod_mplayer_renderer extends plugin_renderer_base {
 
     /**
      * prints the flowplayer effective body (html5)
-     * @param objectref $mplayer the MPlayer instance
-     * @param objectref $cm the associated course module object
-     * @param objectref $context the context object for this module
+     * @param objectref &$mplayer the MPlayer instance
+     * @param objectref &$cm the associated course module object
+     * @param objectref &$context the context object for this module
      * @param string $forcedtype when equals to 'flash' will force the flash engine to be used
      * whatever the technical detection.
+     * return html string
      */
-    function flowplayer_body(&$mplayer, &$cm, &$context, $forcedtype = '') {
+    public function flowplayer_body(&$mplayer, &$cm, &$context, $forcedtype = '') {
         global $CFG, $DB;
         static $loaded = false;
 
@@ -133,8 +134,10 @@ class mod_mplayer_renderer extends plugin_renderer_base {
             set_config('default_native_fullscreen', 'false', 'mplayer');
         }
 
-        // Check poster image or splash screen
-        // change get poster image in poster directory
+        /*
+         * Check poster image or splash screen
+         * change get poster image in poster directory
+         */
         if (empty($mplayer->splashmode)) {
             if ($posterurl = mplayer_get_file_url($mplayer, 'mplayerfiles', $context, '/posters/')) {
                 $js .= 'flp'.$mplayer->id.".set('poster', '$posterurl');\n";
@@ -185,7 +188,7 @@ class mod_mplayer_renderer extends plugin_renderer_base {
         // Load those once only.
         $scriptloadfragment = $this->flowplayer_init_scripts($playlistsheet);
 
-        // Streaming related tag
+        // Streaming related tag.
         $rtmpdata = '';
         if ($mplayer->type == 'rtmp' && $mplayer->streamer == 'wowza') {
             /* $canloadsmil = true;
@@ -203,7 +206,7 @@ class mod_mplayer_renderer extends plugin_renderer_base {
         if ($mplayer->playlist) {
             $mplayer_body .= $this->flowplayer_playlist_html($mplayer, $clips);
         }
-        $mplayer_body .= '</div>'; // master container
+        $mplayer_body .= '</div>'; // master container.
         $mplayer_body .= $this->flowplayer_completion($mplayer, $clips); // completion container
         $mplayer_body .= '<script type="text/javascript">'."\n";
         $mplayer_body .= 'flp'.$mplayer->id." = new FlowplayerConfig();\n";
@@ -216,7 +219,7 @@ class mod_mplayer_renderer extends plugin_renderer_base {
             $mplayer_body .= '<pre>'.htmlentities($mplayer_body).'</pre>';
         }
 
-        // If can load smil
+        // If can load smile.
         if ($canloadsmil) {
             $mplayer_body .= $this->flowplayer_load_smil($mplayer);
         }
@@ -226,9 +229,11 @@ class mod_mplayer_renderer extends plugin_renderer_base {
 
     /**
      * Get clip information from any possible source
+     * @param objectref &$mplayer
+     * @param object $context
      * @return an array of arrays as source definitions per clip
      */ 
-    function flowplayer_get_clips($mplayer, $context) {
+    public function flowplayer_get_clips(&$mplayer, $context) {
         // These are alternate playlist resolutions in case we are NOT using an XML formal playlist.
         $clips = array();
 
@@ -237,7 +242,7 @@ class mod_mplayer_renderer extends plugin_renderer_base {
         }
         switch ($mplayer->type) {
             case 'xml':
-            case 'xmlrtmp':
+            case 'xmlrtmp': {
                 // The playlist file has been uploaded.
                 $cm = get_coursemodule_from_instance('mplayer', $mplayer->id);
                 $context = context_module::instance($cm->id);
@@ -245,9 +250,10 @@ class mod_mplayer_renderer extends plugin_renderer_base {
                     $clips = mplayer_xml_playlist($mplayer, $playlistfile);
                 }
                 break;
+            }
 
             case 'httpxml':
-            case 'httpxmlrtmp':
+            case 'httpxmlrtmp': {
                 /* The playlist file is obtained from an external URL and stored into a special filearea.
                  * this filearea is NOT backuped and reloaded each time the media is accessed.
                  * TODO : Possibly add a hold time of the playlist.
@@ -258,17 +264,19 @@ class mod_mplayer_renderer extends plugin_renderer_base {
                 $playlistfile = mplayer_get_file_location($mplayer, 'remoteplaylist', $context);
                 $clips = mplayer_xml_playlist($mplayer, $playlistfile);
                 break;
+            }
 
             case 'rtmp':
-            case 'video':
+            case 'video': {
                 /* Video stores files into moodle filestore directly, with eventual thumbs
                  * In RTMP case sources can be :
                  * - local rtmp proxies stored into the local storage (.stm files)
                  */
                 $clips = mplayer_get_clips_from_files($mplayer);
                 break;
+            }
 
-            case 'url':
+            case 'url': {
                 // In that case, one clip per URL. No alternate sources possible.
                 if (!empty($mplayer->external)) {
                     $sources = explode(';', $mplayer->external);
@@ -281,25 +289,21 @@ class mod_mplayer_renderer extends plugin_renderer_base {
                     }
                 }
                 break;
-
-
-            default:
-                break;
+            }
         }
 
-        if (debugging()) {
-            // print_object($clips);
-        }
         return $clips;
     }
 
     /**
      * Builds the js sequence for making clips and playlist from a $clips array.
+     * @param objectref &$mplayer
+     * @param array $clips
      */
-    function flowplayer_build_playlist($mplayer, $clips) {
+    public function flowplayer_build_playlist(&$mplayer, $clips) {
         $js = '';
 
-        // One single clip. No playlist
+        // One single clip. No playlist.
         if (empty($clips)) {
             return $js;
         }
@@ -311,7 +315,7 @@ class mod_mplayer_renderer extends plugin_renderer_base {
                 $js .= 'flp'.$mplayer->id.'.setSource(source);'."\n";
             }
         } else {
-            // If multiple clips, we need make a playlist
+            // If multiple clips, we need make a playlist.
             foreach ($clips as $clipix => $clip) {
                 $js .= 'clip = new Clip();'."\n";
                 foreach ($clip->sources as $source) {
@@ -328,8 +332,9 @@ class mod_mplayer_renderer extends plugin_renderer_base {
 
     /**
      * Experimental
+     * @param objectref &$mplayer
      */
-    function flowplayer_load_smil($mplayer) {
+    function flowplayer_load_smil(&$mplayer) {
         global $CFG;
 
         $str = '';
@@ -343,8 +348,10 @@ class mod_mplayer_renderer extends plugin_renderer_base {
 
     /**
      * Builds all HTML output for playlist visible parts
+     * @param objectref &$mplayer
+     * @param array $clips
      */
-     function flowplayer_playlist_html($mplayer, $clips) {
+     public function flowplayer_playlist_html(&$mplayer, $clips) {
 
         $cm = get_coursemodule_from_instance('mplayer', $mplayer->id);
         $context = context_module::instance($cm->id);
@@ -387,7 +394,7 @@ class mod_mplayer_renderer extends plugin_renderer_base {
      * @param object $mplayer the MPlayer instance
      * @return string the completion HTML sequence and HTML representation.
      */
-    function flowplayer_completion($mplayer, $clips) {
+    public function flowplayer_completion($mplayer, $clips) {
         global $CFG;
 
         $cm = get_coursemodule_from_instance('mplayer', $mplayer->id);
@@ -425,7 +432,7 @@ class mod_mplayer_renderer extends plugin_renderer_base {
      * @param object $mplayer the mplayer instance
      * @return an HTML String with track element list
      */
-    function flowplayer_subtitles($mplayer) {
+    public function flowplayer_subtitles($mplayer) {
         global $CFG, $COURSE, $USER;
 
         $cm = get_coursemodule_from_instance('mplayer', $mplayer->id);
@@ -502,7 +509,7 @@ class mod_mplayer_renderer extends plugin_renderer_base {
      * @param object $mplayer the HTML5 MPlayer instance
      * @param arrayref $datacuepointsarr An array of cue points to fill
      */
-    function flowplayer_cuepoints(&$mplayer, $context) {
+    public function flowplayer_cuepoints(&$mplayer, $context) {
 
         // First get cue files if any.
         $fs = get_file_storage();
@@ -520,7 +527,7 @@ class mod_mplayer_renderer extends plugin_renderer_base {
                     } else {
                         $ix = 0;
                     }
-                } elseif (preg_match('#/cues/(\d+)/#', $filepath, $matches)) {
+                } else if (preg_match('#/cues/(\d+)/#', $filepath, $matches)) {
                     $ix = $matches[1];
                 } else {
                     continue;
@@ -529,7 +536,7 @@ class mod_mplayer_renderer extends plugin_renderer_base {
                 $cuelist = $storedfile->get_content();
                 $cuelist = preg_replace("/\r/", '', $cuelist); // Protect windows end lines
                 $cuearr = explode("\n", $cuelist);
-                foreach($cuearr as $c) {
+                foreach ($cuearr as $c) {
                     $cues[] = $ix.'|'.$c;
                 }
             }
@@ -541,12 +548,14 @@ class mod_mplayer_renderer extends plugin_renderer_base {
             $mplayer->_has_cues = true;
             foreach ($cues as $cue) {
                 @list($ix, $time, $url, $cueout, $mandatory) = explode('|', trim($cue));
-                if (empty($time)) continue;
+                if (empty($time)) {
+                    continue;
+                }
                 if (empty($mandatory)) {
                     $mandatory = 'optional';
                 }
 
-                // guess a type from url
+                // Guess a type from url.
                 $type = '';
                 if (preg_match('#\/mod/(.+?)/view#', $url, $matches)) {
                     $type = 'mod_'.$matches[1];
@@ -565,7 +574,7 @@ class mod_mplayer_renderer extends plugin_renderer_base {
         return $js;
     }
 
-    function flowplayer_cue_panels($mplayer) {
+    public function flowplayer_cue_panels($mplayer) {
         $str = '';
 
         if (empty($mplayer->_has_cues)) {
@@ -583,8 +592,9 @@ class mod_mplayer_renderer extends plugin_renderer_base {
 
     /**
      * Writes once only the js calls
+     * @param string $playlistsheet
      */
-    function flowplayer_init_scripts($playlistsheet) {
+    public function flowplayer_init_scripts($playlistsheet) {
         global $CFG, $PAGE;
         static $loaded = false;
 
@@ -621,7 +631,7 @@ class mod_mplayer_renderer extends plugin_renderer_base {
     /**
      * Not used.
      */
-    function flowplayer_flash_body() {
+    public function flowplayer_flash_body() {
         global $CFG;
 
         $body = '
@@ -630,7 +640,7 @@ class mod_mplayer_renderer extends plugin_renderer_base {
             controls: {
             url: "'.$CFG->wwwroot.'/mod/mplayer/flowplayer/flowplayer.swf",
 
-            // customize the appearance make it have a lighter look
+            // Customize the appearance make it have a lighter look.
             buttonColor: "rgba(0, 0, 0, 0.9)",
             buttonOverColor: "#000000",
             backgroundColor: "#D7D7D7",
@@ -656,13 +666,20 @@ class mod_mplayer_renderer extends plugin_renderer_base {
 
     /**
      * Builds the flowplayer class and style ruleset
+     * @param objectref &$mplayer
      */
-    function flowplayer_build_style(&$mplayer) {
+    public function flowplayer_build_style(&$mplayer) {
         $style = '';
 
-        if ($mplayer->screencolor) $style .= '.flowplayer {background-color: #'.str_replace('#', '', $mplayer->screencolor).' !important;}';
-        if ($mplayer->backcolor) $style .= '.flowplayer .fp-controls {background-color: #'.str_replace('#', '', $mplayer->backcolor).' !important;}';
-        if ($mplayer->frontcolor) $style .= '.flowplayer .fp-progress, .flowplayer .fp-volumelevel {background-color: #'.str_replace('#', '', $mplayer->frontcolor).' !important;}';
+        if ($mplayer->screencolor) {
+            $style .= '.flowplayer {background-color: #'.str_replace('#', '', $mplayer->screencolor).' !important;}';
+        }
+        if ($mplayer->backcolor) {
+            $style .= '.flowplayer .fp-controls {background-color: #'.str_replace('#', '', $mplayer->backcolor).' !important;}';
+        }
+        if ($mplayer->frontcolor) {
+            $style .= '.flowplayer .fp-progress, .flowplayer .fp-volumelevel {background-color: #'.str_replace('#', '', $mplayer->frontcolor).' !important;}';
+        }
         if ($mplayer->lightcolor) {
             $style .= '.flowplayer .fp-buffer {background-color: #'.str_replace('#', '', $mplayer->lightcolor).' !important;}';
             $style .= '.flowplayer .fp-time .fp-elapsed, .flowplayer .fp-time .fp-duration, .flowplayer .fp-mute {color: #'.str_replace('#', '', $mplayer->lightcolor).' !important;}';
@@ -672,12 +689,13 @@ class mod_mplayer_renderer extends plugin_renderer_base {
     }
 
     /**
-     * @param $mplayer
-     * @param $cm
-     * @param $context
+     * Prints JW player body.
+     * @param objectref &$mplayer
+     * @param object $cm
+     * @param object $context
      * @return string
      */
-    function jwplayer_body($mplayer, $cm, $context) {
+    public function jwplayer_body(&$mplayer, $cm, $context) {
         global $CFG;
 
         $listbar = $mplayer->playlist ? $mplayer->playlist : 'none';
@@ -685,17 +703,23 @@ class mod_mplayer_renderer extends plugin_renderer_base {
         if (1) {
             switch ($mplayer->type) {
                 case 'video':
-                case 'sound':
+                case 'sound': {
                     $urlArray = mplayer_get_file_url($mplayer, 'mplayerfiles', $context, '/medias/0/', true);
                     break;
-                case 'url':
+                }
+
+                case 'url': {
                     $urlArray = explode(';', ' ;' . $mplayer->external);
                     break;
-                case 'youtube':
+                }
+
+                case 'youtube': {
                     $urlArray = explode(';', $mplayer->external);
                     break;
-                default: $urlArray = array();
-                break;
+                }
+
+                default:
+                    $urlArray = array();
             }
             $playlistthumb = mplayer_get_file_url($mplayer, 'mplayerfiles', $context, '/thumbs/', true);
             $_playlist = array();
@@ -739,8 +763,11 @@ class mod_mplayer_renderer extends plugin_renderer_base {
      * outside style of progress bar is driven by mplayer stylesheet,
      * unless innerbar width.
      * @see ajax/markmediacompletion.php
+     * 
+     * @param int $progress
+     * @param int $progress2
      */
-    function progressbar($progress, $progress2 = null) {
+    public function progressbar($progress, $progress2 = null) {
         $str = '';
 
         $str .= '<div class="mod-mplayer progressbar">';
@@ -768,7 +795,7 @@ class mod_mplayer_renderer extends plugin_renderer_base {
      * @see mod_flashcard
      * NOT USED YET
      */
-    function play_sound(&$mplayer, $clipid, $autostart = 'false', $htmlname = '') {
+    public function play_sound(&$mplayer, $clipid, $autostart = 'false', $htmlname = '') {
         global $CFG, $COURSE, $OUTPUT;
 
         $strmissingsound = get_string('missingsound', 'mplayer');

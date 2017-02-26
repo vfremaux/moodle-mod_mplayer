@@ -18,20 +18,15 @@
  * Creates instance of Media Player activity module
  * Adapted from mod_form.php template by Jamie Pratt
  *
- * @package  mod_mplayer
- * @category mod
- * @author   Matt Bury - matbury@gmail.com
- * @author   Valery Fremaux <valery.fremaux@gmail.com>
- * @licence  http://www.gnu.org/copyleft/gpl.html GNU Public Licence
- *
- * DB Table name (mdl_)mplayer
- *
+ * @package     mod_mplayer
+ * @category    mod
+ * @author      Matt Bury - matbury@gmail.com
+ * @author      Valery Fremaux <valery.fremaux@gmail.com>
+ * @copyright   (C) 2009 onwards Matt Bury
+ * @licence     http://www.gnu.org/copyleft/gpl.html GNU Public Licence
  */
 defined('MOODLE_INTERNAL') || die();
 
-/**
- *    Copyright (C) 2009  Matt Bury
- */
 require_once($CFG->dirroot.'/course/moodleform_mod.php');
 require_once($CFG->dirroot.'/mod/mplayer/locallib.php');
 
@@ -39,7 +34,7 @@ class mod_mplayer_mod_form extends moodleform_mod {
 
     public $descriptionoptions;
 
-    function definition() {
+    public function definition() {
         global $CFG, $COURSE, $USER;
 
         $mform =& $this->_form;
@@ -262,7 +257,7 @@ class mod_mplayer_mod_form extends moodleform_mod {
         $mform->setDefault('lightcolor', $config->default_lightcolor);
         $mform->setAdvanced('lightcolor');
 
-        // screencolor
+        // Screencolor.
         $mform->addElement('text', 'screencolor', get_string('screencolor', 'mplayer'), $mplayer_int_array);
         $mform->setType('screencolor', PARAM_TEXT);
         if (!isset($config->default_screencolor)) {
@@ -272,7 +267,7 @@ class mod_mplayer_mod_form extends moodleform_mod {
         $mform->setDefault('screencolor', $config->default_screencolor);
         $mform->setAdvanced('screencolor');
 
-        // smoothing
+        // Smoothing.
         $mform->addElement('select', 'smoothing', get_string('smoothing', 'mplayer'), mplayer_list_truefalse());
         $mform->setDefault('smoothing', 'true');
         $mform->setAdvanced('smoothing');
@@ -809,7 +804,7 @@ class mod_mplayer_mod_form extends moodleform_mod {
         parent::set_data($defaults);
     }
 
-    function definition_after_data() {
+    public function definition_after_data() {
         parent::definition_after_data();
         $mform = $this->_form;
 
@@ -830,7 +825,7 @@ class mod_mplayer_mod_form extends moodleform_mod {
      * @param array $files
      * @return array
      */
-    function validation($data, $files) {
+    public function validation($data, $files) {
         $draftitemid = file_get_submitted_draft_itemid('mplayerfiles');
         $_data = file_get_drafarea_files($draftitemid);
 
@@ -839,7 +834,7 @@ class mod_mplayer_mod_form extends moodleform_mod {
         return $errors;
     }
 
-    function add_completion_rules() {
+    public function add_completion_rules() {
         $mform =& $this->_form;
 
         $mform->addElement('checkbox', 'completionmediaviewed', get_string('mediaviewed', 'mplayer'), get_string('completionmediaviewed', 'mplayer'));
@@ -847,7 +842,7 @@ class mod_mplayer_mod_form extends moodleform_mod {
         return array('completionmediaviewed');
     }
 
-    function completion_rule_enabled($data) {
+    public function completion_rule_enabled($data) {
         return(!empty($data['completionmediaviewed']));
     }
 }
