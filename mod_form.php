@@ -70,7 +70,6 @@ class mod_mplayer_mod_form extends moodleform_mod {
         $mform->addRule('name', null, 'required', null, 'client');
         $mform->addRule('name', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
 
-        // Introduction.
         $this->standard_intro_elements();
 
         // TECHNOLOGY ----------------------------------------.
@@ -804,7 +803,7 @@ class mod_mplayer_mod_form extends moodleform_mod {
         parent::set_data($defaults);
     }
 
-    public function definition_after_data() {
+    function definition_after_data() {
         parent::definition_after_data();
         $mform = $this->_form;
 
@@ -825,7 +824,7 @@ class mod_mplayer_mod_form extends moodleform_mod {
      * @param array $files
      * @return array
      */
-    public function validation($data, $files) {
+    function validation($data, $files) {
         $draftitemid = file_get_submitted_draft_itemid('mplayerfiles');
         $_data = file_get_drafarea_files($draftitemid);
 
@@ -834,7 +833,7 @@ class mod_mplayer_mod_form extends moodleform_mod {
         return $errors;
     }
 
-    public function add_completion_rules() {
+    function add_completion_rules() {
         $mform =& $this->_form;
 
         $mform->addElement('checkbox', 'completionmediaviewed', get_string('mediaviewed', 'mplayer'), get_string('completionmediaviewed', 'mplayer'));
@@ -842,7 +841,7 @@ class mod_mplayer_mod_form extends moodleform_mod {
         return array('completionmediaviewed');
     }
 
-    public function completion_rule_enabled($data) {
+    function completion_rule_enabled($data) {
         return(!empty($data['completionmediaviewed']));
     }
 }
