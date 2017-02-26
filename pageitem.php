@@ -14,8 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Defines a page embeddable widget for mplayer in page course format.
  *
@@ -25,11 +23,12 @@ defined('MOODLE_INTERNAL') || die();
  * @author   Valery Fremaux <valery.fremaux@gmail.com>
  * @licence  http://www.gnu.org/copyleft/gpl.html GNU Public Licence
  */
+defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->dirroot.'/mod/mplayer/locallib.php');
 
 /**
- * implements an alternative representzaiton of this activity for the "page"
+ * implements an alternative representation of this activity for the "page"
  * format.
  */
 function mplayer_set_instance(&$block) {
@@ -47,6 +46,10 @@ function mplayer_set_instance(&$block) {
 
     $renderer = $PAGE->get_renderer('mplayer');
     $str .= $renderer->print_body($mplayer);
+
+    if (!empty($block->cm->showdescription)) {
+        $str .= $renderer->intro($mplayer);
+    }
 
     // Trigger module viewed event.
     $context = context_module::instance($block->cm->id);
