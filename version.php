@@ -15,22 +15,23 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Version Details.
+ * Version details.
  *
- * @author Matt Bury - matbury@gmail.com - http://matbury.com/
- * @version $Id: version.php,v 0.3 2009/11/25 matbury Exp $
- * @licence http://www.gnu.org/copyleft/gpl.html GNU Public Licence
- * @copyright (C) 2009  Matt Bury
- * @package mplayer
- **/
+ * @package    mod_mplayer
+ * @category   mod
+ * @author     Matt Bury - matbury@gmail.com - http://matbury.com/
+ * @copyright  (C) 2009  Matt Bury
+ * @copyright  (C) 2015  Valery Fremaux (valery.fremaux@gmail.com)
+ * @licence    http://www.gnu.org/copyleft/gpl.html GNU Public Licence
+ */
 
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->version  = 2016033101;  // The current module version (Date: YYYYMMDDXX).
-$plugin->release = 'Moodle 2.7.0 (Build 2015110105)';
 $plugin->requires = 2014050800;
 $plugin->component = 'mod_mplayer';
+$plugin->release = 'Moodle 2.7.0 (Build 2015110105)';
 $plugin->maturity = MATURITY_BETA;
 
-// Non moodle attributes
+// Non Moodle attributes.
 $plugin->codeincrement = '2.7.0001';
