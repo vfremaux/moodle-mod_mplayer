@@ -15,13 +15,15 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * The mod_mplayer course module viewed event.
  *
- * @package    mod_mplayer
- * @copyright  2014 IGA SE
+ * @package     mod_mplayer
+ * @category    mod
+ * @author      Matt Bury - matbury@gmail.com
+ * @author      Valery Fremaux <valery.fremaux@gmail.com>
+ * @licence     http://www.gnu.org/copyleft/gpl.html GNU Public Licence
  */
-
 namespace mod_mplayer\event;
+
 defined('MOODLE_INTERNAL') || die();
 
 /**
@@ -101,6 +103,5 @@ class mplayer_viewedall extends \core\event\base {
             throw new \coding_exception('Context level must be CONTEXT_MODULE.');
         }
     }
-
 }
 

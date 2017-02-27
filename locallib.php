@@ -18,13 +18,47 @@
  * Library of functions and constants for module mplayer
  * For more information on the parameters used by JW FLV Player see documentation: http://developer.longtailvideo.com/trac/wiki/FlashVars
  * 
- * @package  mod_mplayer
- * @category mod
- * @author   Matt Bury - matbury@gmail.com
- * @author   Valery Fremaux <valery.fremaux@gmail.com>
- * @licence  http://www.gnu.org/copyleft/gpl.html GNU Public Licence
+ * @package     mod_mplayer
+ * @category    mod
+ * @author      Matt Bury - matbury@gmail.com
+ * @author      Valery Fremaux <valery.fremaux@gmail.com>
+ * @licence     http://www.gnu.org/copyleft/gpl.html GNU Public Licence
  */
 defined('MOODLE_INTERNAL') || die();
+
+/**
+ * Gets working instance context
+ *
+ * @param int $cmid
+ * @param int $instanceid
+ */
+function mplayer_get_context($cmid, $instanceid) {
+    global $DB;
+
+    if ($cmid) {
+        if (! $cm = $DB->get_record('course_modules', array('id' => $cmid))) {
+            print_error('invalidcoursemodule');
+        }
+        if (! $course = $DB->get_record('course', array('id' => $cm->course))) {
+            print_error('coursemisconf');
+        }
+        if (! $mplayer = $DB->get_record('mplayer', array('id' => $cm->instance))) {
+            print_error('invalidmplayerid', 'mplayer');
+        }
+    } else {
+        if (! $mplayer = $DB->get_record('mplayer', array('id' => $instanceid))) {
+            print_error('invalidmplayerid', 'mplayer');
+        }
+        if (! $course = $DB->get_record('course', array('id' => $mplayer->course))) {
+            print_error('coursemisconf');
+        }
+        if (! $cm = get_coursemodule_from_instance('mplayer', $mplayer->id, $course->id)) {
+            print_error('invalidcoursemodule');
+        }
+    }
+
+    return array($cm, $mplayer, $course);
+}
 
 /**
  * Saves all draft files received from instance setup
@@ -386,7 +420,8 @@ function mplayer_require_js() {
  * Get all file areas used in module
  */
 function mplayer_get_fileareas() {
-    return array('mplayerfiles', 'configxml', 'audiodescriptionfile', 'captionsfile', 'hdfile', 'livestreamfile', 'livestreamimagefile', 'logoboxfile', 'logofile');
+    return array('mplayerfiles', 'configxml', 'audiodescriptionfile', 'captionsfile', 'hdfile', 'livestreamfile',
+                 'livestreamimagefile', 'logoboxfile', 'logofile');
 }
 
 /**
@@ -449,7 +484,6 @@ function mplayer_list_linktarget() {
  * @return array
  */
 function mplayer_list_type($player) {
-    global $CFG;
 
     if ($player->technology == 'jw') {
         return array('video' => get_string('video', 'mplayer'),
@@ -477,7 +511,6 @@ function mplayer_list_type($player) {
  * @return array
  */
 function mplayer_list_technologies() {
-    global $CFG;
 
     return array('flowplayer' => 'Flowplayer',
                 'jw' => 'JW Player'
@@ -524,13 +557,10 @@ function mplayer_list_availablelangoptions() {
  * @return array
  */
 function mplayer_list_streamer() {
-    global $CFG;
 
     $config = get_config('mplayer');
 
     return array('' => 'none',
-                 //, $CFG->wwwroot.'/mod/mplayer/xmoov/xmoov.php' => 'Xmoov-php (http)'
-                 //, 'lighttpd' => 'Lighttpd'
                  'http' => 'Remote HTTP',
                  'wowza' => 'Wowza'
                  );
@@ -542,13 +572,10 @@ function mplayer_list_streamer() {
  * @return array
  */
 function mplayer_list_searchbarscript() {
-    global $CFG;
 
     return array('' => 'none'
                  , 'http://gdata.youtube.com/feeds/api/videos?vq=QUERY&format=5' => 'YouTube.com Search'
-                 //, $CFG->wwwroot.'/mod/mplayer/scripts/search.php' => 'Search Script Label'
-                 //, $CFG->wwwroot.'/file.php/'.$COURSE->id.'/scripts/search.php' => 'Search Script Label'
-                 );
+    );
 }
 
 /**
@@ -561,7 +588,6 @@ function mplayer_list_snapshotscript() {
 
     return array('none' => 'none'
                  , $CFG->wwwroot.'/mod/mplayer/scripts/snapshot.php' => 'Demo Snapshot Script'
-                 //, $CFG->wwwroot.'/file.php/'.$COURSE->id.'/scripts/snapshot.php' => 'Snapshot Script Label'
                  );
 }
 
@@ -807,7 +833,6 @@ function mplayer_list_volume() {
  * @param object $mplayer
  */
 function mplayer_convert_storage_for_streamer($mplayer) {
-    global $CFG;
 
     $config = get_config('mod_mplayer');
 
@@ -819,7 +844,6 @@ function mplayer_convert_storage_for_streamer($mplayer) {
     }
 
     $storage = mplayer_get_media_storage($mplayer->streamer);
-    // echo "Storing in storage $mplayer->streamer";
 
     $files = $fs->get_directory_files($context->id, 'mod_mplayer', 'mplayerfiles', 0, '/medias/', true, false);
 
@@ -827,9 +851,9 @@ function mplayer_convert_storage_for_streamer($mplayer) {
         foreach ($files as $storedfile) {
             $originalname = $storedfile->get_filename();
             if (!preg_match('/\.stm/', $originalname)) {
-                // Process anything that is NOT a proxy
+                // Process anything that is NOT a proxy.
 
-                // Prepare proxy record
+                // Prepare proxy record.
                 $rec = new StdClass();
                 $rec->contextid = $context->id;
                 $rec->component = 'mod_mplayer';
@@ -867,7 +891,7 @@ function mplayer_convert_storage_for_streamer($mplayer) {
  */
 function mplayer_flowplayer_get_type(&$mplayer, $url) {
     if (empty($mplayer->streamer) || $mplayer->streamer == 'http') {
-        // Non streamed sources
+        // Non streamed sources.
         if (preg_match('/\.webm$/', $url)) {
             $type = 'video/webm';
         } else {
@@ -875,13 +899,13 @@ function mplayer_flowplayer_get_type(&$mplayer, $url) {
         }
     } else {
         if (preg_match('/\.m3u8$/', $url)) {
-            // HLS Support
+            // HLS Support.
             $type = 'application/x-mpegurl';
         } elseif (preg_match('/\/vod\/smil\:/', $url)) {
-            // HLS Support
+            // HLS Support.
             $type = 'application/x-mpegurl';
         } else {
-            // Other RTMP calls
+            // Other RTMP calls.
             $type = 'video/flash';
         }
     }

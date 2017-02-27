@@ -32,7 +32,7 @@ require_once($CFG->dirroot.'/mod/mplayer/locallib.php');
  * format.
  */
 function mplayer_set_instance(&$block) {
-    global $DB, $PAGE, $CFG, $COURSE;
+    global $DB, $PAGE;
 
     $str = '';
 

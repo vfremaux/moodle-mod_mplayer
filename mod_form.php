@@ -787,7 +787,8 @@ class mod_mplayer_mod_form extends moodleform_mod {
             $defaults = file_prepare_standard_editor($defaults, 'notes', $this->descriptionoptions, $context, 'mod_techproject', 'notes', $defaults->id);
 
             // Saves draft customization image files into definitive filearea.
-            $instancefiles = array('mplayerfiles', 'playlistfiles', 'configxml', 'audiodescriptionfile', 'captionsfile', 'hdfile', 'livestreamfile', 'livestreamimage', 'logoboxfile', 'logofile');
+            $instancefiles = array('mplayerfiles', 'playlistfiles', 'configxml', 'audiodescriptionfile', 'captionsfile', 'hdfile',
+                                   'livestreamfile', 'livestreamimage', 'logoboxfile', 'logofile');
             foreach ($instancefiles as $if) {
                 $draftitemid = file_get_submitted_draft_itemid($if);
                 $maxfiles = ($if == 'mplayerfiles') ? -1 : 1;
@@ -837,7 +838,8 @@ class mod_mplayer_mod_form extends moodleform_mod {
     public function add_completion_rules() {
         $mform =& $this->_form;
 
-        $mform->addElement('checkbox', 'completionmediaviewed', get_string('mediaviewed', 'mplayer'), get_string('completionmediaviewed', 'mplayer'));
+        $label = get_string('completionmediaviewed', 'mplayer');
+        $mform->addElement('checkbox', 'completionmediaviewed', get_string('mediaviewed', 'mplayer'), $label);
 
         return array('completionmediaviewed');
     }
