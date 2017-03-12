@@ -354,7 +354,7 @@ function mplayer_pluginfile($course, $cm, $context, $filearea, $args, $forcedown
             send_stored_file($file, 0, 0, $forcedownload);
         }
     } else {
-        $sort = "sortorder, itemid, filepath, filename";
+        $sort = 'sortorder, itemid, filepath, filename';
         if ($files = $fs->get_area_files($context->id, 'mod_mplayer', $filearea, $itemid, $sort, false)) {
             $file = array_pop($files);
 
