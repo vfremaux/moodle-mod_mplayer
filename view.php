@@ -112,8 +112,9 @@ if ($COURSE->format != 'singleactivity' && !($COURSE->format == 'page' && option
     echo '<center>';
     require_once($CFG->dirroot.'/course/format/page/xlib.php');
     page_print_page_format_navigation($cm, false);
-    $params = array('id' => $course->id)), get_string('backtocourse', 'mplayer');
-    echo $OUTPUT->single_button(new moodle_url('/course/view.php', $params);
+    $params = array('id' => $course->id);
+    $label = get_string('backtocourse', 'mplayer');
+    echo $OUTPUT->single_button(new moodle_url('/course/view.php', $params, $label);
     echo '</center>';
 }
 
