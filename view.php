@@ -114,7 +114,7 @@ if ($COURSE->format != 'singleactivity' && !($COURSE->format == 'page' && option
     page_print_page_format_navigation($cm, false);
     $params = array('id' => $course->id);
     $label = get_string('backtocourse', 'mplayer');
-    echo $OUTPUT->single_button(new moodle_url('/course/view.php', $params, $label);
+    echo $OUTPUT->single_button(new moodle_url('/course/view.php', $params), $label);
     echo '</center>';
 }
 
