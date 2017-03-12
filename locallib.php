@@ -330,7 +330,7 @@ function mplayer_xml_playlist(&$mplayer, $playlistfile) {
             if (isset($video_info->thumb)) {
                 $clip->thumb = ''.$video_info->thumb;
             }
-        } elseif ($mplayer->playlist == 'dots') {
+        } else if ($mplayer->playlist == 'dots') {
             // Let have thumbs, but let the CSS to the trick.
             $clip->thumb = '';
         } else {
@@ -340,7 +340,7 @@ function mplayer_xml_playlist(&$mplayer, $playlistfile) {
         // Accepts two alternate caption attributes.
         if (isset($video_info->caption)) {
             $clip->title = $video_info->caption;
-        } elseif (isset($video_info->title)) {
+        } else if (isset($video_info->title)) {
             $clip->title = $video_info->title;
         }
 
@@ -359,7 +359,7 @@ function mplayer_xml_playlist(&$mplayer, $playlistfile) {
 function mplayer_clear_area(&$mplayer, $filearea, $context = null) {
 
     if ($context->contextlevel != CONTEXT_MODULE || $context->instance != $mplayer->id) {
-        throw(new CodingException('Context does not match given mplayer instance.'));
+        throw (new CodingException('Context does not match given mplayer instance.'));
     }
 
     if (!$cm = get_coursemodule_from_instance('mplayer', $mplayer->id)) {
@@ -386,7 +386,8 @@ function mplayer_require_js() {
  * Get all file areas used in module
  */
 function mplayer_get_fileareas() {
-    return array('mplayerfiles', 'configxml', 'audiodescriptionfile', 'captionsfile', 'hdfile', 'livestreamfile', 'livestreamimagefile', 'logoboxfile', 'logofile');
+    return array('mplayerfiles', 'configxml', 'audiodescriptionfile', 'captionsfile', 'hdfile', 'livestreamfile',
+                 'livestreamimagefile', 'logoboxfile', 'logofile');
 }
 
 /**
@@ -397,16 +398,19 @@ function mplayer_get_fileareas() {
  * @return string
  */
 function mplayer_print_header_js($mplayer) {
+
     // Build Javascript code for view.php print_header() function.
-    $mplayer_header_js = '<script type="text/javascript" src="swfobject/swfobject.js"></script>
-        <script type="text/javascript">
-            swfobject.registerObject("jwPlayer", "'.$mplayer->fpversion.'");
-        </script>';
-    // Don't show default dotted outline around Flash Player window in Firefox 3.
-    $mplayer_header_js .= '<style type="text/css" media="screen">
-            object { outline:none; }
-        </style>';
-    return $mplayer_header_js;
+
+    $js = '<script type="text/javascript" src="swfobject/swfobject.js"></script>';
+    $js .= '    <script type="text/javascript">';
+    $js .= '        swfobject.registerObject("jwPlayer", "'.$mplayer->fpversion.'");';
+    $js .= '    </script>';
+    $js .= '// Don\'t show default dotted outline around Flash Player window in Firefox 3.';
+    $js .= '<style type="text/css" media="screen">';
+    $js .= '    object { outline:none; }';
+    $js .= '</style>';
+
+    return $js;
 }
 
 /* functions for Form */
@@ -449,7 +453,6 @@ function mplayer_list_linktarget() {
  * @return array
  */
 function mplayer_list_type($player) {
-    global $CFG;
 
     if ($player->technology == 'jw') {
         return array('video' => get_string('video', 'mplayer'),
@@ -477,7 +480,6 @@ function mplayer_list_type($player) {
  * @return array
  */
 function mplayer_list_technologies() {
-    global $CFG;
 
     return array('flowplayer' => 'Flowplayer',
                 'jw' => 'JW Player'
@@ -489,11 +491,11 @@ function mplayer_list_technologies() {
  * @return array
  */
 function mplayer_list_langchoiceoptions() {
+
     return array(0 => get_string('langcourse', 'mplayer'),
         1 => get_string('languser', 'mplayer'),
         2 => get_string('langfreechoice', 'mplayer'),
-        3 => get_string('langteacherchoice', 'mplayer'),
-    );
+        3 => get_string('langteacherchoice', 'mplayer'));
 }
 
 /**
@@ -501,6 +503,7 @@ function mplayer_list_langchoiceoptions() {
  * @return array
  */
 function mplayer_list_availablelangoptions() {
+
     /*
      * This is a first approach that takes only activated languages in Moodle. Other languages
      * Will be ignored.
@@ -532,8 +535,7 @@ function mplayer_list_streamer() {
                  //, $CFG->wwwroot.'/mod/mplayer/xmoov/xmoov.php' => 'Xmoov-php (http)'
                  //, 'lighttpd' => 'Lighttpd'
                  'http' => 'Remote HTTP',
-                 'wowza' => 'Wowza'
-                 );
+                 'wowza' => 'Wowza');
 }
 
 /**
@@ -542,13 +544,9 @@ function mplayer_list_streamer() {
  * @return array
  */
 function mplayer_list_searchbarscript() {
-    global $CFG;
 
     return array('' => 'none'
-                 , 'http://gdata.youtube.com/feeds/api/videos?vq=QUERY&format=5' => 'YouTube.com Search'
-                 //, $CFG->wwwroot.'/mod/mplayer/scripts/search.php' => 'Search Script Label'
-                 //, $CFG->wwwroot.'/file.php/'.$COURSE->id.'/scripts/search.php' => 'Search Script Label'
-                 );
+                 , 'http://gdata.youtube.com/feeds/api/videos?vq=QUERY&format=5' => 'YouTube.com Search');
 }
 
 /**
@@ -594,8 +592,7 @@ function mplayer_list_playliststyles() {
     return array(
         '' => get_string('none', 'mplayer'),
         'dots' => get_string('dots', 'mplayer'),
-        'thumbs' => get_string('thumbs', 'mplayer')
-    );
+        'thumbs' => get_string('thumbs', 'mplayer'));
 }
 
 /**
@@ -650,7 +647,7 @@ function mplayer_list_logoposition() {
     return array('bottom-left' => 'bottom-left',
                  'bottom-right' => 'bottom-right',
                  'top-left' => 'top-left',
-                'top-right' => 'top-right');
+                 'top-right' => 'top-right');
 }
 
 /**
@@ -701,36 +698,36 @@ function mplayer_list_skins() {
  */
 function mplayer_list_bufferlength() {
     return array('0' => '0',
-                '1' => '1',
-                '2' => '2',
-                '3' => '3',
-                '4' => '4',
-                '5' => '5',
-                '6' => '6',
-                '7' => '7',
-                '8' => '8',
-                '9' => '9',
-                '10' => '10',
-                '11' => '11',
-                '12' => '12',
-                '13' => '13',
-                '14' => '14',
-                '15' => '15',
-                '16' => '16',
-                '17' => '17',
-                '18' => '18',
-                '19' => '19',
-                '20' => '20',
-                '21' => '21',
-                '22' => '22',
-                '23' => '23',
-                '24' => '24',
-                '25' => '25',
-                '26' => '26',
-                '27' => '27',
-                '28' => '28',
-                '29' => '29',
-                '30' => '30');
+                 '1' => '1',
+                 '2' => '2',
+                 '3' => '3',
+                 '4' => '4',
+                 '5' => '5',
+                 '6' => '6',
+                 '7' => '7',
+                 '8' => '8',
+                 '9' => '9',
+                 '10' => '10',
+                 '11' => '11',
+                 '12' => '12',
+                 '13' => '13',
+                 '14' => '14',
+                 '15' => '15',
+                 '16' => '16',
+                 '17' => '17',
+                 '18' => '18',
+                 '19' => '19',
+                 '20' => '20',
+                 '21' => '21',
+                 '22' => '22',
+                 '23' => '23',
+                 '24' => '24',
+                 '25' => '25',
+                 '26' => '26',
+                 '27' => '27',
+                 '28' => '28',
+                 '29' => '29',
+                 '30' => '30');
 }
 
 /**
@@ -739,11 +736,11 @@ function mplayer_list_bufferlength() {
  */
 function mplayer_list_displayclick() {
     return array('play' => 'play',
-                'link' => 'link',
-                'fullscreen' => 'fullscreen',
-                'none' => 'none',
-                'mute' => 'mute',
-                'next' => 'next');
+                 'link' => 'link',
+                 'fullscreen' => 'fullscreen',
+                 'none' => 'none',
+                 'mute' => 'mute',
+                 'next' => 'next');
 }
 
 /**
@@ -753,8 +750,8 @@ function mplayer_list_displayclick() {
 function mplayer_list_repeat() {
     return array('none' => 'none',
                  'list' => 'list',
-                'always' => 'always',
-                'single' => 'single');
+                 'always' => 'always',
+                 'single' => 'single');
 }
 
 /**
@@ -765,8 +762,8 @@ function mplayer_list_repeat() {
 function mplayer_list_stretching() {
     return array('none' => 'none',
                  'uniform' => 'uniform',
-                'exactfit' => 'exactfit',
-                'fill' => 'fill');
+                 'exactfit' => 'exactfit',
+                 'fill' => 'fill');
 }
 
 /**
@@ -775,26 +772,26 @@ function mplayer_list_stretching() {
  */
 function mplayer_list_volume() {
     return array('0' => '0',
-                '5' => '5',
-                '10' => '10',
-                '15' => '15',
-                '20' => '20',
-                '25' => '25',
-                '30' => '30',
-                '35' => '35',
-                '40' => '40',
-                '45' => '45',
-                '50' => '50',
-                '55' => '55',
-                '60' => '60',
-                '65' => '65',
-                '70' => '70',
-                '75' => '75',
-                '80' => '80',
-                '85' => '85',
-                '90' => '90',
-                '95' => '95',
-                '100' => '100');
+                 '5' => '5',
+                 '10' => '10',
+                 '15' => '15',
+                 '20' => '20',
+                 '25' => '25',
+                 '30' => '30',
+                 '35' => '35',
+                 '40' => '40',
+                 '45' => '45',
+                 '50' => '50',
+                 '55' => '55',
+                 '60' => '60',
+                 '65' => '65',
+                 '70' => '70',
+                 '75' => '75',
+                 '80' => '80',
+                 '85' => '85',
+                 '90' => '90',
+                 '95' => '95',
+                 '100' => '100');
 }
 
 /**
@@ -807,7 +804,6 @@ function mplayer_list_volume() {
  * @param object $mplayer
  */
 function mplayer_convert_storage_for_streamer($mplayer) {
-    global $CFG;
 
     $config = get_config('mod_mplayer');
 
@@ -829,7 +825,7 @@ function mplayer_convert_storage_for_streamer($mplayer) {
             if (!preg_match('/\.stm/', $originalname)) {
                 // Process anything that is NOT a proxy
 
-                // Prepare proxy record
+                // Prepare proxy record.
                 $rec = new StdClass();
                 $rec->contextid = $context->id;
                 $rec->component = 'mod_mplayer';
@@ -867,7 +863,7 @@ function mplayer_convert_storage_for_streamer($mplayer) {
  */
 function mplayer_flowplayer_get_type(&$mplayer, $url) {
     if (empty($mplayer->streamer) || $mplayer->streamer == 'http') {
-        // Non streamed sources
+        // Non streamed sources.
         if (preg_match('/\.webm$/', $url)) {
             $type = 'video/webm';
         } else {
@@ -875,13 +871,13 @@ function mplayer_flowplayer_get_type(&$mplayer, $url) {
         }
     } else {
         if (preg_match('/\.m3u8$/', $url)) {
-            // HLS Support
+            // HLS Support.
             $type = 'application/x-mpegurl';
         } elseif (preg_match('/\/vod\/smil\:/', $url)) {
-            // HLS Support
+            // HLS Support.
             $type = 'application/x-mpegurl';
         } else {
-            // Other RTMP calls
+            // Other RTMP calls.
             $type = 'video/flash';
         }
     }
@@ -956,7 +952,7 @@ function mplayer_upgrade_storage($mplayer) {
 
     mplayer_init_storage($cm);
 
-    // check old 'mplayerfile' area
+    // Check old 'mplayerfile' area.
     if ($oldfiles = $fs->get_area_files($context->id, 'mod_mplayer', 'mplayerfile', 0, 'itemid,filepath,filename', false)) {
         foreach ($oldfiles as $storedfile) {
             $newrec = new StdClass();
