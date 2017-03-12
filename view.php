@@ -29,30 +29,8 @@
 require('../../config.php');
 require_once($CFG->dirroot.'/mod/mplayer/lib.php');
 
-$id = optional_param('id', 0, PARAM_INT); // Course Module ID, or.
-$a  = optional_param('a', 0, PARAM_INT);  // Mplayer ID.
+list($cm, $mplayer, $course) = get_mplayer_context();
 
-if ($id) {
-    if (! $cm = $DB->get_record('course_modules', array('id' => $id))) {
-        print_error('invalidcoursemodule');
-    }
-    if (! $course = $DB->get_record('course', array('id' => $cm->course))) {
-        print_error('coursemisconf');
-    }
-    if (! $mplayer = $DB->get_record('mplayer', array('id' => $cm->instance))) {
-        print_error('invalidmplayerid', 'mplayer');
-    }
-} else {
-    if (! $mplayer = $DB->get_record('mplayer', array('id' => $a))) {
-        print_error('invalidmplayerid', 'mplayer');
-    }
-    if (! $course = $DB->get_record('course', array('id' => $mplayer->course))) {
-        print_error('coursemisconf');
-    }
-    if (! $cm = get_coursemodule_from_instance('mplayer', $mplayer->id, $course->id)) {
-        print_error('invalidcoursemodule');
-    }
-}
 $url = new moodle_url('/mod/mplayer/view.php', array('id' => $cm->id));
 $PAGE->set_url($url);
 

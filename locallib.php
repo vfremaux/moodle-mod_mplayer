@@ -27,6 +27,37 @@
 defined('MOODLE_INTERNAL') || die();
 
 /**
+ *
+ */
+function get_mplayer_context() {
+    $id = optional_param('id', 0, PARAM_INT); // Course Module ID, or.
+    $a  = optional_param('a', 0, PARAM_INT);  // Mplayer ID.
+    
+    if ($id) {
+        if (! $cm = $DB->get_record('course_modules', array('id' => $id))) {
+            print_error('invalidcoursemodule');
+        }
+        if (! $course = $DB->get_record('course', array('id' => $cm->course))) {
+            print_error('coursemisconf');
+        }
+        if (! $mplayer = $DB->get_record('mplayer', array('id' => $cm->instance))) {
+            print_error('invalidmplayerid', 'mplayer');
+        }
+    } else {
+        if (! $mplayer = $DB->get_record('mplayer', array('id' => $a))) {
+            print_error('invalidmplayerid', 'mplayer');
+        }
+        if (! $course = $DB->get_record('course', array('id' => $mplayer->course))) {
+            print_error('coursemisconf');
+        }
+        if (! $cm = get_coursemodule_from_instance('mplayer', $mplayer->id, $course->id)) {
+            print_error('invalidcoursemodule');
+        }
+    }
+    return array($cm, $mplayer, $course);
+}
+
+/**
  * Saves all draft files received from instance setup
  * @param objectref &$mplayer
  * @param string $filearea name of a filearea to process for saving
@@ -545,8 +576,8 @@ function mplayer_list_streamer() {
  */
 function mplayer_list_searchbarscript() {
 
-    return array('' => 'none'
-                 , 'http://gdata.youtube.com/feeds/api/videos?vq=QUERY&format=5' => 'YouTube.com Search');
+    return array('' => 'none',
+                 'http://gdata.youtube.com/feeds/api/videos?vq=QUERY&format=5' => 'YouTube.com Search');
 }
 
 /**
