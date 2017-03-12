@@ -1,17 +1,41 @@
 <?php
-// This file keeps track of upgrades to the mplayer module
+// This file is part of Moodle - http://moodle.org/
 //
-// The commands in here will all be database-neutral, using the functions defined in lib/ddllib.php
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * This page prints a particular instance of mplayer
+ *
+ * @package     mod_mplayer
+ * @category    mod
+ * @author      Matt Bury - matbury@gmail.com  < 2.x
+ * @author      Valery Fremaux <valery.fremaux@gmail.com> > 2.x
+ * @copyright   (C) 2009  Matt Bury
+ * @copyright   (C) 2015  Valery Fremaux (http://www.mylearningfactory.com)
+ * @licence     http://www.gnu.org/copyleft/gpl.html GNU Public Licence
+ */
+defined('MOODLE_INTERNAL') || die();
+
 require_once($CFG->dirroot.'/mod/mplayer/locallib.php');
 
 function xmldb_mplayer_upgrade($oldversion=0) {
     global $CFG, $THEME, $DB;
 
     $result = true;
-    
+
     $dbman = $DB->get_manager();
 
-    // ===== 1.9.0 to moodle 2 upgrade line ======//
     if ($oldversion < 2014081100) {
         // Add new fields to certificate table
         $table = new xmldb_table('mplayer');
@@ -21,12 +45,12 @@ function xmldb_mplayer_upgrade($oldversion=0) {
             $dbman->add_field($table, $field);
         }
 
-        // Mplayer savepoint reached
+        // Mplayer savepoint reached.
         upgrade_mod_savepoint(true, 2014081100, 'mplayer');
     }
 
     if ($oldversion < 2014112900) {
-        // Add new fields to certificate table
+        // Add new fields to certificate table.
         $table = new xmldb_table('mplayer');
         $field = new xmldb_field('splashmode');
         $field->set_attributes(XMLDB_TYPE_CHAR, 10, null, null, null, 'is-splash', 'snapshotscript');
@@ -34,12 +58,12 @@ function xmldb_mplayer_upgrade($oldversion=0) {
             $dbman->add_field($table, $field);
         }
 
-        // Mplayer savepoint reached
+        // Mplayer savepoint reached.
         upgrade_mod_savepoint(true, 2014112900, 'mplayer');
     }
 
     if ($oldversion < 2014121000) {
-        // Add new fields to mplayer table
+        // Add new fields to mplayer table.
         $table = new xmldb_table('mplayer');
         $field = new xmldb_field('completionviewed');
         $field->set_attributes(XMLDB_TYPE_INTEGER, 2, XMLDB_UNSIGNED, XMLDB_NOTNULL, null, 0, 'splashmode');
@@ -47,12 +71,12 @@ function xmldb_mplayer_upgrade($oldversion=0) {
             $dbman->add_field($table, $field);
         }
 
-        // Mplayer savepoint reached
+        // Mplayer savepoint reached.
         upgrade_mod_savepoint(true, 2014121000, 'mplayer');
     }
 
     if ($oldversion < 2014122700) {
-        // Add new fields to mplayer table
+        // Add new fields to mplayer table.
         $table = new xmldb_table('mplayer');
         $field = new xmldb_field('external');
         $field->set_attributes(XMLDB_TYPE_TEXT, 'medium', null, null, null, null, 'mplayerfile');
@@ -66,12 +90,12 @@ function xmldb_mplayer_upgrade($oldversion=0) {
             $dbman->add_field($table, $field);
         }
 
-        // Mplayer savepoint reached
+        // Mplayer savepoint reached.
         upgrade_mod_savepoint(true, 2014122700, 'mplayer');
     }
 
     if ($oldversion < 2015010200) {
-        // Add new fields to mplayer table
+        // Add new fields to mplayer table.
         $table = new xmldb_table('mplayer');
         $field = new xmldb_field('technology');
         $field->set_attributes(XMLDB_TYPE_TEXT, 'medium', null, null, null, null, 'timemodified');
@@ -79,13 +103,13 @@ function xmldb_mplayer_upgrade($oldversion=0) {
             $dbman->add_field($table, $field);
         }
 
-        // Mplayer savepoint reached
+        // Mplayer savepoint reached.
         upgrade_mod_savepoint(true, 2015010200, 'mplayer');
     }
 
     if ($oldversion < 2015010500) {
-        // MPlayer savepoint reached
-        // Add new fields to mplayer table
+        // MPlayer savepoint reached.
+        // Add new fields to mplayer table.
         $table = new xmldb_table('mplayer');
         $field = new xmldb_field('completionviewed', XMLDB_TYPE_INTEGER, 2, XMLDB_UNSIGNED, XMLDB_NOTNULL, null, 0);
         if (!$dbman->field_exists($table, $field)) {
@@ -156,7 +180,7 @@ function xmldb_mplayer_upgrade($oldversion=0) {
         // Define table mplayer_userdata.
         $table = new xmldb_table('mplayer');
 
-        // Add field clipid to separate completion tracking for each clip
+        // Add field clipid to separate completion tracking for each clip.
         $field = new xmldb_field('langselection');
         $field->set_attributes(XMLDB_TYPE_INTEGER, 4, null, XMLDB_NOTNULL, null, 0, 'snapshotscript');
         if (!$dbman->field_exists($table, $field)) {

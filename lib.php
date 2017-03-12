@@ -270,8 +270,6 @@ function mplayer_user_complete($course, $user, $mod, $mplayer) {
  * @todo Finish documenting this function
  */
 function mplayer_print_recent_activity($course, $isteacher, $timestart) {
-    global $CFG;
-
     return false;  //  True if anything was printed, otherwise false.
 }
 
@@ -301,8 +299,6 @@ function mplayer_get_post_actions() {
  * @todo Finish documenting this function
  */
 function mplayer_cron() {
-    global $CFG;
-
     return true;
 }
 
@@ -321,7 +317,6 @@ function mplayer_cron() {
  * @return bool false if file not found, does not return if found - justsend the file
  */
 function mplayer_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload) {
-    global $CFG, $DB;
 
     $guests = false;
     if ($course->id > SITEID) {
@@ -426,8 +421,6 @@ function mplayer_scale_used($mplayerid, $scaleid) {
  * @return boolean True if the scale is used by any mplayer
  */
 function mplayer_scale_used_anywhere($scaleid) {
-    global $DB;
-
     return false;
 }
 
