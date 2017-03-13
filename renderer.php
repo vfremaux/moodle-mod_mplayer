@@ -111,20 +111,20 @@ class mod_mplayer_renderer extends plugin_renderer_base {
         global $CFG;
 
         // A nice small tiny library for detecting mobile devices.
-        require_once ($CFG->dirroot.'/mod/mplayer/Mobile_Detect.php');
+        require_once($CFG->dirroot.'/mod/mplayer/extralib/Mobile_Detect.php');
 
         $detect = new Mobile_Detect;
 
         $cm = get_coursemodule_from_instance('mplayer', $mplayer->id);
         $context = context_module::instance($cm->id);
 
-        $mplayer_body = $this->get_device_based_mplayer($mplayer, $cm, $context, $detect);
+        $mplayerbody = $this->get_device_based_mplayer($mplayer, $cm, $context, $detect);
 
-        return $mplayer_body;
+        return $mplayerbody;
     }
 
     /**
-     * prints the body of the player 
+     * prints the body of the player
      * @param objectref &$mplayer the MPlayer instance
      * @param objectref &$cm the associated course module
      * @param objectref &$context the associated context
@@ -139,33 +139,41 @@ class mod_mplayer_renderer extends plugin_renderer_base {
 >>>>>>> MOODLE_32_STABLE
             $detector = new Mobile_Detect();
             if ($detector->isMobile() && $detector->isAndroid()) {
-                $mplayer_body = $this->flowplayer_body($mplayer, $cm, $context, 'flash');
+                $mplayerbody = $this->flowplayer_body($mplayer, $cm, $context, 'flash');
             } else {
-                $mplayer_body = $this->flowplayer_body($mplayer, $cm, $context, 'html5');
+                $mplayerbody = $this->flowplayer_body($mplayer, $cm, $context, 'html5');
             }
         } else {
-            $mplayer_body = $this->jwplayer_body($mplayer, $cm, $context);
+            $mplayerbody = $this->jwplayer_body($mplayer, $cm, $context);
         }
 <<<<<<< HEAD
         
 =======
 
         if (!empty($mplayer->notes)) {
-            $mplayer_body .= '<div class="mplayer-notes"><p>'.$mplayer->notes.'</p></div>';
+            $mplayerbody .= '<div class="mplayer-notes"><p>'.$mplayer->notes.'</p></div>';
         }
 
+<<<<<<< HEAD
 >>>>>>> MOODLE_32_STABLE
         return $mplayer_body;
+=======
+        return $mplayerbody;
+>>>>>>> MOODLE_32_STABLE
     }
 
     /**
      * prints the flowplayer effective body (html5)
+<<<<<<< HEAD
 <<<<<<< HEAD
      *
      */
     function flowplayer_body($mplayer, $cm, $context, $forcedtype = '') {
         global $JQUERYVERSION, $CFG, $DB;
 =======
+=======
+     *
+>>>>>>> MOODLE_32_STABLE
      * @param objectref &$mplayer the MPlayer instance
      * @param objectref &$cm the associated course module object
      * @param objectref &$context the context object for this module
@@ -180,7 +188,7 @@ class mod_mplayer_renderer extends plugin_renderer_base {
         $config = get_config('mplayer');
 
         $isplaylist = false;
-        $playlist_html = '';
+        $playlisthtml = '';
         $canloadsmil = false;
         $js = '';
         $cm = get_coursemodule_from_instance('mplayer', $mplayer->id);
@@ -337,7 +345,7 @@ class mod_mplayer_renderer extends plugin_renderer_base {
             }
         } else {
             if ($posterurl = mplayer_get_file_url($mplayer, 'mplayerfiles', $context, '/posters/')) {
-                $js .= 'flp'.$mplayer->id.".set('splash', '$posterurl');\n"; 
+                $js .= 'flp'.$mplayer->id.".set('splash', '$posterurl');\n";
             }
         }
 
@@ -355,7 +363,7 @@ class mod_mplayer_renderer extends plugin_renderer_base {
         // $muted = 'data-muted='.$mplayer->mute;
 
         // Check and get the volume.
-        $js .= 'flp'.$mplayer->id.".set('volume', '".sprintf("%.2f", $mplayer->volume/100)."');\n";
+        $js .= 'flp'.$mplayer->id.".set('volume', '".sprintf("%.2f", $mplayer->volume / 100)."');\n";
 
         if ($mplayer->playlist == 'thumbs') {
             $playlistsheet = 'thumbs_playlist';
@@ -384,48 +392,58 @@ class mod_mplayer_renderer extends plugin_renderer_base {
         // Streaming related tag.
         $rtmpdata = '';
         if ($mplayer->type == 'rtmp' && $mplayer->streamer == 'wowza') {
-            /* $canloadsmil = true;
+            /*
+            // Not resolved yet.
+            $canloadsmil = true;
             $rtmpdata = 'data-rtmp="'.@$config->wowzaserver.@$config->wowzaapplication.'" ';
             */
             $js .= 'flp'.$mplayer->id.".set('rtmp', '".@$config->wowzaserver.@$config->wowzaapplication."');\n";
         }
 
         // Master player DIV.
-        if (is_numeric($mplayer->height)) $mplayer->height .= 'px';
-        if (is_numeric($mplayer->width)) $mplayer->width .= 'px';
-        $mplayer_body = $scriptloadfragment."\n";
-        $mplayer_body .= '<div class="mplayer-cont embed-responsive '.$mplayer->playlist.'" style="width:'.$mplayer->width.';height:'.$mplayer->height.'" id="flp'.$mplayer->id.'">';
-        $mplayer_body .= $this->flowplayer_cue_panels($mplayer);
-        if ($mplayer->playlist) {
-            $mplayer_body .= $this->flowplayer_playlist_html($mplayer, $clips);
+        if (is_numeric($mplayer->height)) {
+            $mplayer->height .= 'px';
         }
-        $mplayer_body .= '</div>'; // master container.
-        $mplayer_body .= $this->flowplayer_completion($mplayer, $clips); // completion container
-        $mplayer_body .= '<script type="text/javascript">'."\n";
-        $mplayer_body .= 'flp'.$mplayer->id." = new FlowplayerConfig();\n";
-        $mplayer_body .= $js;
-        $mplayer_body .= 'flp'.$mplayer->id.'.render('.$mplayer->id.");\n";
-        $mplayer_body .= "</script>\n";
-        $mplayer_body .= '<style>'.$style."</style>\n";
+        if (is_numeric($mplayer->width)) {
+            $mplayer->width .= 'px';
+        }
+        $mplayerbody = $scriptloadfragment."\n";
+        $mplayerbody .= '<div class="mplayer-cont embed-responsive '.$mplayer->playlist.'"
+                              style="width:'.$mplayer->width.';height:'.$mplayer->height.'"
+                              id="flp'.$mplayer->id.'">';
+        $mplayerbody .= $this->flowplayer_cue_panels($mplayer);
+        if ($mplayer->playlist) {
+            $mplayerbody .= $this->flowplayer_playlist_html($mplayer, $clips);
+        }
+        $mplayerbody .= '</div>'; // Master container.
+        $mplayerbody .= $this->flowplayer_completion($mplayer, $clips); // Completion container.
+        $mplayerbody .= '<script type="text/javascript">'."\n";
+        $mplayerbody .= 'flp'.$mplayer->id." = new FlowplayerConfig();\n";
+        $mplayerbody .= $js;
+        $mplayerbody .= 'flp'.$mplayer->id.'.render('.$mplayer->id.");\n";
+        $mplayerbody .= "</script>\n";
+        $mplayerbody .= '<style>'.$style."</style>\n";
 
         if (debugging() && !empty($config->displaydebugcode)) {
-            $mplayer_body .= '<pre>'.htmlentities($mplayer_body).'</pre>';
+            $mplayerbody .= '<pre>'.htmlentities($mplayerbody).'</pre>';
         }
 
         // If can load smile.
         if ($canloadsmil) {
-            $mplayer_body .= $this->flowplayer_load_smil($mplayer);
+            // Untested.
+            $mplayerbody .= $this->flowplayer_load_smil($mplayer);
         }
 
-        return $mplayer_body;
+        return $mplayerbody;
     }
 
     /**
      * Get clip information from any possible source
+     *
      * @param objectref &$mplayer
      * @param object $context
      * @return an array of arrays as source definitions per clip
-     */ 
+     */
     public function flowplayer_get_clips(&$mplayer, $context) {
         // These are alternate playlist resolutions in case we are NOT using an XML formal playlist.
         $clips = array();
@@ -483,6 +501,9 @@ class mod_mplayer_renderer extends plugin_renderer_base {
                 }
                 break;
             }
+
+            default:
+                return null;
         }
 
         return $clips;
@@ -527,13 +548,14 @@ class mod_mplayer_renderer extends plugin_renderer_base {
      * Experimental
      * @param objectref &$mplayer
      */
-    function flowplayer_load_smil(&$mplayer) {
+    protected function flowplayer_load_smil(&$mplayer) {
         global $CFG;
 
         $str = '';
         $str .= '<script type="text/javascript">'."\n";
         $str .= 'var mplayerinstance = flowplayer(\'flowplayer_'.$mplayer->id.'\')'."\n";
-        $str .= 'mplayerinstance.loadPlugin(\'smil\', \''.$CFG->wwwroot.'/mod/mplayer/flowplayer6/flowplayer.smil-3.2.9.swf\');'."\n";
+        $smilurl = $CFG->wwwroot.'/mod/mplayer/flowplayer6/flowplayer.smil-3.2.9.swf';
+        $str .= 'mplayerinstance.loadPlugin(\'smil\', \''.$smilurl.'\');'."\n";
         $str .= '</script>'."\n\n";
 
         return $str;
@@ -544,7 +566,7 @@ class mod_mplayer_renderer extends plugin_renderer_base {
      * @param objectref &$mplayer
      * @param array $clips
      */
-     public function flowplayer_playlist_html(&$mplayer, $clips) {
+    public function flowplayer_playlist_html(&$mplayer, $clips) {
 
         $cm = get_coursemodule_from_instance('mplayer', $mplayer->id);
         $context = context_module::instance($cm->id);
@@ -565,12 +587,14 @@ class mod_mplayer_renderer extends plugin_renderer_base {
             if (!empty($clip->thumb)) {
                 $listitemcontent = '<img src="'.$clip->thumb.'" />';
             }
-            $cliplink = '<a href="'.$clip->sources[0].'" alt="'.@$clip->title.'" title="'.@$clip->title.'" id="item'.$i.'">'.$listitemcontent.'</a>';
+            $cliplink = '<a href="'.$clip->sources[0].'"
+                            alt="'.@$clip->title.'"
+                            title="'.@$clip->title.'"
+                            id="item'.$i.'">'.$listitemcontent.'</a>';
             $str .= $cliplink;
 
-            $hgroups .=' <hgroup class="info'.$i.'">
-            <h1 class="fp-playlist-info">'.@$clip->title.'</h1>
-            </hgroup>';
+            $hgtitle = '<h1 class="fp-playlist-info">'.@$clip->title.'</h1>';
+            $hgroups .= ' <hgroup class="info'.$i.'">'.$hgtitle.'</hgroup>';
             $i++;
         }
 
@@ -602,7 +626,10 @@ class mod_mplayer_renderer extends plugin_renderer_base {
         if ($clipsnum = count($clips)) {
             $width = 100 / $clipsnum - 1;
             foreach (array_keys($clips) as $clipix) {
-                $str .= ' <div class="mplayer-completion" id="mplayer-progress-'.$mplayer->id.'_'.$clipix.'" title="'.@$clips[$clipix]->title.'" style="width:'.$width.'%"></div>';
+                $str .= ' <div class="mplayer-completion"
+                               id="mplayer-progress-'.$mplayer->id.'_'.$clipix.'"
+                               title="'.@$clips[$clipix]->title.'"
+                               style="width:'.$width.'%"></div>';
             }
         }
         $str .= '</div>';
@@ -612,9 +639,9 @@ class mod_mplayer_renderer extends plugin_renderer_base {
     }
 
     /**
-     * Build the subtitles members. 
-     * It accepts that files may adopt several syntax to 
-     * be dispatched on clips and selected as for language :
+     * Build the subtitles members.
+     * It accepts that files may adopt several syntax to
+     * be dispatched on clips and selected as for language:
      *
      * {n}_subtitlefilename.vtt
      * {n}_subtitlefilename_{lang}.vtt
@@ -639,7 +666,8 @@ class mod_mplayer_renderer extends plugin_renderer_base {
         $languages = $strm->get_list_of_languages();
         $langs = implode('|', array_keys($languages));
 
-        if ($files = $fs->get_directory_files($context->id, 'mod_mplayer', 'mplayerfiles', 0, '/tracks/', true, false, "filepath, filename")) {
+        if ($files = $fs->get_directory_files($context->id, 'mod_mplayer', 'mplayerfiles', 0, '/tracks/', true, false,
+                                              'filepath, filename')) {
 
             while ($file = array_shift($files)) {
                 $filename = pathinfo($file->get_filename(), PATHINFO_FILENAME);
@@ -662,10 +690,11 @@ class mod_mplayer_renderer extends plugin_renderer_base {
 
                 if ($mplayer->langselection == 0) {
                     $expectedlang = $COURSE->lang;
-                } elseif ($mplayer->langselection == 1) {
+                } else if ($mplayer->langselection == 1) {
                     $expectedlang = $USER->lang;
-                } elseif ($mplayer->langselection == 2) {
-                } elseif ($mplayer->langselection == 2) {
+                } else if ($mplayer->langselection == 2) {
+                    assert(1);
+                } else if ($mplayer->langselection == 2) {
                     $expectedlang = $mplayer->langforced;
                 }
 
@@ -675,13 +704,13 @@ class mod_mplayer_renderer extends plugin_renderer_base {
                     }
                 }
 
-                $trackurl = moodle_url::make_pluginfile_url($context->id, 'mod_mplayer', 'mplayerfiles', 0, $file->get_filepath(), $file->get_filename());
+                $trackurl = moodle_url::make_pluginfile_url($context->id, 'mod_mplayer', 'mplayerfiles', 0, $file->get_filepath(),
+                                                            $file->get_filename());
                 $subtitles[$lang][$ix] = $trackurl;
             }
 
             foreach ($subtitles as $lang => $arr) {
                 foreach ($arr as $ix => $trackurl) {
-                    // $str = '<track src="'.$trackurl.'" />';
                     $langlabel = $languages[$lang];
                     if ($ix == 0) {
                         $js .= 'flp'.$mplayer->id.".setSubtitle('subtitles', '$trackurl', '$lang', '$langlabel', true)\n";
@@ -697,7 +726,7 @@ class mod_mplayer_renderer extends plugin_renderer_base {
     }
 
     /**
-     * Get cue list definitions from mplayer configuration and prepare 
+     * Get cue list definitions from mplayer configuration and prepare
      * Cue point arrays and HTML output.
      * @param object $mplayer the HTML5 MPlayer instance
      * @param arrayref $datacuepointsarr An array of cue points to fill
@@ -707,7 +736,8 @@ class mod_mplayer_renderer extends plugin_renderer_base {
         // First get cue files if any.
         $fs = get_file_storage();
 
-        $cuefiles = $fs->get_directory_files($context->id, 'mod_mplayer', 'mplayerfiles', 0, '/cues/', true, false, 'filepath,filename');
+        $order = 'filepath, filename';
+        $cuefiles = $fs->get_directory_files($context->id, 'mod_mplayer', 'mplayerfiles', 0, '/cues/', true, false, $order);
         $cues = array();
         if (!empty($cuefiles)) {
             foreach ($cuefiles as $storedfile) {
@@ -727,7 +757,7 @@ class mod_mplayer_renderer extends plugin_renderer_base {
                 }
                 // Ignore all other files.
                 $cuelist = $storedfile->get_content();
-                $cuelist = preg_replace("/\r/", '', $cuelist); // Protect windows end lines
+                $cuelist = preg_replace("/\r/", '', $cuelist); // Protect windows end lines.
                 $cuearr = explode("\n", $cuelist);
                 foreach ($cuearr as $c) {
                     $cues[] = $ix.'|'.$c;
@@ -754,7 +784,7 @@ class mod_mplayer_renderer extends plugin_renderer_base {
                     $type = 'mod_'.$matches[1];
                 }
 
-                list($h,$m,$s) = explode(':', $time);
+                list($h, $m, $s) = explode(':', $time);
                 $sectime = $h * 3600 + $m * 60 + $s;
 
                 if ($ix == 0) {
@@ -795,8 +825,11 @@ class mod_mplayer_renderer extends plugin_renderer_base {
         if (!$loaded) {
             $flowplayercompletionjscodeurl = new moodle_url('/mod/mplayer/js/completion.js');
             $flowplayercuejscodeurl = new moodle_url('/mod/mplayer/js/cuepoints.js');
-            // $flowplayerjscodeurl = new moodle_url('/mod/mplayer/flowplayer6/flowplayer.min.js');
-            $flowplayerjscodeurl = new moodle_url('/mod/mplayer/flowplayer6/flowplayer.js');
+            if (!debugging()) {
+                $flowplayerjscodeurl = new moodle_url('/mod/mplayer/flowplayer6/flowplayer.min.js');
+            } else {
+                $flowplayerjscodeurl = new moodle_url('/mod/mplayer/flowplayer6/flowplayer.js');
+            }
             $flowplayerjswrapperurl = new moodle_url('/mod/mplayer/js/flowplayer.js');
             $flowplayercssurl = new moodle_url('/mod/mplayer/flowplayer6/skin/functional.css');
             $flowplayerplaylistcssurl = new moodle_url('/mod/mplayer/flowplayer6/'.$playlistsheet.'.css');
@@ -851,7 +884,7 @@ class mod_mplayer_renderer extends plugin_renderer_base {
             clip: {
                 autoPlay: true
             },
-            playlist: ' . json_encode($_playlist) . '
+            playlist: ' . json_encode($this->playlist) . '
 
             });
         ';
@@ -871,11 +904,15 @@ class mod_mplayer_renderer extends plugin_renderer_base {
             $style .= '.flowplayer .fp-controls {background-color: #'.str_replace('#', '', $mplayer->backcolor).' !important;}';
         }
         if ($mplayer->frontcolor) {
-            $style .= '.flowplayer .fp-progress, .flowplayer .fp-volumelevel {background-color: #'.str_replace('#', '', $mplayer->frontcolor).' !important;}';
+            $style .= '.flowplayer .fp-progress, .flowplayer .fp-volumelevel {
+                background-color: #'.str_replace('#', '', $mplayer->frontcolor).' !important;
+            }';
         }
         if ($mplayer->lightcolor) {
             $style .= '.flowplayer .fp-buffer {background-color: #'.str_replace('#', '', $mplayer->lightcolor).' !important;}';
-            $style .= '.flowplayer .fp-time .fp-elapsed, .flowplayer .fp-time .fp-duration, .flowplayer .fp-mute {color: #'.str_replace('#', '', $mplayer->lightcolor).' !important;}';
+            $style .= '.flowplayer .fp-time .fp-elapsed, .flowplayer .fp-time .fp-duration, .flowplayer .fp-mute {
+                color: #'.str_replace('#', '', $mplayer->lightcolor).' !important;
+            }';
         }
 
         return $style;
@@ -883,6 +920,7 @@ class mod_mplayer_renderer extends plugin_renderer_base {
 
     /**
      * Prints JW player body.
+     *
      * @param objectref &$mplayer
      * @param object $cm
      * @param object $context
@@ -895,31 +933,33 @@ class mod_mplayer_renderer extends plugin_renderer_base {
 
         if (1) {
             switch ($mplayer->type) {
+
                 case 'video':
                 case 'sound': {
-                    $urlArray = mplayer_get_file_url($mplayer, 'mplayerfiles', $context, '/medias/0/', true);
+                    $urlarray = mplayer_get_file_url($mplayer, 'mplayerfiles', $context, '/medias/0/', true);
                     break;
                 }
 
                 case 'url': {
-                    $urlArray = explode(';', ' ;' . $mplayer->external);
+                    $urlarray = explode(';', ' ;' . $mplayer->external);
                     break;
                 }
 
                 case 'youtube': {
-                    $urlArray = explode(';', $mplayer->external);
+                    $urlarray = explode(';', $mplayer->external);
                     break;
                 }
 
                 default:
-                    $urlArray = array();
+                    $urlarray = array();
             }
             $playlistthumb = mplayer_get_file_url($mplayer, 'mplayerfiles', $context, '/thumbs/', true);
-            $_playlist = array();
-            if (is_array($urlArray)) {
-                foreach ($urlArray as $index => $url) {
+            $this->playlist = array();
+
+            if (is_array($urlarray)) {
+                foreach ($urlarray as $index => $url) {
                     if ($index !== '' && $url) {
-                        $_playlist[] = array(
+                        $this->playlist[] = array(
                             'file'  => $url,
                             'image' => isset($playlistthumb[$index]) ? $playlistthumb[$index] : '',
                             'title' => 'test'
@@ -929,14 +969,14 @@ class mod_mplayer_renderer extends plugin_renderer_base {
             }
         }
 
-        $jw_body = '<script type="text/javascript" src="'.$CFG->wwwroot.'/mod/mplayer/jw/6.11/jwplayer.js"></script>
+        $jwbody = '<script type="text/javascript" src="'.$CFG->wwwroot.'/mod/mplayer/jw/6.11/jwplayer.js"></script>
         <script type="text/javascript">jwplayer.key="pZDZgizUElLVj2BEBWMBql9bbp9Bnckbg7qQxw==";</script>
         <div id="jw-player">'.get_string('loadingplayer', 'mplayer').'</div>
         <script type="text/javascript">
             jwplayer("jw-player").setup({
-                "file" : "'.$urlArray[0].'",
+                "file" : "'.$urlarray[0].'",
                 "image": "'.mplayer_get_file_url($mplayer, 'mplayerfiles', $context, '/posters/').'",
-                "playlist" : '.json_encode($_playlist).',
+                "playlist" : '.json_encode($this->playlist).',
                 "height" : "'.$mplayer->height.'",
                 "width" : "'.$mplayer->width.'",
                 volume: "'.$mplayer->volume.'",
@@ -949,17 +989,17 @@ class mod_mplayer_renderer extends plugin_renderer_base {
 >>>>>>> MOODLE_32_STABLE
         </script>';
 
-        return $jw_body;
+        return $jwbody;
     }
 <<<<<<< HEAD
 =======
 
     /**
-     * Draws a responsive progress bar 
+     * Draws a responsive progress bar
      * outside style of progress bar is driven by mplayer stylesheet,
      * unless innerbar width.
      * @see ajax/markmediacompletion.php
-     * 
+     *
      * @param int $progress
      * @param int $progress2
      */
@@ -982,17 +1022,16 @@ class mod_mplayer_renderer extends plugin_renderer_base {
 
 
     /**
-     * plays a soundcard 
+     * plays a soundcard
+     *
      * @param reference $flashcard
      * @param string $soundname the local name of the sound file. Should be wav or any playable sound format.
      * @param string $autostart if 'true' the sound starts playing immediately
-     * @uses $CFG
-     * @uses $COURSE
      * @see mod_flashcard
      * NOT USED YET
      */
     public function play_sound(&$mplayer, $clipid, $autostart = 'false', $htmlname = '') {
-        global $CFG, $COURSE, $OUTPUT;
+        global $CFG, $COURSE;
 
         $strmissingsound = get_string('missingsound', 'mplayer');
 
@@ -1005,7 +1044,7 @@ class mod_mplayer_renderer extends plugin_renderer_base {
         $soundfiles = $fs->get_directory_files($context->id, 'mod_mplayer', $filearea, 0, '/media/');
 
         if (empty($soundfiles)) {
-            $soundfileurl = $OUTPUT->pix_url('notfound', 'mod_mplayer');
+            $soundfileurl = $this->output->pix_url('notfound', 'mod_mplayer');
             $soundhtml = "<img src=\"{$soundfileurl}\" />";
             return $soundhtml;
         }
@@ -1013,7 +1052,7 @@ class mod_mplayer_renderer extends plugin_renderer_base {
         $soundfile = array_pop($soundfiles);
         $filename = $soundfile->get_filename();
 
-        $magic = rand(0,100000);
+        $magic = rand(0, 100000);
         if ($htmlname == '') {
             $htmlname = "bell_{$magic}";
         }
@@ -1021,8 +1060,18 @@ class mod_mplayer_renderer extends plugin_renderer_base {
         $soundfileurl = $CFG->wwwroot."/pluginfile.php/{$contextid}/mod_mplayer/{$filearea}/0/media/{$clipid}/{$filename}";
 
         if (!preg_match('/\.mp3$/i', $filename)) {
-            $soundhtml = "<embed src=\"{$soundfileurl}\" autostart=\"{$autostart}\" hidden=\"false\" id=\"{$htmlname}_player\" height=\"20\" width=\"200\" />";
-            $soundhtml .= "<a href=\"{$soundfileurl}\" autostart=\"{$autostart}\" hidden=\"false\" id=\"{$htmlname}\" height=\"20\" width=\"200\" />";
+            $soundhtml = "<embed src=\"{$soundfileurl}\"
+                                 autostart=\"{$autostart}\"
+                                 hidden=\"false\"
+                                 id=\"{$htmlname}_player\"
+                                 height=\"20\"
+                                 width=\"200\" />";
+            $soundhtml .= "<a href=\"{$soundfileurl}\"
+                              autostart=\"{$autostart}\"
+                              hidden=\"false\"
+                              id=\"{$htmlname}\"
+                              height=\"20\"
+                              width=\"200\" />";
         } else {
             $soundhtml = flashcard_mp3_dewplayer($flashcard, $soundfileurl, $htmlname);
         }

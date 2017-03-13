@@ -20,7 +20,7 @@
 /**
  * Library of functions and constants for module mplayer
  * For more information on the parameters used by JW FLV Player see documentation: http://developer.longtailvideo.com/trac/wiki/FlashVars
- * 
+ *
  * @package  mod_mplayer
  * @category mod
  * @author   Matt Bury - matbury@gmail.com
@@ -28,6 +28,37 @@
  * @licence  http://www.gnu.org/copyleft/gpl.html GNU Public Licence
  */
 defined('MOODLE_INTERNAL') || die();
+
+/**
+ *
+ */
+function get_mplayer_context() {
+    $id = optional_param('id', 0, PARAM_INT); // Course Module ID, or.
+    $a  = optional_param('a', 0, PARAM_INT); // Mplayer ID.
+
+    if ($id) {
+        if (! $cm = $DB->get_record('course_modules', array('id' => $id))) {
+            print_error('invalidcoursemodule');
+        }
+        if (! $course = $DB->get_record('course', array('id' => $cm->course))) {
+            print_error('coursemisconf');
+        }
+        if (! $mplayer = $DB->get_record('mplayer', array('id' => $cm->instance))) {
+            print_error('invalidmplayerid', 'mplayer');
+        }
+    } else {
+        if (! $mplayer = $DB->get_record('mplayer', array('id' => $a))) {
+            print_error('invalidmplayerid', 'mplayer');
+        }
+        if (! $course = $DB->get_record('course', array('id' => $mplayer->course))) {
+            print_error('coursemisconf');
+        }
+        if (! $cm = get_coursemodule_from_instance('mplayer', $mplayer->id, $course->id)) {
+            print_error('invalidcoursemodule');
+        }
+    }
+    return array($cm, $mplayer, $course);
+}
 
 /**
  * Saves all draft files received from instance setup
@@ -142,10 +173,10 @@ function mplayer_load_remote_file($mplayer, $url, $context) {
     if ($curlerrno != 0) {
         debugging("Request for $uri failed with curl error $curlerrno");
         return;
-    } 
+    }
 
     // Check HTTP error code.
-    $info =  curl_getinfo($ch);
+    $info = curl_getinfo($ch);
     if (!empty($info['http_code']) and ($info['http_code'] != 200)) {
         debugging("Request for $uri failed with HTTP code ".$info['http_code']);
         return;
@@ -187,19 +218,27 @@ function mplayer_get_file_url(&$mplayer, $filearea, $context = null, $path = '/'
 
     if (!$fs->is_area_empty($context->id, 'mod_mplayer', $filearea, 0, true)) {
 <<<<<<< HEAD
+<<<<<<< HEAD
         if ($areafiles = $fs->get_area_files($context->id, 'mod_mplayer', $filearea, 0)) {
             $storedfile = array_pop($areafiles);
             $url = $CFG->wwwroot.'/pluginfile.php/'.$context->id.'/mod_mplayer/'.$filearea.'/0/'.$storedfile->get_filename();
 =======
         if ($areafiles = $fs->get_directory_files($context->id, 'mod_mplayer', $filearea, 0, $path, true, false, 'itemid, filepath,filename')) {
+=======
+        $order = 'itemid, filepath, filename';
+        if ($areafiles = $fs->get_directory_files($context->id, 'mod_mplayer', $filearea, 0, $path, true, false, $order)) {
+>>>>>>> MOODLE_32_STABLE
             if ($array) {
                 $url = array();
                 foreach ($areafiles as $storedfile) {
-                    $url[] = $CFG->wwwroot.'/pluginfile.php/'.$context->id.'/mod_mplayer/'.$filearea.'/0'.$storedfile->get_filepath().$storedfile->get_filename();
+                    $linkurl = $CFG->wwwroot.'/pluginfile.php/'.$context->id.'/mod_mplayer/'.$filearea.'/0';
+                    $linkurl .= $storedfile->get_filepath().$storedfile->get_filename();
+                    $url[] = $linkurl;
                 }
             } else {
                 $storedfile = array_pop($areafiles);
-                $url = $CFG->wwwroot.'/pluginfile.php/'.$context->id.'/mod_mplayer/'.$filearea.'/0'.$storedfile->get_filepath().$storedfile->get_filename();
+                $url = $CFG->wwwroot.'/pluginfile.php/'.$context->id.'/mod_mplayer/'.$filearea.'/0';
+                $url .= $storedfile->get_filepath().$storedfile->get_filename();
             }
 >>>>>>> MOODLE_32_STABLE
         }
@@ -269,7 +308,8 @@ function mplayer_get_clips_from_files(&$mplayer) {
 
     if (!$fs->is_area_empty($context->id, 'mod_mplayer', 'mplayerfiles', 0, true)) {
         // Get sources and fill clip array with.
-        if ($areafiles = $fs->get_directory_files($context->id, 'mod_mplayer', 'mplayerfiles', 0, '/medias/', true, false, 'filepath, filename')) {
+        $order = 'filepath, filename';
+        if ($areafiles = $fs->get_directory_files($context->id, 'mod_mplayer', 'mplayerfiles', 0, '/medias/', true, false, $order)) {
             if (count($areafiles) > 0) {
                 // If we do have some media files.
                 foreach ($areafiles as $storedfile) {
@@ -295,17 +335,17 @@ function mplayer_get_clips_from_files(&$mplayer) {
                         $l1 = $contenthash[0].$contenthash[1];
                         $l2 = $contenthash[2].$contenthash[3];
                         $manifestlocation = $CFG->dataroot.'/filedir/'.$l1.'/'.$l2.'/'.$contenthash;
-                        $streamed_obj = simplexml_load_file($manifestlocation);
+                        $streamedobj = simplexml_load_file($manifestlocation);
 
-                        if (!$streamed_obj) {
+                        if (!$streamedobj) {
                             // Manifest not readable. Continue.
                             continue;
                         }
 
-                        if (!empty($streamed_obj->clip)) {
-                            $ix = $streamed_obj->clip;
+                        if (!empty($streamedobj->clip)) {
+                            $ix = $streamedobj->clip;
                         }
-                        $url = ''.$streamed_obj->stream;
+                        $url = ''.$streamedobj->stream;
                     } else {
                         // Normal local case.
                         $url = moodle_url::make_pluginfile_url($context->id, 'mod_mplayer', 'mplayerfiles', 0, $filepath, $filename);
@@ -322,11 +362,12 @@ function mplayer_get_clips_from_files(&$mplayer) {
 
         if ($mplayer->playlist == 'thumbs') {
             // Get thumbs and fill clip array with.
-            if ($thumbfiles = $fs->get_directory_files($context->id, 'mod_mplayer', 'mplayerfiles', 0, '/thumbs/', true, false, 'filepath, filename')) {
+            if ($thumbfiles = $fs->get_directory_files($context->id, 'mod_mplayer', 'mplayerfiles', 0, '/thumbs/', true, false,
+                                                       'filepath, filename')) {
                 if (count($areafiles) > 0) {
                     // If we do have some media files.
                     foreach ($thumbfiles as $storedfile) {
-    
+
                         /*
                          * Process each entry. an entry can be at root level and thus is a clip 0 source, or
                          * may be in a numbered subdir and will be registered for the corresponding clip.
@@ -335,16 +376,18 @@ function mplayer_get_clips_from_files(&$mplayer) {
                         $filename = $storedfile->get_filename();
                         if ($filepath == '/thumbs/') {
                             $ix = 0;
-                        } elseif (preg_match('#^/thumbs/(\d+)#', $filepath, $matches)) {
+                        } else if (preg_match('#^/thumbs/(\d+)#', $filepath, $matches)) {
                             $ix = $matches[1];
-                        } elseif(preg_match('#^(\d+)#', $filename, $matches)) {
+                        } else if (preg_match('#^(\d+)#', $filename, $matches)) {
                             $ix = $matches[1];
                         } else {
                             // Ignore.
                             continue;
                         }
                         if (array_key_exists($ix, $clips)) {
-                            $clips[$ix]->thumb = moodle_url::make_pluginfile_url($context->id, 'mod_mplayer', 'mplayerfiles', 0, $storedfile->get_filepath(), $storedfile->get_filename());
+                            $clips[$ix]->thumb = moodle_url::make_pluginfile_url($context->id, 'mod_mplayer', 'mplayerfiles', 0,
+                                                                                 $storedfile->get_filepath(),
+                                                                                 $storedfile->get_filename());
                         }
                     }
                 }
@@ -353,7 +396,8 @@ function mplayer_get_clips_from_files(&$mplayer) {
     }
 
     // Open captions file and get clip titles from caption. there should be only one file.
-    if ($captionfiles = $fs->get_directory_files($context->id, 'mod_mplayer', 'mplayerfiles', 0, '/captions/', true, false, 'filepath, filename')) {
+    if ($captionfiles = $fs->get_directory_files($context->id, 'mod_mplayer', 'mplayerfiles', 0, '/captions/', true, false,
+                                                 'filepath, filename')) {
         $captionfile = array_pop($captionfiles);
         $captions = $captionfile->get_content();
         $titlearray = explode("\n", $captions);
@@ -377,37 +421,38 @@ function mplayer_get_clips_from_files(&$mplayer) {
  */
 function mplayer_xml_playlist(&$mplayer, $playlistfile) {
 
-    $playlist_obj = simplexml_load_file($playlistfile);
+    $playlistobj = simplexml_load_file($playlistfile);
 
     $clips = array();
 
-    if (!$playlist_obj) {
+    if (!$playlistobj) {
         // Not readable XML file.
         return false;
     }
 
     $ix = 0;
-    foreach ($playlist_obj->trackList->track as $video_info) {
+    foreach ($playlistobj->trackList->track as $videoinfo) {
         // TODO : process multiple locations in a track as alternative sources.
         $clip = new StdClass();
-        $clip->sources[] = $video_info->location;
+        $clip->sources[] = $videoinfo->location;
         $listitemcontent = '';
         if ($mplayer->playlist == 'thumbs') {
-            if (isset($video_info->thumb)) {
-                $clip->thumb = ''.$video_info->thumb;
+            if (isset($videoinfo->thumb)) {
+                $clip->thumb = ''.$videoinfo->thumb;
             }
-        } elseif ($mplayer->playlist == 'dots') {
+        } else if ($mplayer->playlist == 'dots') {
             // Let have thumbs, but let the CSS to the trick.
             $clip->thumb = '';
         } else {
-            // No thumbs at all
+            assert(1);
+            // No thumbs at all.
         }
 
         // Accepts two alternate caption attributes.
-        if (isset($video_info->caption)) {
-            $clip->title = $video_info->caption;
-        } elseif (isset($video_info->title)) {
-            $clip->title = $video_info->title;
+        if (isset($videoinfo->caption)) {
+            $clip->title = $videoinfo->caption;
+        } else if (isset($videoinfo->title)) {
+            $clip->title = $videoinfo->title;
         }
 
         $clips[$ix] = $clip;
@@ -425,7 +470,7 @@ function mplayer_xml_playlist(&$mplayer, $playlistfile) {
 function mplayer_clear_area(&$mplayer, $filearea, $context = null) {
 
     if ($context->contextlevel != CONTEXT_MODULE || $context->instance != $mplayer->id) {
-        throw(new CodingException('Context does not match given mplayer instance.'));
+        throw new CodingException('Context does not match given mplayer instance.');
     }
 
     if (!$cm = get_coursemodule_from_instance('mplayer', $mplayer->id)) {
@@ -454,9 +499,14 @@ function mplayer_require_js() {
  */
 function mplayer_get_fileareas() {
 <<<<<<< HEAD
+<<<<<<< HEAD
     return array('intro', 'mplayerfile', 'playlistfile', 'playlistthumb', 'configxml', 'image', 'audiodescriptionfile', 'captionsfile', 'hdfile', 'livestreamfile', 'livestreamimage', 'logoboxfile', 'logofile');
 =======
     return array('mplayerfiles', 'configxml', 'audiodescriptionfile', 'captionsfile', 'hdfile', 'livestreamfile', 'livestreamimagefile', 'logoboxfile', 'logofile');
+>>>>>>> MOODLE_32_STABLE
+=======
+    return array('mplayerfiles', 'configxml', 'audiodescriptionfile', 'captionsfile', 'hdfile', 'livestreamfile',
+                 'livestreamimagefile', 'logoboxfile', 'logofile');
 >>>>>>> MOODLE_32_STABLE
 }
 
@@ -468,6 +518,7 @@ function mplayer_get_fileareas() {
  * @return string
  */
 function mplayer_print_header_js($mplayer) {
+<<<<<<< HEAD
 <<<<<<< HEAD
     // Build Javascript code for view.php print_header() function
 =======
@@ -486,6 +537,21 @@ function mplayer_print_header_js($mplayer) {
             object { outline:none; }
         </style>';
     return $mplayer_header_js;
+=======
+
+    // Build Javascript code for view.php print_header() function.
+
+    $js = '<script type="text/javascript" src="swfobject/swfobject.js"></script>';
+    $js .= '    <script type="text/javascript">';
+    $js .= '        swfobject.registerObject("jwPlayer", "'.$mplayer->fpversion.'");';
+    $js .= '    </script>';
+    $js .= '// Don\'t show default dotted outline around Flash Player window in Firefox 3.';
+    $js .= '<style type="text/css" media="screen">';
+    $js .= '    object { outline:none; }';
+    $js .= '</style>';
+
+    return $js;
+>>>>>>> MOODLE_32_STABLE
 }
 
 <<<<<<< HEAD
@@ -585,7 +651,7 @@ function mplayer_print_body_flashvars($mplayer) {
  */
 function mplayer_list_truefalse() {
     return array('true' => 'true',
-                'false' => 'false');
+                 'false' => 'false');
 }
 
 /**
@@ -593,13 +659,12 @@ function mplayer_list_truefalse() {
  * @return array
  */
 function mplayer_list_quality() {
-    return array(
-        'best' => 'best',
-        'high' => 'high',
-        'medium' => 'medium',
-        'autohigh' => 'autohigh',
-        'autolow' => 'autolow',
-        'low' => 'low');
+    return array('best' => 'best',
+                 'high' => 'high',
+                 'medium' => 'medium',
+                 'autohigh' => 'autohigh',
+                 'autolow' => 'autolow',
+                 'low' => 'low');
 }
 
 /**
@@ -634,26 +699,25 @@ function mplayer_list_type() {
                 'rtmp' => 'RTMP Streaming');
 =======
 function mplayer_list_type($player) {
-    global $CFG;
 
     if ($player->technology == 'jw') {
         return array('video' => get_string('video', 'mplayer'),
-                    'youtube' => 'YouTube',
-                    'url' => get_string('fullurl', 'mplayer'),
-                    'xml' => 'XML Playlist',
-                    'sound' => 'Sound',
-                    'image' => 'Image',
-                    'http' => 'HTTP (pseudo) Streaming',
-                    'lighttpd' => 'Lighttpd Streaming',
-                    'rtmp' => 'RTMP Streaming');
+                     'youtube' => 'YouTube',
+                     'url' => get_string('fullurl', 'mplayer'),
+                     'xml' => 'XML Playlist',
+                     'sound' => 'Sound',
+                     'image' => 'Image',
+                     'http' => 'HTTP (pseudo) Streaming',
+                     'lighttpd' => 'Lighttpd Streaming',
+                     'rtmp' => 'RTMP Streaming');
     } else {
         return array('video' => get_string('video', 'mplayer'),
-                    'url' => get_string('fullurl', 'mplayer'),
-                    'xml' => get_string('xmlplaylist', 'mplayer'),
-                    'httpxml' => get_string('httpxmlplaylist', 'mplayer'),
-                    'xmlrtmp' => 'RTMP XML Playlist',
-                    'xmlhttprtmp' => 'RTMP HTTP XML Playlist',
-                    'rtmp' => 'RTMP Streaming');
+                     'url' => get_string('fullurl', 'mplayer'),
+                     'xml' => get_string('xmlplaylist', 'mplayer'),
+                     'httpxml' => get_string('httpxmlplaylist', 'mplayer'),
+                     'xmlrtmp' => 'RTMP XML Playlist',
+                     'xmlhttprtmp' => 'RTMP HTTP XML Playlist',
+                     'rtmp' => 'RTMP Streaming');
     }
 }
 
@@ -662,10 +726,9 @@ function mplayer_list_type($player) {
  * @return array
  */
 function mplayer_list_technologies() {
-    global $CFG;
 
     return array('flowplayer' => 'Flowplayer',
-                'jw' => 'JW Player'
+                 'jw' => 'JW Player'
     );
 }
 
@@ -674,11 +737,11 @@ function mplayer_list_technologies() {
  * @return array
  */
 function mplayer_list_langchoiceoptions() {
+
     return array(0 => get_string('langcourse', 'mplayer'),
         1 => get_string('languser', 'mplayer'),
         2 => get_string('langfreechoice', 'mplayer'),
-        3 => get_string('langteacherchoice', 'mplayer'),
-    );
+        3 => get_string('langteacherchoice', 'mplayer'));
 }
 
 /**
@@ -686,6 +749,7 @@ function mplayer_list_langchoiceoptions() {
  * @return array
  */
 function mplayer_list_availablelangoptions() {
+
     /*
      * This is a first approach that takes only activated languages in Moodle. Other languages
      * Will be ignored.
@@ -697,20 +761,20 @@ function mplayer_list_availablelangoptions() {
 
 /**
  * HTTP streaming (Xmoov-php) not yet working!
- * 
+ *
  * For Lighttpd streaming or RTMP (Flash Media Server or Red5),
  * enter the path to the gateway in the corresponding empty quotes
  * and uncomment the appropriate lines
  * e.g. 'path/to/your/gateway.jsp' => 'RTMP');
  *
  * For RTMP streaming, uncomment and edit this line: //, 'rtmp://yourstreamingserver.com/yourmediadirectory' => 'RTMP'
- * to reflect your streaming server's details. It's probably a good idea to change the 'RTMP' bit to the name of your streaming service,
+ * to reflect your streaming server's details. It's probably a good idea to change the 'RTMP' bit to the name
+ * of your streaming service,
  * i.e. 'My Media Server' or 'Acme Media Server'.
  * Remember not to include the ".mplayer" file extensions in video file names when using RTMP.
  * @return array
  */
 function mplayer_list_streamer() {
-    global $CFG;
 
 <<<<<<< HEAD
     return array('' => 'none'
@@ -721,12 +785,14 @@ function mplayer_list_streamer() {
     $config = get_config('mplayer');
 
     return array('' => 'none',
-                 //, $CFG->wwwroot.'/mod/mplayer/xmoov/xmoov.php' => 'Xmoov-php (http)'
-                 //, 'lighttpd' => 'Lighttpd'
                  'http' => 'Remote HTTP',
+<<<<<<< HEAD
                  'wowza' => 'Wowza'
 >>>>>>> MOODLE_32_STABLE
                  );
+=======
+                 'wowza' => 'Wowza');
+>>>>>>> MOODLE_32_STABLE
 }
 
 /**
@@ -735,13 +801,9 @@ function mplayer_list_streamer() {
  * @return array
  */
 function mplayer_list_searchbarscript() {
-    global $CFG;
 
-    return array('' => 'none'
-                 , 'http://gdata.youtube.com/feeds/api/videos?vq=QUERY&format=5' => 'YouTube.com Search'
-                 //, $CFG->wwwroot.'/mod/mplayer/scripts/search.php' => 'Search Script Label'
-                 //, $CFG->wwwroot.'/file.php/'.$COURSE->id.'/scripts/search.php' => 'Search Script Label'
-                 );
+    return array('' => 'none',
+                 'http://gdata.youtube.com/feeds/api/videos?vq=QUERY&format=5' => 'YouTube.com Search');
 }
 
 /**
@@ -752,10 +814,9 @@ function mplayer_list_searchbarscript() {
 function mplayer_list_snapshotscript() {
     global $CFG;
 
-    return array('none' => 'none'
-                 , $CFG->wwwroot.'/mod/mplayer/scripts/snapshot.php' => 'Demo Snapshot Script'
-                 //, $CFG->wwwroot.'/file.php/'.$COURSE->id.'/scripts/snapshot.php' => 'Snapshot Script Label'
-                 );
+    return array('none' => 'none',
+                 $CFG->wwwroot.'/mod/mplayer/scripts/snapshot.php' => 'Demo Snapshot Script'
+    );
 }
 
 /**
@@ -764,8 +825,8 @@ function mplayer_list_snapshotscript() {
  */
 function mplayer_list_controlbar() {
     return array('bottom' => 'bottom',
-                'over' => 'over',
-                'none' => 'none');
+                 'over' => 'over',
+                 'none' => 'none');
 }
 
 /**
@@ -774,9 +835,9 @@ function mplayer_list_controlbar() {
  */
 function mplayer_list_playlistposition() {
     return array('bottom' => get_string('bottom', 'mplayer'),
-                'right' => get_string('right', 'mplayer'),
-                'over' => get_string('over', 'mplayer'),
-                'none' => get_string('none', 'mplayer'));
+                 'right' => get_string('right', 'mplayer'),
+                 'over' => get_string('over', 'mplayer'),
+                 'none' => get_string('none', 'mplayer'));
 }
 
 /**
@@ -784,6 +845,7 @@ function mplayer_list_playlistposition() {
  * @return array
  */
 function mplayer_list_playliststyles() {
+<<<<<<< HEAD
     return array(
 <<<<<<< HEAD
 =======
@@ -792,6 +854,11 @@ function mplayer_list_playliststyles() {
         'dots' => get_string('dots', 'mplayer'),
         'thumbs' => get_string('thumbs', 'mplayer')
     );
+=======
+    return array('' => get_string('none', 'mplayer'),
+                 'dots' => get_string('dots', 'mplayer'),
+                 'thumbs' => get_string('thumbs', 'mplayer'));
+>>>>>>> MOODLE_32_STABLE
 }
 
 /**
@@ -799,11 +866,10 @@ function mplayer_list_playliststyles() {
  * @return array
  */
 function mplayer_list_infoboxposition() {
-    return array(
-        'none' => 'none',
-        'bottom' => 'bottom',
-        'over' => 'over',
-        'top' => 'top');
+    return array('none' => 'none',
+                 'bottom' => 'bottom',
+                 'over' => 'over',
+                 'top' => 'top');
 }
 
 /**
@@ -812,7 +878,7 @@ function mplayer_list_infoboxposition() {
  */
 function mplayer_list_logoboxalign() {
     return array('left' => 'left',
-                'right' => 'right');
+                 'right' => 'right');
 }
 
 /**
@@ -826,10 +892,10 @@ function mplayer_list_logoboxalign() {
 function mplayer_list_metaviewerposition() {
     return array('' => 'none',
                  'over' => 'over',
-                'left' => 'left',
-                'right' => 'right',
-                'top' => 'top',
-                'bottom' => 'bottom');
+                 'left' => 'left',
+                 'right' => 'right',
+                 'top' => 'top',
+                 'bottom' => 'bottom');
 }
 
 /**
@@ -843,7 +909,7 @@ function mplayer_list_metaviewerposition() {
 function mplayer_list_searchbarposition() {
     return array('none' => 'none',
                  'top' => 'top',
-                'bottom' => 'bottom');
+                 'bottom' => 'bottom');
 }
 
 /**
@@ -854,7 +920,7 @@ function mplayer_list_logoposition() {
     return array('bottom-left' => 'bottom-left',
                  'bottom-right' => 'bottom-right',
                  'top-left' => 'top-left',
-                'top-right' => 'top-right');
+                 'top-right' => 'top-right');
 }
 
 /**
@@ -862,40 +928,41 @@ function mplayer_list_logoposition() {
  * Skins can be downloaded from: http://www.longtailvideo.com/addons/skins
  * Skins (the .swf file only) are kept in /mod/mplayer/skins/
  * New skins must be added to the array below manually for them to show up on the mod_form.php list.
- * Copy and paste the following line into the array below then edit it to match the name and filename of your new skin:
+ * Copy and paste the following line into the array below then edit it to match the name and filename
+ * of your new skin:
  *                'filename.swf' => 'Name',
  * I find alphabetical order works best ;)
  * @return array
  */
 function mplayer_list_skins() {
     return array('' => '',
-                'beelden/beelden.xml' => 'Beelden XML Skin',
-                '3dpixelstyle.swf' => '3D Pixel Style',
-                'atomicred.swf' => 'Atomic Red',
-                'bekle.swf' => 'Bekle',
-                'bluemetal.swf' => 'Blue Metal',
-                'comet.swf' => 'Comet',
-                'controlpanel.swf' => 'Control Panel',
-                'dangdang.swf' => 'Dangdang',
-                'fashion.swf' => 'Fashion',
-                'festival.swf' => 'Festival',
-                'grungetape.swf' => 'Grunge Tape',
-                'icecreamsneaka.swf' => 'Ice Cream Sneaka',
-                'kleur.swf' => 'Kleur',
-                'magma.swf' => 'Magama',
-                'metarby10.swf' => 'Metarby 10',
-                'modieus.swf' => 'Modieus',
-                'nacht.swf' => 'Nacht',
-                'neon.swf' => 'Neon',
-                'pearlized.swf' => 'Pearlized',
-                'pixelize.swf' => 'Pixelize',
-                'playcasso.swf' => 'Playcasso',
-                'silverywhite.swf' => 'Silvery White',
-                'simple.swf' => 'Simple',
-                'snel.swf' => 'Snel',
-                'stijl.swf' => 'Stijl',
-                'stylish_slim.swf' => 'Stylish Slim',
-                'traganja.swf' => 'Traganja');
+                 'beelden/beelden.xml' => 'Beelden XML Skin',
+                 '3dpixelstyle.swf' => '3D Pixel Style',
+                 'atomicred.swf' => 'Atomic Red',
+                 'bekle.swf' => 'Bekle',
+                 'bluemetal.swf' => 'Blue Metal',
+                 'comet.swf' => 'Comet',
+                 'controlpanel.swf' => 'Control Panel',
+                 'dangdang.swf' => 'Dangdang',
+                 'fashion.swf' => 'Fashion',
+                 'festival.swf' => 'Festival',
+                 'grungetape.swf' => 'Grunge Tape',
+                 'icecreamsneaka.swf' => 'Ice Cream Sneaka',
+                 'kleur.swf' => 'Kleur',
+                 'magma.swf' => 'Magama',
+                 'metarby10.swf' => 'Metarby 10',
+                 'modieus.swf' => 'Modieus',
+                 'nacht.swf' => 'Nacht',
+                 'neon.swf' => 'Neon',
+                 'pearlized.swf' => 'Pearlized',
+                 'pixelize.swf' => 'Pixelize',
+                 'playcasso.swf' => 'Playcasso',
+                 'silverywhite.swf' => 'Silvery White',
+                 'simple.swf' => 'Simple',
+                 'snel.swf' => 'Snel',
+                 'stijl.swf' => 'Stijl',
+                 'stylish_slim.swf' => 'Stylish Slim',
+                 'traganja.swf' => 'Traganja');
 }
 
 /**
@@ -905,36 +972,36 @@ function mplayer_list_skins() {
  */
 function mplayer_list_bufferlength() {
     return array('0' => '0',
-                '1' => '1',
-                '2' => '2',
-                '3' => '3',
-                '4' => '4',
-                '5' => '5',
-                '6' => '6',
-                '7' => '7',
-                '8' => '8',
-                '9' => '9',
-                '10' => '10',
-                '11' => '11',
-                '12' => '12',
-                '13' => '13',
-                '14' => '14',
-                '15' => '15',
-                '16' => '16',
-                '17' => '17',
-                '18' => '18',
-                '19' => '19',
-                '20' => '20',
-                '21' => '21',
-                '22' => '22',
-                '23' => '23',
-                '24' => '24',
-                '25' => '25',
-                '26' => '26',
-                '27' => '27',
-                '28' => '28',
-                '29' => '29',
-                '30' => '30');
+                 '1' => '1',
+                 '2' => '2',
+                 '3' => '3',
+                 '4' => '4',
+                 '5' => '5',
+                 '6' => '6',
+                 '7' => '7',
+                 '8' => '8',
+                 '9' => '9',
+                 '10' => '10',
+                 '11' => '11',
+                 '12' => '12',
+                 '13' => '13',
+                 '14' => '14',
+                 '15' => '15',
+                 '16' => '16',
+                 '17' => '17',
+                 '18' => '18',
+                 '19' => '19',
+                 '20' => '20',
+                 '21' => '21',
+                 '22' => '22',
+                 '23' => '23',
+                 '24' => '24',
+                 '25' => '25',
+                 '26' => '26',
+                 '27' => '27',
+                 '28' => '28',
+                 '29' => '29',
+                 '30' => '30');
 }
 
 /**
@@ -943,11 +1010,11 @@ function mplayer_list_bufferlength() {
  */
 function mplayer_list_displayclick() {
     return array('play' => 'play',
-                'link' => 'link',
-                'fullscreen' => 'fullscreen',
-                'none' => 'none',
-                'mute' => 'mute',
-                'next' => 'next');
+                 'link' => 'link',
+                 'fullscreen' => 'fullscreen',
+                 'none' => 'none',
+                 'mute' => 'mute',
+                 'next' => 'next');
 }
 
 /**
@@ -957,8 +1024,8 @@ function mplayer_list_displayclick() {
 function mplayer_list_repeat() {
     return array('none' => 'none',
                  'list' => 'list',
-                'always' => 'always',
-                'single' => 'single');
+                 'always' => 'always',
+                 'single' => 'single');
 }
 
 /**
@@ -973,8 +1040,8 @@ function mplayer_list_repeat() {
 function mplayer_list_stretching() {
     return array('none' => 'none',
                  'uniform' => 'uniform',
-                'exactfit' => 'exactfit',
-                'fill' => 'fill');
+                 'exactfit' => 'exactfit',
+                 'fill' => 'fill');
 }
 
 /**
@@ -983,26 +1050,26 @@ function mplayer_list_stretching() {
  */
 function mplayer_list_volume() {
     return array('0' => '0',
-                '5' => '5',
-                '10' => '10',
-                '15' => '15',
-                '20' => '20',
-                '25' => '25',
-                '30' => '30',
-                '35' => '35',
-                '40' => '40',
-                '45' => '45',
-                '50' => '50',
-                '55' => '55',
-                '60' => '60',
-                '65' => '65',
-                '70' => '70',
-                '75' => '75',
-                '80' => '80',
-                '85' => '85',
-                '90' => '90',
-                '95' => '95',
-                '100' => '100');
+                 '5' => '5',
+                 '10' => '10',
+                 '15' => '15',
+                 '20' => '20',
+                 '25' => '25',
+                 '30' => '30',
+                 '35' => '35',
+                 '40' => '40',
+                 '45' => '45',
+                 '50' => '50',
+                 '55' => '55',
+                 '60' => '60',
+                 '65' => '65',
+                 '70' => '70',
+                 '75' => '75',
+                 '80' => '80',
+                 '85' => '85',
+                 '90' => '90',
+                 '95' => '95',
+                 '100' => '100');
 }
 
 <<<<<<< HEAD
@@ -1011,13 +1078,12 @@ function mplayer_list_volume() {
  * converts the local storage into a local proxy and remote storage.
  * this function will process the whole filearea keeping no video files inside.
  * video files are removed from Moodle storage after having been copied to the remote streming storage.
- * A proxy descriptor is stored using similar filename with .stm extension which is added to the original file's fullname
- * to keep full track of multiple endoding versions of a same resource.
+ * A proxy descriptor is stored using similar filename with .stm extension which is added to the
+ * original file's fullname to keep full track of multiple endoding versions of a same resource.
  * The filepath of the original video location in local storage is preserved.
  * @param object $mplayer
  */
 function mplayer_convert_storage_for_streamer($mplayer) {
-    global $CFG;
 
     $config = get_config('mod_mplayer');
 
@@ -1029,7 +1095,6 @@ function mplayer_convert_storage_for_streamer($mplayer) {
     }
 
     $storage = mplayer_get_media_storage($mplayer->streamer);
-    // echo "Storing in storage $mplayer->streamer";
 
     $files = $fs->get_directory_files($context->id, 'mod_mplayer', 'mplayerfiles', 0, '/medias/', true, false);
 
@@ -1037,9 +1102,9 @@ function mplayer_convert_storage_for_streamer($mplayer) {
         foreach ($files as $storedfile) {
             $originalname = $storedfile->get_filename();
             if (!preg_match('/\.stm/', $originalname)) {
-                // Process anything that is NOT a proxy
+                // Process anything that is NOT a proxy.
 
-                // Prepare proxy record
+                // Prepare proxy record.
                 $rec = new StdClass();
                 $rec->contextid = $context->id;
                 $rec->component = 'mod_mplayer';
@@ -1077,7 +1142,7 @@ function mplayer_convert_storage_for_streamer($mplayer) {
  */
 function mplayer_flowplayer_get_type(&$mplayer, $url) {
     if (empty($mplayer->streamer) || $mplayer->streamer == 'http') {
-        // Non streamed sources
+        // Non streamed sources.
         if (preg_match('/\.webm$/', $url)) {
             $type = 'video/webm';
         } else {
@@ -1085,13 +1150,13 @@ function mplayer_flowplayer_get_type(&$mplayer, $url) {
         }
     } else {
         if (preg_match('/\.m3u8$/', $url)) {
-            // HLS Support
+            // HLS Support.
             $type = 'application/x-mpegurl';
-        } elseif (preg_match('/\/vod\/smil\:/', $url)) {
-            // HLS Support
+        } else if (preg_match('/\/vod\/smil\:/', $url)) {
+            // HLS Support.
             $type = 'application/x-mpegurl';
         } else {
-            // Other RTMP calls
+            // Other RTMP calls.
             $type = 'video/flash';
         }
     }
@@ -1166,7 +1231,7 @@ function mplayer_upgrade_storage($mplayer) {
 
     mplayer_init_storage($cm);
 
-    // check old 'mplayerfile' area
+    // Check old 'mplayerfile' area.
     if ($oldfiles = $fs->get_area_files($context->id, 'mod_mplayer', 'mplayerfile', 0, 'itemid,filepath,filename', false)) {
         foreach ($oldfiles as $storedfile) {
             $newrec = new StdClass();

@@ -19,19 +19,26 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
+<<<<<<< HEAD
  * @package mod_mplayer
 >>>>>>> MOODLE_32_STABLE
  * @category mod
  * @author Valery Fremaux (valery.fremaux@gmail.com)
+=======
+ * @package     mod_mplayer
+ * @category    mod
+ * @author  Valery Fremaux (valery.fremaux@gmail.com)
+>>>>>>> MOODLE_32_STABLE
  */
+defined('MOODLE_INTERNAL') || die();
+
 class backup_mplayer_activity_structure_step extends backup_activity_structure_step {
 
     protected function define_structure() {
 
         $mplayer = new backup_nested_element('mplayer', array('id'), array(
+<<<<<<< HEAD
 <<<<<<< HEAD
             'name', 'intro', 'introformat', 'timecreated', 'timemodified', 'configxml', 'author', 'mplayerdate', 'description',
             'infoboxcolor', 'infoboxposition', 'infoboxsize', 'duration', 'mplayerfile', 'hdbitrate', 'hdfile', 'hdfullscreen', 
@@ -52,13 +59,29 @@ class backup_mplayer_activity_structure_step extends backup_activity_structure_s
 =======
             'searchbarscript', 'snapshotbitmap', 'snapshotscript', 'splashmode', 'completionmediaviewed'));
 >>>>>>> MOODLE_32_STABLE
+=======
+            'name', 'intro', 'introformat', 'timecreated', 'timemodified', 'technology', 'configxml', 'author', 'mplayerdate',
+            'description', 'infoboxcolor', 'infoboxposition', 'infoboxsize', 'duration', 'mplayerfile', 'external', 'cuelists',
+            'hdbitrate', 'hdfile', 'hdfullscreen', 'hdstate', 'livestreamfile', 'livestreamimage', 'livestreaminterval',
+            'livestreammessage', 'livestreamstreamer', 'livestreamtags', 'image', 'audiodescriptionfile', 'audiodescriptionstate',
+            'audiodescriptionvolume', 'mplayerstart', 'tags', 'title', 'type', 'backcolor', 'frontcolor', 'lightcolor',
+            'screencolor', 'controlbar', 'smoothing', 'height', 'playlist', 'playlistsize', 'skin', 'width', 'autostart',
+            'bufferlength', 'fullscreen', 'icons', 'item', 'logoboxalign', 'logoboxfile', 'logoboxlink', 'logoboxmargin',
+            'logoboxposition', 'logofile', 'logolink', 'logohide', 'logoposition', 'mute', 'quality', 'mplayerrepeat',
+            'resizing', 'shuffle', 'state', 'stretching', 'volume', 'plugins', 'streamer', 'tracecall', 'captionsback',
+            'captionsfile', 'captionsfontsize', 'captionsstate', 'fpversion', 'notes', 'metaviewerposition', 'metaviewersize',
+            'searchbarcolor', 'searchbarlabel', 'searchbarposition', 'searchbarscript', 'snapshotbitmap', 'snapshotscript',
+            'splashmode', 'completionmediaviewed'));
+>>>>>>> MOODLE_32_STABLE
 
-        // Sources
+        // Sources.
         $mplayer->set_source_table('mplayer', array('id' => backup::VAR_ACTIVITYID));
 
         if ($this->get_setting_value('userinfo')) {
+            assert(1);
         }
 
+<<<<<<< HEAD
         // Define file annotations
         $mplayer->annotate_files('mod_mplayer', 'intro', null); // This file areas haven't itemid
 <<<<<<< HEAD
@@ -73,10 +96,14 @@ class backup_mplayer_activity_structure_step extends backup_activity_structure_s
         $deck->annotate_files('mod_mplayer', 'logoboxfile', 'id');
         $deck->annotate_files('mod_mplayer', 'logofile', 'id');
 =======
+=======
+        // Define file annotations.
+        $mplayer->annotate_files('mod_mplayer', 'intro', null); // This file areas haven't itemid.
+>>>>>>> MOODLE_32_STABLE
         $mplayer->annotate_files('mod_mplayer', 'mplayerfiles', null);
         $mplayer->annotate_files('mod_mplayer', 'notes', null);
 
-        // These play for JWplayer
+        // These play for JWplayer.
         $mplayer->annotate_files('mod_mplayer', 'configxml', null);
         $mplayer->annotate_files('mod_mplayer', 'audiodescriptionfile', null);
         $mplayer->annotate_files('mod_mplayer', 'hdfile', null);
