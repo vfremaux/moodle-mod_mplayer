@@ -43,6 +43,7 @@ class backup_mplayer_activity_structure_step extends backup_activity_structure_s
         $mplayer->set_source_table('mplayer', array('id' => backup::VAR_ACTIVITYID));
 
         if ($this->get_setting_value('userinfo')) {
+            assert(1);
         }
 
         // Define file annotations.

@@ -14,26 +14,22 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Library of functions and constants for module mplayer
- * For more information on the parameters used by JW FLV Player see documentation: http://developer.longtailvideo.com/trac/wiki/FlashVars
- * 
+ * For more information on the parameters used by JW FLV Player see documentation:
+ * http://developer.longtailvideo.com/trac/wiki/FlashVars
+ *
  * @package  mod_mplayer
  * @category mod
  * @author   Matt Bury - matbury@gmail.com
  * @author   Valery Fremaux <valery.fremaux@gmail.com>
  * @licence  http://www.gnu.org/copyleft/gpl.html GNU Public Licence
  */
+defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->dirroot.'/mod/mplayer/lib.php');
 
-/*
- ----------------------------------- Set default parameters for new instances of Media Player Module ----------------------------------- 
-*/
-
-// Player technology -----------------------------------------.
+// Player technology.
 
 $playeroptions = array('jw' => 'JW Player', 'flowplayer' => 'Flowplayer');
 $key = 'mplayer/default_player';
@@ -52,7 +48,7 @@ $label = get_string('allowtechnologychoice', 'mplayer');
 $desc = get_string('allowtechnologychoicedesc', 'mplayer');
 $settings->add(new admin_setting_configselect($key, $label, $desc, 0, $yesnooptions));
 
-// Appearance -------------------------------------------------.
+// APPEARANCE.
 // Width.
 $key = 'mplayer/default_width';
 $label = get_string('width', 'mplayer');
@@ -107,7 +103,7 @@ $label = get_string('screencolor', 'mplayer');
 $desc = '';
 $settings->add(new admin_setting_configtext($key, $label, $desc, '', PARAM_TEXT));
 
-// Behaviour -------------------------------------------------.
+// BEHAVIOUR.
 // Auto start.
 $key = 'mplayer/default_autostart';
 $label = get_string('autostart', 'mplayer');
@@ -139,7 +135,7 @@ $desc = '';
 $settings->add(new admin_setting_configselect($key, $label, $desc, 'false', mplayer_list_truefalse()));
 
 $storages = glob($CFG->dirroot.'/mod/mplayer/storage/*_storage.class.php');
-foreach($storages as $st) {
+foreach ($storages as $st) {
     include_once($st);
     $classfile = basename($st);
     $classname = str_replace('.class.php', '', $classfile);

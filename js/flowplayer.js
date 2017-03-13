@@ -1,5 +1,5 @@
 /**
- *
+ * Class encaps of the flowplayer configuration.
  */
 // jshint unused:false, undef:false
 
@@ -9,7 +9,7 @@ var ClassBuilder = function(methods) {
     };
 
     for (var property in methods) {
-       klass.prototype[property] = methods[property];
+        klass.prototype[property] = methods[property];
     }
 
     if (!klass.prototype.initialize) {
@@ -91,7 +91,7 @@ var FlowplayerConfig = ClassBuilder( {
      */
     render: function(id) {
         // Select the above element as player container.
-        var container = document.getElementById("flp"+id);
+        var container = document.getElementById("flp" + id);
 
         // install flowplayer into selected container
         flowplayer(container, this);

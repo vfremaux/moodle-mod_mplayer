@@ -30,7 +30,7 @@ defined('MOODLE_INTERNAL') || die();
 require_once($CFG->dirroot.'/mod/mplayer/locallib.php');
 
 function xmldb_mplayer_upgrade($oldversion=0) {
-    global $CFG, $THEME, $DB;
+    global $DB;
 
     $result = true;
 

@@ -436,7 +436,7 @@ function mplayer_scale_used_anywhere($scaleid) {
  * @return bool True if completed, false if not, $type if conditions not set.
  */
 function mplayer_get_completion_state($course, $cm, $userid, $type) {
-    global $CFG, $DB;
+    global $DB;
 
     $mplayerinstance = $DB->get_record('mplayer', array('id' => $cm->instance));
 

@@ -523,7 +523,7 @@ ou laisser le choix aux enseignants sur chaque instance.</p>
 
 $string['mplayer_track'] = 'sous-titres';
 $string['mplayer_track_help'] = '
-Admet un fichier VTT qui est un simple fichier texte formaté d\'une certaine manière pour fournir les sous-titres 
+Admet un fichier VTT qui est un simple fichier texte formaté d\'une certaine manière pour fournir les sous-titres
 correspondant aux instants de la vidéo. Attention ce fichier doit être encodé en UTF-8.
 
 ----
@@ -552,6 +552,6 @@ pédagogiques ajoutées.
 Vous pouvez publier vos vidéo comme des fichiers locaux (plutot déconseillé), mais aussi sous forme de ressources distantes à travers
 des URLs ou des serveurs de flux déportés.
 
-Vous pouvez gérer des listes de chapitrage, des sous-titres en plusieurs langues ainsi que des points d\'arrêts pédagogiques qui peuvent 
+Vous pouvez gérer des listes de chapitrage, des sous-titres en plusieurs langues ainsi que des points d\'arrêts pédagogiques qui peuvent
 intercaler des actvitiés pédagogiques au milieu du visionnage.
 ';

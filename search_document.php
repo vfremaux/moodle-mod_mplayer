@@ -41,11 +41,14 @@ define('X_SEARCH_TYPE_MPLAYER', 'mplayer');
 class MPLayerSearchDocument extends SearchDocument {
 
     /**
-    * constructor
-    */
+     * constructor
+     */
     public function __construct(&$media, $courseid, $contextid) {
+        global $DB;
 
-        // generic information; required
+        $context = $DB->get_record('context', array('id' => $contextid));
+
+        // Generic information; required.
         $doc = new StdClass;
         $doc->docid         = $media->id;
         $doc->documenttype  = SEARCH_TYPE_MPLAYER;
@@ -59,7 +62,7 @@ class MPLayerSearchDocument extends SearchDocument {
         // Remove '(ip.ip.ip.ip)' from chat author list.
         $doc->author        = $lastuserid;
         $doc->contents      = strip_tags($media['summary']);
-        $doc->url           = local_cms_make_link($page_id);
+        $doc->url           = new moodle_url('/mod/mplayer/view.php', array('id' => $context->instanceid));
 
         // Module specific information; optional.
         $data = new StdClass;
@@ -75,7 +78,6 @@ class MPLayerSearchDocument extends SearchDocument {
  * constructs a valid link to a page content
  *
  * @param media_id the mplayer course module
- * @uses CFG
  * @return a well formed link to session display
  */
 function mplayer_make_link($mediaid) {
@@ -102,7 +104,7 @@ function mplayer_get_content_for_index(&$unused) {
     $mplayers = $DB->get_records('mplayer');
 
     $documents = array();
-    foreach($mplayers as $mplayer) {
+    foreach ($mplayers as $mplayer) {
 
         $course = $DB->get_record('course', array('id' => $mplayer->course));
         $context = context_module::instance($page->course);
@@ -135,7 +137,7 @@ function mplayer_single_document($id, $itemtype) {
 /**
  * dummy delete function that packs id with itemtype.
  * this was here for a reason, but I can't remember it at the moment.
- * 
+ *
  * @param int info
  * @param string $itemtype
  */
@@ -180,7 +182,8 @@ function mplayer_check_text_access($path, $itemtype, $thisid, $user, $groupidunu
         return false;
     }
 
-    if ($page->publish || has_any_capability(array('local/cms:editpage', 'local/cms:publishpage', 'local/cms:deletepage'), $context)) {
+    $caps = array('local/cms:editpage', 'local/cms:publishpage', 'local/cms:deletepage');
+    if ($page->publish || has_any_capability($caps, $context)) {
         return false;
     }
 

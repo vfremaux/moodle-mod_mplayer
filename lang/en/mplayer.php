@@ -556,7 +556,7 @@ or let the teacher choose which to use.</p>
 
 $string['mplayer_track'] = 'Subtitles';
 $string['mplayer_track_help'] = '
-Admits a VTT file which is a simply text formatted file that gives subtitles 
+Admits a VTT file which is a simply text formatted file that gives subtitles
 mapped to timestamps.
 
 ----
