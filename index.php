@@ -17,11 +17,11 @@
 /**
  * This page prints a list of instances of mplayer in current course
  *
- * @package  mod_mplayer
- * @category mod
- * @author   Matt Bury - matbury@gmail.com
- * @author   Valery Fremaux <valery.fremaux@gmail.com>
- * @licence  http://www.gnu.org/copyleft/gpl.html GNU Public Licence
+ * @package     mod_mplayer
+ * @category    mod
+ * @author      Matt Bury - matbury@gmail.com
+ * @author      Valery Fremaux <valery.fremaux@gmail.com>
+ * @licence     http://www.gnu.org/copyleft/gpl.html GNU Public Licence
  */
 require('../../config.php');
 require_once($CFG->dirroot.'/mod/mplayer/lib.php');

@@ -29,47 +29,43 @@
 require_once('../../../config.php');
 global $CFG;
 global $USER;
-$id = optional_param('id', 0, PARAM_INT); // Course Module ID
-// Get the course and module
-if ($id)
-{
-	if (! $cm = $DB->get_record('course_modules', array('id' => $id)))
-	{
-		echo 'Course Module ID was incorrect';
-		exit();
-	}
-	if (! $course = $DB->get_record('course', array('id' => $cm->course)))
-	{
-		echo 'Course is misconfigured';
-		exit();
-	}
+$id = optional_param('id', 0, PARAM_INT); // Course Module ID.
+// Get the course and module.
+if ($id) {
+    if (! $cm = $DB->get_record('course_modules', array('id' => $id))) {
+        echo 'Course Module ID was incorrect';
+        exit();
+    }
+    if (! $course = $DB->get_record('course', array('id' => $cm->course))) {
+        echo 'Course is misconfigured';
+        exit();
+    }
 }
-// Make sure user is logged in
+
+// Make sure user is logged in.
 require_login($course->id);
-if(isset ($GLOBALS['HTTP_RAW_POST_DATA']))
-{
-	// Get the image from POST data
-	$mplayer_image =  $GLOBALS['HTTP_RAW_POST_DATA'];
-	// Create an easy to find unique file name, i.e. "firstname_year_month_date_hours-mins-secs.jpg"
-	$mplayer_filename = $USER->firstname.'_'.date('Y\_M\_dS\_h\-i\-s').'.jpg';
-	// Set file path to moodledata snapshots directory for current user
-	$mplayer_snapshots_path = '/'.$course->id.'/snapshots/'.$USER->id.'/';
-	$mplayer_moodledata = $CFG->wwwroot.'/file.php/'.$mplayer_snapshots_path;
-	// Try to write the image as a JPG in moodledata/snapshots/[user ID]/
-	try {
-		$mplayer_filepath = fopen($CFG->dataroot.$mplayer_snapshots_path.$mplayer_filename, 'wb');
-		fwrite($mplayer_filepath, $mplayer_image);
-		fclose($mplayer_filepath);
-	} catch(Exception $e) {
-		exit();
-	}
-	// Send the image filename and path back to the Media Player Snapshot plugin
-	if (exif_imagetype($CFG->dataroot.$mplayer_snapshots_path.$mplayer_filename) == IMAGETYPE_JPEG)
-	{
-		echo $mplayer_moodledata.$mplayer_filename;
-		exit();
-	}
+if (isset ($GLOBALS['HTTP_RAW_POST_DATA'])) {
+    // Get the image from POST data.
+    $mplayer_image =  $GLOBALS['HTTP_RAW_POST_DATA'];
+    // Create an easy to find unique file name, i.e. "firstname_year_month_date_hours-mins-secs.jpg".
+    $mplayer_filename = $USER->firstname.'_'.date('Y\_M\_dS\_h\-i\-s').'.jpg';
+    // Set file path to moodledata snapshots directory for current user.
+    $mplayer_snapshots_path = '/'.$course->id.'/snapshots/'.$USER->id.'/';
+    $mplayer_moodledata = $CFG->wwwroot.'/file.php/'.$mplayer_snapshots_path;
+    // Try to write the image as a JPG in moodledata/snapshots/[user ID]/.
+    try {
+        $mplayer_filepath = fopen($CFG->dataroot.$mplayer_snapshots_path.$mplayer_filename, 'wb');
+        fwrite($mplayer_filepath, $mplayer_image);
+        fclose($mplayer_filepath);
+    } catch(Exception $e) {
+        exit();
+    }
+    // Send the image filename and path back to the Media Player Snapshot plugin.
+    if (exif_imagetype($CFG->dataroot.$mplayer_snapshots_path.$mplayer_filename) == IMAGETYPE_JPEG) {
+        echo $mplayer_moodledata.$mplayer_filename;
+        exit();
+    }
 } else {
-	echo 'error: '.$mplayer_moodledata.$mplayer_filename.' was not saved';
+    echo 'error: '.$mplayer_moodledata.$mplayer_filename.' was not saved';
 }
-?>
+

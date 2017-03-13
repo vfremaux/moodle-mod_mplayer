@@ -28,11 +28,11 @@ require('../../../config.php');
 require_once($CFG->dirroot.'/mod/mplayer/lib.php');
 require_once($CFG->dirroot.'/mod/mplayer/locallib.php');
 
-$mpid = required_param('mpid', PARAM_INT); // Player instance id
-$cueurl = required_param('cueurl', PARAM_URL); // Cue target url
-$type = required_param('type', PARAM_TEXT); // Target object type
-$cueout = required_param('cueout', PARAM_TEXT); // How to get out
-$mandatory = required_param('mandatory', PARAM_TEXT); // Target object type
+$mpid = required_param('mpid', PARAM_INT); // Player instance id.
+$cueurl = required_param('cueurl', PARAM_URL); // Cue target url.
+$type = required_param('type', PARAM_TEXT); // Target object type.
+$cueout = required_param('cueout', PARAM_TEXT); // How to get out.
+$mandatory = required_param('mandatory', PARAM_TEXT); // Target object type.
 
 if (!$mplayer = $DB->get_record('mplayer', array('id' => $mpid))) {
     die;
@@ -58,9 +58,9 @@ if (!empty($type)) {
     $e->type = get_string('pluginname', $type);
 }
 
-// $e->link = $OUTPUT->action_link($e->url, get_string('cuelaunch', 'mplayer', $e->type), new popup_action('click', $e->url, "mplayer{$course->id}_{$mpid}", array('height' => 680, 'width' => 800)));
-
-$e->link = '<a href="#" onclick="cuewin = window.open(\''.$e->url.'\', \'cuepoint_mplayer'.$course->id.'_'.$mpid.'\', \'width=680,height=800,toolbar=0,scrollbars=1\');cuewin.onbeforeunload = function() {cuepoint_resume(api, \''.$cueout.'\')}"><input type="button" value="'.get_string('cuelaunch', 'mplayer', $e->type).'"></a>';
+$jshandler = 'cuewin = window.open(\''.$e->url.'\', \'cuepoint_mplayer'.$course->id.'_'.$mpid.'\', \'width=680,height=800,toolbar=0,scrollbars=1\');';
+$jshandler .= 'cuewin.onbeforeunload = function() {cuepoint_resume(api, \''.$cueout.'\')}';
+$e->link = '<a href="#" onclick="'.$jshandler.'"><input type="button" value="'.get_string('cuelaunch', 'mplayer', $e->type).'"></a>';
 
 if ($mandatory == 'optional') {
     echo get_string('cueininviteoptional', 'mplayer', $e);
