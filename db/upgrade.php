@@ -37,7 +37,7 @@ function xmldb_mplayer_upgrade($oldversion=0) {
     $dbman = $DB->get_manager();
 
     if ($oldversion < 2014081100) {
-        // Add new fields to certificate table
+        // Add new fields to certificate table.
         $table = new xmldb_table('mplayer');
         $field = new xmldb_field('notesformat');
         $field->set_attributes(XMLDB_TYPE_INTEGER, 4, XMLDB_UNSIGNED, XMLDB_NOTNULL, null, 0, 'notes');
@@ -150,7 +150,7 @@ function xmldb_mplayer_upgrade($oldversion=0) {
         mtrace('Converting storage');
         $allplayers = $DB->get_records('mplayer', array());
         if ($allplayers) {
-            foreach($allplayers as $mplayer) {
+            foreach ($allplayers as $mplayer) {
                 mtrace('Converting storage '.$mplayer->id);
                 mplayer_upgrade_storage($mplayer);
             }
@@ -166,7 +166,7 @@ function xmldb_mplayer_upgrade($oldversion=0) {
         // Define table mplayer_userdata.
         $table = new xmldb_table('mplayer_userdata');
 
-        // Add field clipid to separate completion tracking for each clip
+        // Add field clipid to separate completion tracking for each clip.
         $field = new xmldb_field('clipid');
         $field->set_attributes(XMLDB_TYPE_INTEGER, 4, null, XMLDB_NOTNULL, null, 0, 'userid');
         if (!$dbman->field_exists($table, $field)) {

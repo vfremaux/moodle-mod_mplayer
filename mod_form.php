@@ -848,7 +848,7 @@ class mod_mplayer_mod_form extends moodleform_mod {
      */
     public function validation($data, $files) {
         $draftitemid = file_get_submitted_draft_itemid('mplayerfiles');
-        $_data = file_get_drafarea_files($draftitemid);
+        $voiddata = file_get_drafarea_files($draftitemid);
 
         $errors = parent::validation($data, $files);
 

@@ -25,13 +25,6 @@
  */
 defined('MOODLE_INTERNAL') || die();
 
-/**
- * Capability definitions for Mplayer Activity Module.
- *
- * For naming conventions, see lib/db/access.php.
- * 
- * If you edit these capabilities, they won't take effect until you upgrade the module version.
- */
 $capabilities = array(
 
     'mod/mplayer:addinstance' => array(

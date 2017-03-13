@@ -776,7 +776,7 @@ class mod_mplayer_renderer extends plugin_renderer_base {
             jwplayer("jw-player").setup({
                 "file" : "'.$urlarray[0].'",
                 "image": "'.mplayer_get_file_url($mplayer, 'mplayerfiles', $context, '/posters/').'",
-                "playlist" : '.json_encode($_playlist).',
+                "playlist" : '.json_encode($this->playlist).',
                 "height" : "'.$mplayer->height.'",
                 "width" : "'.$mplayer->width.'",
                 volume: "'.$mplayer->volume.'",

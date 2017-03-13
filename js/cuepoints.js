@@ -10,19 +10,7 @@ function cuepoint_process(e, api, cue) {
         // Stop video.
         api.pause();
 
-        /*
-        // this may be :
-        // -- surprizing
-        // -- not easy to manage closing event.
-        window.cuewin = window.open(cue.url, 'cuepoint'+api.conf._mplayerid, "width=820,height=630,resizable,scrollbars=yes,status=1,toolbars=no");
-        window.cuewin.onload = function() {
-            window.cuewin.onbeforeunload = function() {
-                window.cuewin.opener.cuepoint_resume(api, cue);
-            }
-        };
-        */
-
-        // feed cue-in-panel with message and show it progresively.
+        // Feed cue-in-panel with message and show it progresively.
         url = M.cfg.wwwroot + '/mod/mplayer/ajax/get_cue_invite.php';
         url += 'mpid=' + api.conf._mplayerid + '&cueurl=' + cue.url + '&type=' + cue.type + '&mandatory=' + cue.mandatory;
         url += '&cueout=' + cue.cueout;

@@ -308,7 +308,7 @@ function mplayer_get_clips_from_files(&$mplayer) {
                             $ix = 0;
                         } else if (preg_match('#^/thumbs/(\d+)#', $filepath, $matches)) {
                             $ix = $matches[1];
-                        } else if(preg_match('#^(\d+)#', $filename, $matches)) {
+                        } else if (preg_match('#^(\d+)#', $filename, $matches)) {
                             $ix = $matches[1];
                         } else {
                             // Ignore.
