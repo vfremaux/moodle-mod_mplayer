@@ -71,7 +71,7 @@ class MPLayerSearchDocument extends SearchDocument {
 
         // Construct the parent class.
         parent::__construct($doc, $data, $courseid, 0, 0, 'mod/'.X_SEARCH_TYPE_MPLAYER);
-    } 
+    }
 }
 
 /**
