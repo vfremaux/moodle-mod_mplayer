@@ -352,14 +352,14 @@ function mplayer_xml_playlist(&$mplayer, $playlistfile) {
     }
 
     $ix = 0;
-    foreach ($playlist_obj->trackList->track as $video_info) {
+    foreach ($playlist_obj->trackList->track as $videoinfo) {
         // TODO : process multiple locations in a track as alternative sources.
         $clip = new StdClass();
-        $clip->sources[] = $video_info->location;
+        $clip->sources[] = $videoinfo->location;
         $listitemcontent = '';
         if ($mplayer->playlist == 'thumbs') {
-            if (isset($video_info->thumb)) {
-                $clip->thumb = ''.$video_info->thumb;
+            if (isset($videoinfo->thumb)) {
+                $clip->thumb = ''.$videoinfo->thumb;
             }
         } else if ($mplayer->playlist == 'dots') {
             // Let have thumbs, but let the CSS to the trick.
@@ -369,10 +369,10 @@ function mplayer_xml_playlist(&$mplayer, $playlistfile) {
         }
 
         // Accepts two alternate caption attributes.
-        if (isset($video_info->caption)) {
-            $clip->title = $video_info->caption;
-        } else if (isset($video_info->title)) {
-            $clip->title = $video_info->title;
+        if (isset($videoinfo->caption)) {
+            $clip->title = $videoinfo->caption;
+        } else if (isset($videoinfo->title)) {
+            $clip->title = $videoinfo->title;
         }
 
         $clips[$ix] = $clip;
@@ -452,7 +452,7 @@ function mplayer_print_header_js($mplayer) {
  */
 function mplayer_list_truefalse() {
     return array('true' => 'true',
-                'false' => 'false');
+                 'false' => 'false');
 }
 
 /**
@@ -460,13 +460,12 @@ function mplayer_list_truefalse() {
  * @return array
  */
 function mplayer_list_quality() {
-    return array(
-        'best' => 'best',
-        'high' => 'high',
-        'medium' => 'medium',
-        'autohigh' => 'autohigh',
-        'autolow' => 'autolow',
-        'low' => 'low');
+    return array('best' => 'best',
+                 'high' => 'high',
+                 'medium' => 'medium',
+                 'autohigh' => 'autohigh',
+                 'autolow' => 'autolow',
+                 'low' => 'low');
 }
 
 /**
@@ -487,22 +486,22 @@ function mplayer_list_type($player) {
 
     if ($player->technology == 'jw') {
         return array('video' => get_string('video', 'mplayer'),
-                    'youtube' => 'YouTube',
-                    'url' => get_string('fullurl', 'mplayer'),
-                    'xml' => 'XML Playlist',
-                    'sound' => 'Sound',
-                    'image' => 'Image',
-                    'http' => 'HTTP (pseudo) Streaming',
-                    'lighttpd' => 'Lighttpd Streaming',
-                    'rtmp' => 'RTMP Streaming');
+                     'youtube' => 'YouTube',
+                     'url' => get_string('fullurl', 'mplayer'),
+                     'xml' => 'XML Playlist',
+                     'sound' => 'Sound',
+                     'image' => 'Image',
+                     'http' => 'HTTP (pseudo) Streaming',
+                     'lighttpd' => 'Lighttpd Streaming',
+                     'rtmp' => 'RTMP Streaming');
     } else {
         return array('video' => get_string('video', 'mplayer'),
-                    'url' => get_string('fullurl', 'mplayer'),
-                    'xml' => get_string('xmlplaylist', 'mplayer'),
-                    'httpxml' => get_string('httpxmlplaylist', 'mplayer'),
-                    'xmlrtmp' => 'RTMP XML Playlist',
-                    'xmlhttprtmp' => 'RTMP HTTP XML Playlist',
-                    'rtmp' => 'RTMP Streaming');
+                     'url' => get_string('fullurl', 'mplayer'),
+                     'xml' => get_string('xmlplaylist', 'mplayer'),
+                     'httpxml' => get_string('httpxmlplaylist', 'mplayer'),
+                     'xmlrtmp' => 'RTMP XML Playlist',
+                     'xmlhttprtmp' => 'RTMP HTTP XML Playlist',
+                     'rtmp' => 'RTMP Streaming');
     }
 }
 
@@ -513,7 +512,7 @@ function mplayer_list_type($player) {
 function mplayer_list_technologies() {
 
     return array('flowplayer' => 'Flowplayer',
-                'jw' => 'JW Player'
+                 'jw' => 'JW Player'
     );
 }
 
@@ -563,8 +562,6 @@ function mplayer_list_streamer() {
     $config = get_config('mplayer');
 
     return array('' => 'none',
-                 //, $CFG->wwwroot.'/mod/mplayer/xmoov/xmoov.php' => 'Xmoov-php (http)'
-                 //, 'lighttpd' => 'Lighttpd'
                  'http' => 'Remote HTTP',
                  'wowza' => 'Wowza');
 }
@@ -588,10 +585,9 @@ function mplayer_list_searchbarscript() {
 function mplayer_list_snapshotscript() {
     global $CFG;
 
-    return array('none' => 'none'
-                 , $CFG->wwwroot.'/mod/mplayer/scripts/snapshot.php' => 'Demo Snapshot Script'
-                 //, $CFG->wwwroot.'/file.php/'.$COURSE->id.'/scripts/snapshot.php' => 'Snapshot Script Label'
-                 );
+    return array('none' => 'none',
+                 $CFG->wwwroot.'/mod/mplayer/scripts/snapshot.php' => 'Demo Snapshot Script'
+    );
 }
 
 /**
@@ -600,8 +596,8 @@ function mplayer_list_snapshotscript() {
  */
 function mplayer_list_controlbar() {
     return array('bottom' => 'bottom',
-                'over' => 'over',
-                'none' => 'none');
+                 'over' => 'over',
+                 'none' => 'none');
 }
 
 /**
@@ -610,9 +606,9 @@ function mplayer_list_controlbar() {
  */
 function mplayer_list_playlistposition() {
     return array('bottom' => get_string('bottom', 'mplayer'),
-                'right' => get_string('right', 'mplayer'),
-                'over' => get_string('over', 'mplayer'),
-                'none' => get_string('none', 'mplayer'));
+                 'right' => get_string('right', 'mplayer'),
+                 'over' => get_string('over', 'mplayer'),
+                 'none' => get_string('none', 'mplayer'));
 }
 
 /**
@@ -620,10 +616,9 @@ function mplayer_list_playlistposition() {
  * @return array
  */
 function mplayer_list_playliststyles() {
-    return array(
-        '' => get_string('none', 'mplayer'),
-        'dots' => get_string('dots', 'mplayer'),
-        'thumbs' => get_string('thumbs', 'mplayer'));
+    return array('' => get_string('none', 'mplayer'),
+                 'dots' => get_string('dots', 'mplayer'),
+                 'thumbs' => get_string('thumbs', 'mplayer'));
 }
 
 /**
@@ -631,11 +626,10 @@ function mplayer_list_playliststyles() {
  * @return array
  */
 function mplayer_list_infoboxposition() {
-    return array(
-        'none' => 'none',
-        'bottom' => 'bottom',
-        'over' => 'over',
-        'top' => 'top');
+    return array('none' => 'none',
+                 'bottom' => 'bottom',
+                 'over' => 'over',
+                 'top' => 'top');
 }
 
 /**
@@ -644,7 +638,7 @@ function mplayer_list_infoboxposition() {
  */
 function mplayer_list_logoboxalign() {
     return array('left' => 'left',
-                'right' => 'right');
+                 'right' => 'right');
 }
 
 /**
@@ -654,10 +648,10 @@ function mplayer_list_logoboxalign() {
 function mplayer_list_metaviewerposition() {
     return array('' => 'none',
                  'over' => 'over',
-                'left' => 'left',
-                'right' => 'right',
-                'top' => 'top',
-                'bottom' => 'bottom');
+                 'left' => 'left',
+                 'right' => 'right',
+                 'top' => 'top',
+                 'bottom' => 'bottom');
 }
 
 /**
@@ -667,7 +661,7 @@ function mplayer_list_metaviewerposition() {
 function mplayer_list_searchbarposition() {
     return array('none' => 'none',
                  'top' => 'top',
-                'bottom' => 'bottom');
+                 'bottom' => 'bottom');
 }
 
 /**
@@ -693,33 +687,33 @@ function mplayer_list_logoposition() {
  */
 function mplayer_list_skins() {
     return array('' => '',
-                'beelden/beelden.xml' => 'Beelden XML Skin',
-                '3dpixelstyle.swf' => '3D Pixel Style',
-                'atomicred.swf' => 'Atomic Red',
-                'bekle.swf' => 'Bekle',
-                'bluemetal.swf' => 'Blue Metal',
-                'comet.swf' => 'Comet',
-                'controlpanel.swf' => 'Control Panel',
-                'dangdang.swf' => 'Dangdang',
-                'fashion.swf' => 'Fashion',
-                'festival.swf' => 'Festival',
-                'grungetape.swf' => 'Grunge Tape',
-                'icecreamsneaka.swf' => 'Ice Cream Sneaka',
-                'kleur.swf' => 'Kleur',
-                'magma.swf' => 'Magama',
-                'metarby10.swf' => 'Metarby 10',
-                'modieus.swf' => 'Modieus',
-                'nacht.swf' => 'Nacht',
-                'neon.swf' => 'Neon',
-                'pearlized.swf' => 'Pearlized',
-                'pixelize.swf' => 'Pixelize',
-                'playcasso.swf' => 'Playcasso',
-                'silverywhite.swf' => 'Silvery White',
-                'simple.swf' => 'Simple',
-                'snel.swf' => 'Snel',
-                'stijl.swf' => 'Stijl',
-                'stylish_slim.swf' => 'Stylish Slim',
-                'traganja.swf' => 'Traganja');
+                 'beelden/beelden.xml' => 'Beelden XML Skin',
+                 '3dpixelstyle.swf' => '3D Pixel Style',
+                 'atomicred.swf' => 'Atomic Red',
+                 'bekle.swf' => 'Bekle',
+                 'bluemetal.swf' => 'Blue Metal',
+                 'comet.swf' => 'Comet',
+                 'controlpanel.swf' => 'Control Panel',
+                 'dangdang.swf' => 'Dangdang',
+                 'fashion.swf' => 'Fashion',
+                 'festival.swf' => 'Festival',
+                 'grungetape.swf' => 'Grunge Tape',
+                 'icecreamsneaka.swf' => 'Ice Cream Sneaka',
+                 'kleur.swf' => 'Kleur',
+                 'magma.swf' => 'Magama',
+                 'metarby10.swf' => 'Metarby 10',
+                 'modieus.swf' => 'Modieus',
+                 'nacht.swf' => 'Nacht',
+                 'neon.swf' => 'Neon',
+                 'pearlized.swf' => 'Pearlized',
+                 'pixelize.swf' => 'Pixelize',
+                 'playcasso.swf' => 'Playcasso',
+                 'silverywhite.swf' => 'Silvery White',
+                 'simple.swf' => 'Simple',
+                 'snel.swf' => 'Snel',
+                 'stijl.swf' => 'Stijl',
+                 'stylish_slim.swf' => 'Stylish Slim',
+                 'traganja.swf' => 'Traganja');
 }
 
 /**
@@ -846,7 +840,6 @@ function mplayer_convert_storage_for_streamer($mplayer) {
     }
 
     $storage = mplayer_get_media_storage($mplayer->streamer);
-    // echo "Storing in storage $mplayer->streamer";
 
     $files = $fs->get_directory_files($context->id, 'mod_mplayer', 'mplayerfiles', 0, '/medias/', true, false);
 
@@ -854,7 +847,7 @@ function mplayer_convert_storage_for_streamer($mplayer) {
         foreach ($files as $storedfile) {
             $originalname = $storedfile->get_filename();
             if (!preg_match('/\.stm/', $originalname)) {
-                // Process anything that is NOT a proxy
+                // Process anything that is NOT a proxy.
 
                 // Prepare proxy record.
                 $rec = new StdClass();
@@ -904,7 +897,7 @@ function mplayer_flowplayer_get_type(&$mplayer, $url) {
         if (preg_match('/\.m3u8$/', $url)) {
             // HLS Support.
             $type = 'application/x-mpegurl';
-        } elseif (preg_match('/\/vod\/smil\:/', $url)) {
+        } else if (preg_match('/\/vod\/smil\:/', $url)) {
             // HLS Support.
             $type = 'application/x-mpegurl';
         } else {

@@ -41,7 +41,6 @@ function mplayer_set_instance(&$block) {
     $mplayer = $DB->get_record('mplayer', array('id' => $block->cm->instance));
 
     // Transfer content from title to content.
-    // $block->content->text = $block->title;
     $block->title = format_string($mplayer->name);
 
     $renderer = $PAGE->get_renderer('mplayer');

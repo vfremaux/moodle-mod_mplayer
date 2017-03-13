@@ -56,4 +56,11 @@
     <version></version>
     <licenseversion></licenseversion>
   </library>
+  <library>
+    <location>extra</location>
+    <name>Extra additional libraries</name>
+    <license></license>
+    <version></version>
+    <licenseversion></licenseversion>
+  </library>
 </libraries>

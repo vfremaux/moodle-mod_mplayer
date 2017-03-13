@@ -50,11 +50,11 @@ abstract class media_storage {
     abstract public function get_manifest(stored_file $storedfile, $type);
 
     /**
-     * This function will store a media given as a stored file into a 
+     * This function will store a media given as a stored file into a
      * final location. This is possibly a remote location for an external
      * streamer engine to operate on data. If nothing is done, the effective
      * media storage remains in Moodle.
-     * 
+     *
      * @param stored_file $storedfile
      */
     abstract public function store_media(stored_file $storedfile);

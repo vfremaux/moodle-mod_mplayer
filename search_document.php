@@ -14,8 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Global Search Engine for Moodle
  *
@@ -29,6 +27,7 @@ defined('MOODLE_INTERNAL') || die();
  * document handling for the mplayer page module
  * A video media can be indexed using description and some metadata information.
  */
+defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->dirroot.'/local/search/documents/document.php');
 require_once($CFG->dirroot.'/mod/mplayer/lib.php');
@@ -44,14 +43,14 @@ class MPLayerSearchDocument extends SearchDocument {
     /**
     * constructor
     */
-    public function __construct(&$media, $course_id, $context_id) {
+    public function __construct(&$media, $courseid, $contextid) {
 
         // generic information; required
         $doc = new StdClass;
         $doc->docid         = $media->id;
         $doc->documenttype  = SEARCH_TYPE_MPLAYER;
         $doc->itemtype      = 'video';
-        $doc->contextid     = $context_id;
+        $doc->contextid     = $contextid;
 
         // We cannot call userdate with relevant locale at indexing time.
         $doc->title         = $media['name'];
@@ -68,18 +67,19 @@ class MPLayerSearchDocument extends SearchDocument {
         $data->metadata   = strip_tags($media['id']);
 
         // Construct the parent class.
-        parent::__construct($doc, $data, $course_id, 0, 0, 'mod/'.X_SEARCH_TYPE_MPLAYER);
+        parent::__construct($doc, $data, $courseid, 0, 0, 'mod/'.X_SEARCH_TYPE_MPLAYER);
     } 
 }
 
 /**
  * constructs a valid link to a page content
+ *
  * @param media_id the mplayer course module
  * @uses CFG
  * @return a well formed link to session display
  */
-function mplayer_make_link($media_id) {
-    return new moodle_url('/mod/mplayer/view.php', array('id' => $media_id));
+function mplayer_make_link($mediaid) {
+    return new moodle_url('/mod/mplayer/view.php', array('id' => $mediaid));
 }
 
 /**
@@ -135,6 +135,9 @@ function mplayer_single_document($id, $itemtype) {
 /**
  * dummy delete function that packs id with itemtype.
  * this was here for a reason, but I can't remember it at the moment.
+ * 
+ * @param int info
+ * @param string $itemtype
  */
 function mplayer_delete($info, $itemtype) {
     $object->id = $info;
@@ -144,35 +147,34 @@ function mplayer_delete($info, $itemtype) {
 
 /**
  * returns the var names needed to build a sql query for addition/deletions
- * // TODO cms indexable records are virtual. Should proceed in a special way 
+ * // TODO cms indexable records are virtual. Should proceed in a special way
  */
 function mplayer_db_names() {
-    //[primary id], [table name], [time created field name], [time modified field name]
+    // Template: [primary id], [table name], [time created field name], [time modified field name].
     return array('id', 'mplayer', 'timecreated', 'timemodified', 'video');;
 }
 
 /**
- * this function handles the access policy to contents indexed as searchable documents. If this 
+ * this function handles the access policy to contents indexed as searchable documents. If this
  * function does not exist, the search engine assumes access is allowed.
- * When this point is reached, we already know that : 
+ * When this point is reached, we already know that :
  * - user is legitimate in the surrounding context
  * - user may be guest and guest access is allowed to the module
  * - the function may perform local checks within the module information logic
  * @param path the access path to the module script code
  * @param itemtype the information subclassing (usefull for complex modules, defaults to 'standard')
- * @param this_id the item id within the information class denoted by entry_type. In cms pages, this navi_data id 
+ * @param this_id the item id within the information class denoted by entry_type. In cms pages, this navi_data id
  * @param user the user record denoting the user who searches
  * @param group_id the current group used by the user when searching
- * @uses CFG
  * @return true if access is allowed, false elsewhere
  */
-function mplayer_check_text_access($path, $itemtype, $this_id, $user, $group_id_unused, $context_id_unused) {
+function mplayer_check_text_access($path, $itemtype, $thisid, $user, $groupidunused, $contextidunused) {
     global $CFG, $DB;
 
     include_once("{$CFG->dirroot}/{$path}/lib.php");
 
-    $indexcontext = $DB->get_record('context', array('id' => $context_id));
-    $cm = get_coursemodule_from_instance('mplayer', $this_id);
+    $indexcontext = $DB->get_record('context', array('id' => $contextid));
+    $cm = get_coursemodule_from_instance('mplayer', $thisid);
 
     if (!is_enrolled($context, $user)) {
         return false;
@@ -189,8 +191,6 @@ function mplayer_check_text_access($path, $itemtype, $this_id, $user, $group_id_
  * this call back is called when displaying the link for some last post processing
  *
  */
-function local_cms_post_processing($title) {
-    global $CFG;
-
+function mplayer_post_processing($title) {
     return $title;
 }

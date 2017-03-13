@@ -85,7 +85,7 @@ class http_storage extends media_storage {
 
         $settings->add(new admin_setting_configtext('mplayer/httpmediapath', get_string('httpmediapath', 'mplayer'), '', ''));
 
-        // Physical path for direct storage of media files
+        // Physical path for direct storage of media files.
         $label = get_string('httpmediacontentdir', 'mplayer');
         $settings->add(new admin_setting_configtext('mplayer/httpmediacontentdir', $label, '', ''));
     }

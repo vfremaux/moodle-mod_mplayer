@@ -358,8 +358,8 @@ $string['mplayer_infobox_help'] = '
 $string['mplayer_livestream'] = 'Distribution de flux continu';
 $string['mplayer_livestream_help'] = '
 <div class="indent">
-  <p><strong>RTMP Stream</strong>: name of RTMP stream to check and load</p>
-  <p><strong>Image</strong>: image to show user when stream ends</p>
+  <p><strong>RTMP Stream</strong>: nom du flux RTMP à charger</p>
+  <p><strong>Image</strong>: image à montrer quand le flux se termine</p>
   <p><strong>Interval</strong>: interval in seconds to check for RTMP stream</p>
   <p><strong>Message</strong>: shown to user while plugin checks for RTMP stream</p>
   <p><strong>Streamer</strong>: RTMP server to pull stream from</p>
@@ -373,15 +373,15 @@ $string['mplayer_livestream_help'] = '
 $string['mplayer_logo'] = 'Logo';
 $string['mplayer_logo_help'] = '
 <div class="indent">
-  <p><strong>Image:</strong> JPG, GIF, PNG or SWF logo to display</p>
-  <p><strong>Link:</strong> opens a web page (new window)</p>
+  <p><strong>Image:</strong> Logo JPG, GIF, PNG ou SWF</p>
+  <p><strong>Link:</strong> ouvre une nouvelle fenêtre</p>
   <p><strong>Auto Hide</strong>: logo fades out when there is no mouse activity</p>
   <p><strong>Position</strong>:</p>
   <ul>
-    <li>bottom-left</li>
-    <li>bottom-right</li>
-    <li>top-left</li>
-    <li>top-right</li>
+    <li>en bas à gauche</li>
+    <li>en bas à droite</li>
+    <li>en haut à gauche</li>
+    <li>en haut à droite</li>
   </ul>
   <p><strong>Please note:</strong> Logo &amp; logo link only function in licensed versions of the JW Player. See Logo Box for unlicenced players.</p>
   <p>Activity Module Developed by Matt Bury - <a href="http://matbury.com/" target="_blank">http://matbury.com/</a></p>
