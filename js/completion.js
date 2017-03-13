@@ -4,6 +4,8 @@
  */
 // jshint unused:false, undef:false
 
+var clockdividers = [];
+
 function fire_video_finished(e, api) {
 
     var index;
