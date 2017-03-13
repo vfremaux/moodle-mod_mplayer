@@ -175,4 +175,3 @@ var FlowplayerConfig = new ClassBuilder( {
         }
     }
 });
-
