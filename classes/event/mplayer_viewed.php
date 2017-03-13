@@ -17,8 +17,9 @@
 /**
  * The mod_mplayer course module viewed event.
  *
- * @package    mod_mplayer
- * @copyright  2014 IGA SE
+ * @package     mod_mplayer
+ * @category    mod
+ * @copyright   2014 IGA SE
  */
 
 namespace mod_mplayer\event;
@@ -26,10 +27,6 @@ defined('MOODLE_INTERNAL') || die();
 
 /**
  * The mod_mplayer module viewed event class.
- *
- * @package    mod_mplayer
- * @since      Moodle 2.7
- * @copyright  2014 IGA Tunisie
  */
 class mplayer_viewed extends \core\event\base {
 
@@ -77,7 +74,7 @@ class mplayer_viewed extends \core\event\base {
      * @return array|null
      */
     protected function get_legacy_logdata() {
-        return array($this->courseid, 'mplayer', 'view', 'view.php?id=' . $this->objectid,
+        return array($this->courseid, 'mplayer', 'view', 'view.php?id='.$this->objectid,
             $this->other['objectname'], $this->contextinstanceid);
     }
 
@@ -101,6 +98,5 @@ class mplayer_viewed extends \core\event\base {
             throw new \coding_exception('Context level must be CONTEXT_MODULE.');
         }
     }
-
 }
 
