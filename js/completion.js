@@ -6,12 +6,13 @@
 
 function fire_video_finished(e, api) {
 
+    var index;
     var mpid = api.conf._mplayerid;
 
     if (api.video.index === undefined) {
-        var index = 0;
+        index = 0;
     } else {
-        var index = api.video.index;
+        index = api.video.index;
     }
     var url = M.cfg.wwwroot + '/mod/mplayer/ajax/markmediacompletion.php?mpid=' + mpid + '&clipid=' + index + '&what=finished';
 
@@ -26,6 +27,7 @@ function fire_video_finished(e, api) {
  */
 function send_video_progress(e, api, progresstime) {
 
+    var index;
     var mpid = api.conf._mplayerid;
 
     if (isNaN(clockdividers[mpid])) {
@@ -37,13 +39,13 @@ function send_video_progress(e, api, progresstime) {
     }
 
     if (api.video.index === undefined) {
-        var index = 0;
+        index = 0;
     } else {
-        var index = api.video.index;
+        index = api.video.index;
     }
 
     if (api.ready) {
-        var progress = progresstime * 100 / api.video.duration
+        var progress = progresstime * 100 / api.video.duration;
         var url = M.cfg.wwwroot + '/mod/mplayer/ajax/markmediacompletion.php?';
         url += 'mpid=' + mpid + '&clipid=' + index + '&what=progress&progress=' + progress;
 

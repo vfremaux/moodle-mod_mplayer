@@ -19,7 +19,7 @@ var ClassBuilder = function(methods) {
     return klass;
 };
 
-var FlowplayerConfig = ClassBuilder( {
+var FlowplayerConfig = new ClassBuilder( {
 
     /*
      * Note extra members are called with _ prefix. those
@@ -123,14 +123,14 @@ var FlowplayerConfig = ClassBuilder( {
     }
 });
 
-var Source = ClassBuilder( {
+var Source = new ClassBuilder( {
     initialize: function(type, src) {
         this.type = type;
         this.src = src;
     }
 });
 
-var Clip = ClassBuilder( {
+var Clip = new ClassBuilder( {
     initialize: function() {
         this.sources = [];
         this.subtitles = [];
@@ -154,7 +154,7 @@ var Clip = ClassBuilder( {
     },
 });
 
-var Cue = ClassBuilder( {
+var Cue = new ClassBuilder( {
     initialize: function(time, url, cueout, cuetype, mandatory, playerid) {
         this.time = time;
         this.url = url;
@@ -165,7 +165,7 @@ var Cue = ClassBuilder( {
     }
 });
 
-var Subtitle = ClassBuilder( {
+var Subtitle = new ClassBuilder( {
     initialize: function(kind, src, srclang, label, defaultvalue) {
         if (defaultvalue) {
             this["default"] = true;
