@@ -17,8 +17,8 @@
 /**
  * The mod_mplayer course module viewed event.
  *
- * @package    mod_mplayer
- * @copyright  2014 IGA SE
+ * @package     mod_mplayer
+ * @category   mod
  */
 
 namespace mod_mplayer\event;
@@ -26,10 +26,6 @@ defined('MOODLE_INTERNAL') || die();
 
 /**
  * The mod_mplayer module viewed event class.
- *
- * @package    mod_mplayer
- * @since      Moodle 2.7
- * @copyright  2014 IGA Tunisie
  */
 class mplayer_viewedall extends \core\event\base {
 
@@ -77,7 +73,7 @@ class mplayer_viewedall extends \core\event\base {
      * @return array|null
      */
     protected function get_legacy_logdata() {
-        return array($this->courseid, 'mplayer', 'view all', 'index.php?id=' . $this->objectid,
+        return array($this->courseid, 'mplayer', 'view all', 'index.php?id='.$this->objectid,
             $this->other['objectname'], $this->contextinstanceid);
     }
 
