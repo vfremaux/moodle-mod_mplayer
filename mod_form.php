@@ -39,8 +39,8 @@ class mod_mplayer_mod_form extends moodleform_mod {
 
         $mform =& $this->_form;
 
-        $mplayer_url_array = array('size' => '80');
-        $mplayer_int_array = array('size' => '6');
+        $mplayerurlarray = array('size' => '80');
+        $mplayerintarray = array('size' => '6');
 
         $config = get_config('mplayer');
         $instance = $this->current;
@@ -51,17 +51,19 @@ class mod_mplayer_mod_form extends moodleform_mod {
             $instance->technology = 'flowplayer';
         }
 
-        $maxfiles = 99;                // TODO: add some setting
-        $maxbytes = $COURSE->maxbytes; // TODO: add some setting
+        $maxfiles = 99;                // TODO: add some setting.
+        $maxbytes = $COURSE->maxbytes; // TODO: add some setting.
         $modcontext = $this->context;
-        $this->descriptionoptions = array('trusttext' => true, 'subdirs' => false, 'maxfiles' => $maxfiles, 'maxbytes' => $maxbytes, 'context' => $modcontext);
+        $this->descriptionoptions = array('trusttext' => true,
+                                          'subdirs' => false,
+                                          'maxfiles' => $maxfiles,
+                                          'maxbytes' => $maxbytes,
+                                          'context' => $modcontext);
 
-        //-------------------------------------------------------------------------------
-
-        // Adding the "general" fieldset, where all the common settings are shown
+        // Adding the "general" fieldset, where all the common settings are shown.
         $mform->addElement('header', 'general', get_string('general', 'form'));
 
-        $mform->addElement('text', 'name', get_string('name'), array('size'=>'64'));
+        $mform->addElement('text', 'name', get_string('name'), array('size' => '64'));
         if (!empty($CFG->formatstringstriptags)) {
             $mform->setType('name', PARAM_TEXT);
         } else {
@@ -73,7 +75,7 @@ class mod_mplayer_mod_form extends moodleform_mod {
         // Introduction.
         $this->standard_intro_elements();
 
-        // TECHNOLOGY ----------------------------------------.
+        // TECHNOLOGY.
 
         if (!empty($config->allowchoice)) {
             $mform->addElement('header', 'headertechnology', get_string('technology', 'mplayer'));
@@ -85,34 +87,37 @@ class mod_mplayer_mod_form extends moodleform_mod {
             $mform->setDefault('technology', $config->default_player);
         }
 
-        // MEDIA SOURCE ----------------------------------------.
+        // MEDIA SOURCE.
 
         $mform->addElement('header', 'mplayerresources', get_string('mplayerresources', 'mplayer'));
         $mform->addHelpButton('mplayerresources', 'mplayer_resources', 'mplayer');
         $mform->setExpanded('mplayerresources');
 
         // Mplayerfile.
-        $mform->addElement('filemanager', 'mplayerfiles', get_string('mplayerfiles', 'mplayer'), null, array('subdirs' => true, 'courseid' => $COURSE->id, 'maxfiles' => 60));
+        $options = array('subdirs' => true, 'courseid' => $COURSE->id, 'maxfiles' => 60);
+        $mform->addElement('filemanager', 'mplayerfiles', get_string('mplayerfiles', 'mplayer'), null, $options);
 
         // Type.
         $mform->addElement('select', 'type', get_string('type', 'mplayer'), mplayer_list_type($instance));
         $mform->setDefault('type', 'video');
 
         // External url alternative.
-        $mform->addElement('textarea', 'external', get_string('external', 'mplayer'), array('rows' => 5, 'style' => 'width:97%','height' => 0));
+        $attrs = array('rows' => 5, 'style' => 'width:97%', 'height' => 0);
+        $mform->addElement('textarea', 'external', get_string('external', 'mplayer'), $attrs);
 
         $mform->addElement('select', 'streamer', get_string('streamer', 'mplayer'), mplayer_list_streamer());
         $mform->disabledIf('streamer', 'type', 'neq', 'rtmp');
         $mform->setDefault('streamer', 'none');
         $mform->setAdvanced('streamer');
 
-        // Playlists ---------------------------------------.
+        // PLAYLISTS.
 
         $mform->addElement('header', 'playlists', get_string('playlists', 'mplayer'));
         $mform->addHelpButton('playlists', 'mplayer_playlist', 'mplayer');
 
         // Local file path template.
-        $mform->addElement('static', 'playlistlocalpath', get_string('playlistlocalpath', 'mplayer'), $CFG->wwwroot.'/pluginfile.php/'.$this->context->id.'/mod_mplayer/mplayerfile/0/&lt;filename&gt;');
+        $clipurl = $CFG->wwwroot.'/pluginfile.php/'.$this->context->id.'/mod_mplayer/mplayerfile/0/&lt;filename&gt;';
+        $mform->addElement('static', 'playlistlocalpath', get_string('playlistlocalpath', 'mplayer'), $clipurl);
 
         // Playlist.
         if ($instance->technology == 'jw') {
@@ -122,14 +127,14 @@ class mod_mplayer_mod_form extends moodleform_mod {
         }
 
         // Playlistsize.
-        $mform->addElement('text', 'playlistsize', get_string('playlistsize', 'mplayer'), $mplayer_int_array);
+        $mform->addElement('text', 'playlistsize', get_string('playlistsize', 'mplayer'), $mplayerintarray);
         $mform->setType('playlistsize', PARAM_INT);
         $mform->setDefault('playlistsize', '180');
         $mform->setAdvanced('playlistsize');
 
         // Item.
         // TODO : Check if still necessary.
-        $mform->addElement('text', 'item', get_string('item', 'mplayer'), $mplayer_int_array);
+        $mform->addElement('text', 'item', get_string('item', 'mplayer'), $mplayerintarray);
         $mform->setType('item', PARAM_TEXT);
         $mform->setDefault('item', '');
         $mform->setAdvanced('item');
@@ -144,7 +149,7 @@ class mod_mplayer_mod_form extends moodleform_mod {
         $mform->setDefault('shuffle', 'false');
         $mform->setAdvanced('shuffle');
 
-        // Subtitle options ---------------------------------------.
+        // SUBTITLES.
 
         if ($instance->technology != 'jw') {
             $mform->addElement('header', 'configsubtitles', get_string('configsubtitles', 'mplayer'));
@@ -156,7 +161,7 @@ class mod_mplayer_mod_form extends moodleform_mod {
             $mform->disabledIf('langforced', 'langselection', 'neq', 'langteacherchoice');
         }
 
-        // CONFIGXML ---------------------------------------.
+        // CONFIGXML.
 
         if ($instance->technology == 'jw') {
             $mform->addElement('header', 'config', get_string('config', 'mplayer'));
@@ -164,7 +169,8 @@ class mod_mplayer_mod_form extends moodleform_mod {
 
             // Configxml.
             $group = array();
-            $group[] = $mform->createElement('filepicker', 'configxml', get_string('configxml', 'mplayer'), array('courseid' => $COURSE->id, 'accepted_types' => '.xml'));
+            $optoins = array('courseid' => $COURSE->id, 'accepted_types' => '.xml');
+            $group[] = $mform->createElement('filepicker', 'configxml', get_string('configxml', 'mplayer'), $options);
             $group[] = $mform->createElement('checkbox', 'clearconfigxml', '', get_string('clearconfigxml', 'mplayer'));
             $mform->addGroup($group, 'configxmlgroup', get_string('configxml', 'mplayer'), '', array(''), false);
         } else {
@@ -175,7 +181,7 @@ class mod_mplayer_mod_form extends moodleform_mod {
             $mform->setType('configxmlgroup[clearconfigxml]', PARAM_BOOL);
         }
 
-        // APPEARANCE ---------------------------------------.
+        // APPEARANCE.
 
         $mform->addElement('header', 'appearance', get_string('appearance', 'mplayer'));
         $mform->addHelpButton('appearance', 'mplayer_appearance', 'mplayer');
@@ -185,7 +191,7 @@ class mod_mplayer_mod_form extends moodleform_mod {
         $mform->setType('notes_editor', PARAM_RAW);
 
         // Width.
-        $mform->addElement('text', 'width', get_string('width', 'mplayer'), $mplayer_int_array);
+        $mform->addElement('text', 'width', get_string('width', 'mplayer'), $mplayerintarray);
         $mform->setType('width', PARAM_TEXT);
         $mform->addRule('width', get_string('required'), 'required', null, 'client');
         if (empty($config->default_width)) {
@@ -195,7 +201,7 @@ class mod_mplayer_mod_form extends moodleform_mod {
         $mform->setDefault('width', $config->default_width);
 
         // Height.
-        $mform->addElement('text', 'height', get_string('height', 'mplayer'), $mplayer_int_array);
+        $mform->addElement('text', 'height', get_string('height', 'mplayer'), $mplayerintarray);
         $mform->setType('height', PARAM_TEXT);
         $mform->addRule('height', get_string('required'), 'required', null, 'client');
         if (empty($CFG->default_height)) {
@@ -227,8 +233,8 @@ class mod_mplayer_mod_form extends moodleform_mod {
             $mform->setAdvanced('controlbar');
         }
 
-        // backcolor
-        $mform->addElement('text', 'backcolor', get_string('backcolor', 'mplayer'), $mplayer_int_array);
+        // Backcolor.
+        $mform->addElement('text', 'backcolor', get_string('backcolor', 'mplayer'), $mplayerintarray);
         $mform->setType('backcolor', PARAM_TEXT);
         if (!isset($config->default_backcolor)) {
             set_config('default_backcolor', '#000000', 'mplayer');
@@ -237,8 +243,8 @@ class mod_mplayer_mod_form extends moodleform_mod {
         $mform->setDefault('backcolor', $config->default_backcolor);
         $mform->setAdvanced('backcolor');
 
-        // frontcolor
-        $mform->addElement('text', 'frontcolor', get_string('frontcolor', 'mplayer'), $mplayer_int_array);
+        // Frontcolor.
+        $mform->addElement('text', 'frontcolor', get_string('frontcolor', 'mplayer'), $mplayerintarray);
         $mform->setType('frontcolor', PARAM_TEXT);
         if (!isset($config->default_frontcolor)) {
             set_config('default_frontcolor', '#dddddd', 'mplayer');
@@ -247,8 +253,8 @@ class mod_mplayer_mod_form extends moodleform_mod {
         $mform->setDefault('frontcolor', $config->default_frontcolor);
         $mform->setAdvanced('frontcolor');
 
-        // lightcolor
-        $mform->addElement('text', 'lightcolor', get_string('lightcolor', 'mplayer'), $mplayer_int_array);
+        // Lightcolor.
+        $mform->addElement('text', 'lightcolor', get_string('lightcolor', 'mplayer'), $mplayerintarray);
         $mform->setType('lightcolor', PARAM_TEXT);
         if (!isset($config->default_lightcolor)) {
             set_config('default_lightcolor', '#ffffff', 'mplayer');
@@ -258,7 +264,7 @@ class mod_mplayer_mod_form extends moodleform_mod {
         $mform->setAdvanced('lightcolor');
 
         // Screencolor.
-        $mform->addElement('text', 'screencolor', get_string('screencolor', 'mplayer'), $mplayer_int_array);
+        $mform->addElement('text', 'screencolor', get_string('screencolor', 'mplayer'), $mplayerintarray);
         $mform->setType('screencolor', PARAM_TEXT);
         if (!isset($config->default_screencolor)) {
             set_config('default_screencolor', '#80ff80', 'mplayer');
@@ -277,12 +283,12 @@ class mod_mplayer_mod_form extends moodleform_mod {
         $mform->setDefault('quality', 'best');
         $mform->setAdvanced('quality');
 
-        // BEHAVIOUR ---------------------------------------.
+        // BEHAVIOUR.
 
         $mform->addElement('header', 'behaviour', get_string('behaviour', 'mplayer'));
         $mform->addHelpButton('behaviour', 'mplayer_behaviour', 'mplayer');
 
-        // Autostart. 
+        // Autostart.
         $mform->addElement('select', 'autostart', get_string('autostart', 'mplayer'), mplayer_list_truefalse());
         if (empty($config->default_autostart)) {
             set_config('default_autostart', 'false', 'mplayer');
@@ -291,7 +297,7 @@ class mod_mplayer_mod_form extends moodleform_mod {
         $mform->setDefault('autostart', $config->default_autostart);
         $mform->disabledIf('autostart', 'splashmode', 'eq', 'is-splash');
 
-        // Fullscreen. 
+        // Fullscreen.
         $mform->addElement('select', 'fullscreen', get_string('fullscreen', 'mplayer'), mplayer_list_truefalse());
         if (empty($config->default_fullscreen)) {
             set_config('default_fullscreen', 'true', 'mplayer');
@@ -345,7 +351,7 @@ class mod_mplayer_mod_form extends moodleform_mod {
 
         if ($instance->technology == 'jw') {
             // Mplayerstart.
-            $mform->addElement('text', 'mplayerstart', get_string('mplayerstart', 'mplayer'), $mplayer_int_array);
+            $mform->addElement('text', 'mplayerstart', get_string('mplayerstart', 'mplayer'), $mplayerintarray);
             $mform->setType('mplayerstart', PARAM_INT);
             $mform->setDefault('mplayerstart', '0');
             $mform->setAdvanced('mplayerstart');
@@ -356,7 +362,7 @@ class mod_mplayer_mod_form extends moodleform_mod {
             $mform->setAdvanced('bufferlength');
 
             // Plugins.
-            $mform->addElement('text', 'plugins', get_string('plugins', 'mplayer'), $mplayer_url_array);
+            $mform->addElement('text', 'plugins', get_string('plugins', 'mplayer'), $mplayerurlarray);
             $mform->setType('plugins', PARAM_TEXT);
             $mform->setDefault('plugins', '');
             $mform->setAdvanced('plugins');
@@ -369,31 +375,31 @@ class mod_mplayer_mod_form extends moodleform_mod {
             $mform->setType('plugins', PARAM_TEXT);
         }
 
-        // Metadata ---------------------------------------.
+        // Metadata.
 
         if ($instance->technology == 'jw') {
             $mform->addElement('header', 'metadata', get_string('metadata', 'mplayer'));
             $mform->addHelpButton('metadata', 'mplayer_metadata', 'mplayer');
 
             // Author.
-            $mform->addElement('text', 'author', get_string('author', 'mplayer'), $mplayer_url_array);
+            $mform->addElement('text', 'author', get_string('author', 'mplayer'), $mplayerurlarray);
             $mform->setType('author', PARAM_TEXT);
             $mform->setDefault('author', fullname($USER));
             $mform->setAdvanced('author');
 
             // Mplayerdate.
-            $mform->addElement('text', 'mplayerdate', get_string('mplayerdate', 'mplayer'), $mplayer_url_array);
+            $mform->addElement('text', 'mplayerdate', get_string('mplayerdate', 'mplayer'), $mplayerurlarray);
             $mform->setType('mplayerdate', PARAM_TEXT);
             $mform->setDefault('mplayerdate', date('l jS \of F Y'));
             $mform->setAdvanced('mplayerdate');
 
             // Title.
-            $mform->addElement('text', 'title', get_string('title', 'mplayer'), $mplayer_url_array);
+            $mform->addElement('text', 'title', get_string('title', 'mplayer'), $mplayerurlarray);
             $mform->setType('title', PARAM_CLEANHTML);
             $mform->setAdvanced('title');
 
             // Description.
-            $mform->addElement('text', 'description', get_string('description', 'mplayer'), $mplayer_url_array);
+            $mform->addElement('text', 'description', get_string('description', 'mplayer'), $mplayerurlarray);
             $mform->setType('description', PARAM_CLEANHTML);
             $mform->setAdvanced('description');
 
@@ -409,23 +415,27 @@ class mod_mplayer_mod_form extends moodleform_mod {
 
         }
 
-        // Audiodescription ---------------------------------------.
+        // AUDIODESCRIPTION.
 
         if ($instance->technology == 'jw') {
             $mform->addElement('header', 'audiodescription', get_string('audiodescription', 'mplayer'));
             $mform->addHelpButton('audiodescription', 'mplayer_audiodescription', 'mplayer');
-    
+
             // Audiodescriptionfile.
-            $mform->addElement('filepicker', 'audiodescriptionfile', get_string('audiodescriptionfile', 'mplayer'), array('courseid'=>$COURSE->id));
+            $options = array('courseid' => $COURSE->id);
+            $label = get_string('audiodescriptionfile', 'mplayer');
+            $mform->addElement('filepicker', 'audiodescriptionfile', $label, $options);
             $mform->setAdvanced('audiodescriptionfile');
-    
+
             // Audiodescriptionstate.
-            $mform->addElement('select', 'audiodescriptionstate', get_string('audiodescriptionstate', 'mplayer'), mplayer_list_truefalse());
+            $label = get_string('audiodescriptionstate', 'mplayer');
+            $mform->addElement('select', 'audiodescriptionstate', $label, mplayer_list_truefalse());
             $mform->setDefault('audiodescriptionstate', 'true');
             $mform->setAdvanced('audiodescriptionstate');
-    
+
             // Audiodescriptionvolume.
-            $mform->addElement('select', 'audiodescriptionvolume', get_string('audiodescriptionvolume', 'mplayer'), mplayer_list_volume());
+            $label = get_string('audiodescriptionvolume', 'mplayer');
+            $mform->addElement('select', 'audiodescriptionvolume', $label, mplayer_list_volume());
             $mform->setDefault('audiodescriptionvolume', '90');
             $mform->setAdvanced('audiodescriptionvolume');
         } else {
@@ -435,7 +445,7 @@ class mod_mplayer_mod_form extends moodleform_mod {
             $mform->setType('audiodescriptionvolume', PARAM_INT);
         }
 
-        // Captions ---------------------------------------.
+        // CAPTIONS.
 
         if ($instance->technology == 'jw') {
             $mform->addElement('header', 'captions', get_string('captions', 'mplayer'));
@@ -447,11 +457,12 @@ class mod_mplayer_mod_form extends moodleform_mod {
             $mform->setAdvanced('captionsback');
 
             // Captionsfile.
-            $mform->addElement('filepicker', 'captionsfile', get_string('captionsfile', 'mplayer'), array('courseid'=>$COURSE->id));
+            $options = array('courseid' => $COURSE->id);
+            $mform->addElement('filepicker', 'captionsfile', get_string('captionsfile', 'mplayer'), $options);
             $mform->setAdvanced('captionsfile');
 
             // Captionsfontsize.
-            $mform->addElement('text', 'captionsfontsize', get_string('captionsfontsize', 'mplayer'), $mplayer_int_array);
+            $mform->addElement('text', 'captionsfontsize', get_string('captionsfontsize', 'mplayer'), $mplayerintarray);
             $mform->setType('captionsfontsize', PARAM_INT);
             $mform->setDefault('captionsfontsize', '14');
             $mform->setAdvanced('captionsfontsize');
@@ -469,20 +480,21 @@ class mod_mplayer_mod_form extends moodleform_mod {
             $mform->setType('captionsstate', PARAM_TEXT);
         }
 
-        // HD ---------------------------------------.
+        // HD.
 
         if ($instance->technology == 'jw') {
             $mform->addElement('header', 'hd', get_string('hd', 'mplayer'));
             $mform->addHelpButton('hd', 'mplayer_hd', 'mplayer');
 
             // Hdbitrate.
-            $mform->addElement('text', 'hdbitrate', get_string('hdbitrate', 'mplayer'), $mplayer_int_array);
+            $mform->addElement('text', 'hdbitrate', get_string('hdbitrate', 'mplayer'), $mplayerintarray);
             $mform->setType('hdbitrate', PARAM_INT);
             $mform->setDefault('hdbitrate', '1500');
             $mform->setAdvanced('hdbitrate');
 
             // Hdfile.
-            $mform->addElement('filepicker', 'hdfile', get_string('hdfile', 'mplayer'), array('courseid'=>$COURSE->id));
+            $options = array('courseid' => $COURSE->id);
+            $mform->addElement('filepicker', 'hdfile', get_string('hdfile', 'mplayer'), $options);
             $mform->setAdvanced('hdfile');
 
             // Hdfullscreen.
@@ -503,25 +515,26 @@ class mod_mplayer_mod_form extends moodleform_mod {
             $mform->setType('hdstate', PARAM_INT);
         }
 
-        // Infobox ---------------------------------------.
+        // INFOBOX.
 
         if ($instance->technology == 'jw') {
             $mform->addElement('header', 'infobox', get_string('infobox', 'mplayer'));
             $mform->addHelpButton('infobox', 'mplayer_infobox', 'mplayer');
 
             // Infoboxcolor.
-            $mform->addElement('text', 'infoboxcolor', get_string('infoboxcolor', 'mplayer'), $mplayer_int_array);
+            $mform->addElement('text', 'infoboxcolor', get_string('infoboxcolor', 'mplayer'), $mplayerintarray);
             $mform->setType('infoboxcolor', PARAM_TEXT);
             $mform->setDefault('infoboxcolor', 'ffffff');
             $mform->setAdvanced('infoboxcolor');
 
             // Infoboxposition.
-            $mform->addElement('select', 'infoboxposition', get_string('infoboxposition', 'mplayer'), mplayer_list_infoboxposition());
+            $label = get_string('infoboxposition', 'mplayer');
+            $mform->addElement('select', 'infoboxposition', $label, mplayer_list_infoboxposition());
             $mform->setDefault('infoboxposition', 'none');
             $mform->setAdvanced('infoboxposition');
 
             // Infoboxsize.
-            $mform->addElement('text', 'infoboxsize', get_string('infoboxsize', 'mplayer'), $mplayer_int_array);
+            $mform->addElement('text', 'infoboxsize', get_string('infoboxsize', 'mplayer'), $mplayerintarray);
             $mform->setType('infoboxsize', PARAM_INT);
             $mform->setDefault('infoboxsize', '85');
             $mform->setAdvanced('infoboxsize');
@@ -534,39 +547,41 @@ class mod_mplayer_mod_form extends moodleform_mod {
             $mform->setType('infoboxsize', PARAM_INT);
         }
 
-        // Livestream ---------------------------------------.
+        // LIVESTREAM.
 
         if ($instance->technology == 'jw') {
             $mform->addElement('header', 'livestream', get_string('livestream', 'mplayer'));
             $mform->addHelpButton('livestream', 'mplayer_livestream', 'mplayer');
-    
+
             // Livestreamfile.
-            $mform->addElement('filepicker', 'livestreamfile', get_string('livestreamfile', 'mplayer'), array('courseid' => $COURSE->id));
+            $options = array('courseid' => $COURSE->id);
+            $mform->addElement('filepicker', 'livestreamfile', get_string('livestreamfile', 'mplayer'), $options);
             $mform->setAdvanced('livestreamfile');
-    
+
             // Livestreamimage.
-            $mform->addElement('filepicker', 'livestreamimagefile', get_string('livestreamimage', 'mplayer'), array('courseid'=>$COURSE->id));
+            $mform->addElement('filepicker', 'livestreamimagefile', get_string('livestreamimage', 'mplayer'), $options);
             $mform->setAdvanced('livestreamimagefile');
-    
+
             // Livestreaminterval.
-            $mform->addElement('text', 'livestreaminterval', get_string('livestreaminterval', 'mplayer'), $mplayer_int_array);
+            $mform->addElement('text', 'livestreaminterval', get_string('livestreaminterval', 'mplayer'), $mplayerintarray);
             $mform->setType('livestreaminterval', PARAM_INT);
             $mform->setDefault('livestreaminterval', '15');
             $mform->setAdvanced('livestreaminterval');
 
             // Livestreammessage.
-            $mform->addElement('text', 'livestreammessage', get_string('livestreammessage', 'mplayer'), $mplayer_url_array);
+            $mform->addElement('text', 'livestreammessage', get_string('livestreammessage', 'mplayer'), $mplayerurlarray);
             $mform->setType('livestreammessage', PARAM_CLEANHTML);
             $mform->setDefault('livestreammessage', 'Checking for livestream...');
             $mform->setAdvanced('livestreammessage');
 
             // Livestreamstreamer.
-            $mform->addElement('select', 'livestreamstreamer', get_string('livestreamstreamer', 'mplayer'), mplayer_list_streamer());
+            $label = get_string('livestreamstreamer', 'mplayer');
+            $mform->addElement('select', 'livestreamstreamer', $label, mplayer_list_streamer());
             $mform->setDefault('livestreamstreamer', '');
             $mform->setAdvanced('livestreamstreamer');
 
             // Livestreamtags.
-            $mform->addElement('text', 'livestreamtags', get_string('livestreamtags', 'mplayer'), $mplayer_url_array);
+            $mform->addElement('text', 'livestreamtags', get_string('livestreamtags', 'mplayer'), $mplayerurlarray);
             $mform->setType('livestreamtags', PARAM_INT);
             $mform->setAdvanced('livestreamtags');
         } else {
@@ -580,34 +595,36 @@ class mod_mplayer_mod_form extends moodleform_mod {
             $mform->setType('livestreamtags', PARAM_CLEANHTML);
         }
 
-        // Logobox ---------------------------------------.
+        // LOGOBOX.
 
         if ($instance->technology == 'jw') {
             $mform->addElement('header', 'logobox', get_string('logobox', 'mplayer'));
             $mform->addHelpButton('logobox', 'mplayer_logobox', 'mplayer');
-    
+
             // Logoboxalign.
             $mform->addElement('select', 'logoboxalign', get_string('logoboxalign', 'mplayer'), mplayer_list_logoboxalign());
             $mform->setDefault('logoboxalign', 'left');
             $mform->setAdvanced('logoboxalign');
-    
+
             // Logoboxfile.
-            $mform->addElement('filepicker', 'logoboxfile', get_string('logoboxfile', 'mplayer'), array('courseid'=>$COURSE->id));
+            $options = array('courseid' => $COURSE->id);
+            $mform->addElement('filepicker', 'logoboxfile', get_string('logoboxfile', 'mplayer'), $options);
             $mform->setAdvanced('logoboxfile');
-    
+
             // Logoboxlink.
-            $mform->addElement('text', 'logoboxlink', get_string('logoboxlink', 'mplayer'), $mplayer_url_array);
+            $mform->addElement('text', 'logoboxlink', get_string('logoboxlink', 'mplayer'), $mplayerurlarray);
             $mform->setType('logoboxlink', PARAM_URL);
             $mform->setAdvanced('logoboxlink');
-    
+
             // Logoboxmargin.
-            $mform->addElement('text', 'logoboxmargin', get_string('logoboxmargin', 'mplayer'), $mplayer_int_array);
+            $mform->addElement('text', 'logoboxmargin', get_string('logoboxmargin', 'mplayer'), $mplayerintarray);
             $mform->setType('logoboxmargin', PARAM_INT);
             $mform->setDefault('logoboxmargin', '15');
             $mform->setAdvanced('logoboxmargin');
-    
+
             // Logoboxposition.
-            $mform->addElement('select', 'logoboxposition', get_string('logoboxposition', 'mplayer'), mplayer_list_infoboxposition());
+            $label = get_string('logoboxposition', 'mplayer');
+            $mform->addElement('select', 'logoboxposition', $label, mplayer_list_infoboxposition());
             $mform->setDefault('logoboxposition', 'top');
             $mform->setAdvanced('logoboxposition');
         } else {
@@ -627,12 +644,13 @@ class mod_mplayer_mod_form extends moodleform_mod {
             $mform->addHelpButton('metaviewer', 'mplayer_metaviewer', 'mplayer');
 
             // Metaviewerposition.
-            $mform->addElement('select', 'metaviewerposition', get_string('metaviewerposition', 'mplayer'), mplayer_list_metaviewerposition());
+            $label = get_string('metaviewerposition', 'mplayer');
+            $mform->addElement('select', 'metaviewerposition', $label, mplayer_list_metaviewerposition());
             $mform->setDefault('metaviewerposition', 'none');
             $mform->setAdvanced('metaviewerposition');
 
             // Metaviewersize.
-            $mform->addElement('text', 'metaviewersize', get_string('metaviewersize', 'mplayer'), $mplayer_int_array);
+            $mform->addElement('text', 'metaviewersize', get_string('metaviewersize', 'mplayer'), $mplayerintarray);
             $mform->setType('metaviewersize', PARAM_INT);
             $mform->setDefault('metaviewersize', '100');
             $mform->setAdvanced('metaviewersize');
@@ -643,7 +661,7 @@ class mod_mplayer_mod_form extends moodleform_mod {
             $mform->setType('metaviewersize', PARAM_INT);
         }
 
-        // Searchbar ---------------------------------------.
+        // SEARCHBAR.
 
         if ($instance->technology == 'jw') {
             $mform->addElement('header', 'searchbar', get_string('searchbar', 'mplayer'));
@@ -651,24 +669,26 @@ class mod_mplayer_mod_form extends moodleform_mod {
             $mform->setAdvanced('searchbar');
 
             // Searchbarcolor.
-            $mform->addElement('text', 'searchbarcolor', get_string('searchbarcolor', 'mplayer'), $mplayer_int_array);
+            $mform->addElement('text', 'searchbarcolor', get_string('searchbarcolor', 'mplayer'), $mplayerintarray);
             $mform->setType('searchbarcolor', PARAM_TEXT);
             $mform->setDefault('searchbarcolor', 'CC0000');
             $mform->setAdvanced('searchbarcolor');
 
             // Searchbarlabel.
-            $mform->addElement('text', 'searchbarlabel', get_string('searchbarlabel', 'mplayer'), $mplayer_url_array);
+            $mform->addElement('text', 'searchbarlabel', get_string('searchbarlabel', 'mplayer'), $mplayerurlarray);
             $mform->setType('searchbarlabel', PARAM_TEXT);
             $mform->setDefault('searchbarlabel', 'Search');
             $mform->setAdvanced('searchbarlabel');
 
             // Searchbarposition.
-            $mform->addElement('select', 'searchbarposition', get_string('searchbarposition', 'mplayer'), mplayer_list_searchbarposition());
+            $label = get_string('searchbarposition', 'mplayer');
+            $mform->addElement('select', 'searchbarposition', $label, mplayer_list_searchbarposition());
             $mform->setDefault('searchbarposition', '');
             $mform->setAdvanced('searchbarposition');
-    
+
             // Searchbarscript.
-            $mform->addElement('select', 'searchbarscript', get_string('searchbarscript', 'mplayer'), mplayer_list_searchbarscript());
+            $label = get_string('searchbarscript', 'mplayer');
+            $mform->addElement('select', 'searchbarscript', $label, mplayer_list_searchbarscript());
             $mform->setDefault('searchbarscript', '');
             $mform->setAdvanced('searchbarscript');
         } else {
@@ -682,7 +702,7 @@ class mod_mplayer_mod_form extends moodleform_mod {
             $mform->setType('searchbarscript', PARAM_TEXT);
         }
 
-        // Snapshot ---------------------------------------.
+        // SNAPSHOT.
 
         if ($instance->technology == 'jw') {
             $mform->addElement('header', 'snapshot', get_string('snapshot', 'mplayer'));
@@ -692,7 +712,7 @@ class mod_mplayer_mod_form extends moodleform_mod {
             $mform->addElement('select', 'snapshotbitmap', get_string('snapshotbitmap', 'mplayer'), mplayer_list_truefalse());
             $mform->setDefault('snapshotbitmap', 'true');
             $mform->setAdvanced('snapshotbitmap');
-    
+
             // Snapshotscript.
             $mform->addElement('select', 'snapshotscript', get_string('snapshotscript', 'mplayer'), mplayer_list_snapshotscript());
             $mform->setDefault('snapshotscript', '');
@@ -704,27 +724,28 @@ class mod_mplayer_mod_form extends moodleform_mod {
             $mform->setType('snapshotscript', PARAM_TEXT);
         }
 
-        // Logo (licenced players only) ---------------------------------------.
+        // JW LOGO (licenced players only).
 
         if ($instance->technology == 'jw') {
             $mform->addElement('header', 'logo', get_string('logo', 'mplayer'));
             $mform->addHelpButton('logo', 'mplayer_logo', 'mplayer');
             $mform->setAdvanced('logo');
-    
+
             // Logofile.
-            $mform->addElement('filepicker', 'logofile', get_string('logofile', 'mplayer'), array('courseid'=>$COURSE->id));
+            $options = array('courseid' => $COURSE->id);
+            $mform->addElement('filepicker', 'logofile', get_string('logofile', 'mplayer'), $options);
             $mform->setAdvanced('logofile');
-    
+
             // Logolink.
-            $mform->addElement('text', 'logolink', get_string('logolink', 'mplayer'), $mplayer_url_array);
+            $mform->addElement('text', 'logolink', get_string('logolink', 'mplayer'), $mplayerurlarray);
             $mform->setType('logolink', PARAM_URL);
             $mform->setAdvanced('logolink');
-    
+
             // logohide.
             $mform->addElement('select', 'logohide', get_string('logohide', 'mplayer'), mplayer_list_truefalse());
             $mform->setDefault('logohide', 'true');
             $mform->setAdvanced('logohide');
-    
+
             // Logoposition.
             $mform->addElement('select', 'logoposition', get_string('logoposition', 'mplayer'), mplayer_list_logoposition());
             $mform->setDefault('logoposition', 'bottom-left');
@@ -738,22 +759,21 @@ class mod_mplayer_mod_form extends moodleform_mod {
             $mform->setType('logoposition', PARAM_TEXT);
         }
 
-        // ADVANCED ---------------------------------------.
+        // ADVANCED.
 
         if ($instance->technology == 'jw') {
             $mform->addElement('header', 'advanced', get_string('advanced', 'mplayer'));
             $mform->addHelpButton('advanced', 'mplayer_advanced', 'mplayer');
             $mform->setAdvanced('advanced');
-    
+
             // Fpversion.
-            $mform->addElement('text', 'fpversion', get_string('fpversion', 'mplayer'), array('size'=>'9'));
+            $mform->addElement('text', 'fpversion', get_string('fpversion', 'mplayer'), array('size' => '9'));
             $mform->setType('fpversion', PARAM_TEXT);
             $mform->setDefault('fpversion', '9.0.115');
-            // $mform->addRule('fpversion', get_string('required'), 'required', null, 'client');
             $mform->setAdvanced('fpversion');
-    
+
             // Tracecall.
-            $mform->addElement('text', 'tracecall', get_string('tracecall', 'mplayer'), $mplayer_url_array);
+            $mform->addElement('text', 'tracecall', get_string('tracecall', 'mplayer'), $mplayerurlarray);
             $mform->setType('tracecall', PARAM_TEXT);
             $mform->setAdvanced('tracecall');
         } else {
@@ -766,7 +786,6 @@ class mod_mplayer_mod_form extends moodleform_mod {
         // Add standard elements, common to all modules.
         $this->standard_coursemodule_elements();
 
-        //-------------------------------------------------------------------------------
         // Add standard buttons, common to all modules.
         $this->add_action_buttons();
     }
@@ -784,10 +803,12 @@ class mod_mplayer_mod_form extends moodleform_mod {
                 mplayer_init_storage($cm);
             }
 
-            $defaults = file_prepare_standard_editor($defaults, 'notes', $this->descriptionoptions, $context, 'mod_techproject', 'notes', $defaults->id);
+            $defaults = file_prepare_standard_editor($defaults, 'notes', $this->descriptionoptions, $context, 'mod_techproject',
+                                                     'notes', $defaults->id);
 
             // Saves draft customization image files into definitive filearea.
-            $instancefiles = array('mplayerfiles', 'playlistfiles', 'configxml', 'audiodescriptionfile', 'captionsfile', 'hdfile', 'livestreamfile', 'livestreamimage', 'logoboxfile', 'logofile');
+            $instancefiles = array('mplayerfiles', 'playlistfiles', 'configxml', 'audiodescriptionfile', 'captionsfile',
+                                   'hdfile', 'livestreamfile', 'livestreamimage', 'logoboxfile', 'logofile');
             foreach ($instancefiles as $if) {
                 $draftitemid = file_get_submitted_draft_itemid($if);
                 $maxfiles = ($if == 'mplayerfiles') ? -1 : 1;
@@ -827,7 +848,7 @@ class mod_mplayer_mod_form extends moodleform_mod {
      */
     public function validation($data, $files) {
         $draftitemid = file_get_submitted_draft_itemid('mplayerfiles');
-        $_data = file_get_drafarea_files($draftitemid);
+        $voiddata = file_get_drafarea_files($draftitemid);
 
         $errors = parent::validation($data, $files);
 
@@ -837,7 +858,8 @@ class mod_mplayer_mod_form extends moodleform_mod {
     public function add_completion_rules() {
         $mform =& $this->_form;
 
-        $mform->addElement('checkbox', 'completionmediaviewed', get_string('mediaviewed', 'mplayer'), get_string('completionmediaviewed', 'mplayer'));
+        $label = get_string('mediaviewed', 'mplayer');
+        $mform->addElement('checkbox', 'completionmediaviewed', $label, get_string('completionmediaviewed', 'mplayer'));
 
         return array('completionmediaviewed');
     }

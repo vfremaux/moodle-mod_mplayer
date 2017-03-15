@@ -14,27 +14,26 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
- * @package   mod_mplayer
- * @category  mod
- * @author   Valery Fremaux <valery.fremaux@gmail.com>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package     mod_mplayer
+ * @category    mod
+ * @author      Valery Fremaux <valery.fremaux@gmail.com>
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->dirroot.'/mod/mplayer/storage/storage.class.php');
 
 class http_storage extends media_storage {
 
-    function __construct() {
+    public function __construct() {
         $this->name = 'http';
     }
 
     /**
      * computes an accessible media URL from the downloaded file
      */
-    function get_access_url(stored_file $storedfile) {
+    public function get_access_url(stored_file $storedfile) {
 
         $config = get_config('mplayer');
         $mediaserver = preg_replace('#//$#', '/', $config->httpmediaserver.'/');
@@ -44,21 +43,20 @@ class http_storage extends media_storage {
         return $mediaserver.$mediapath.$storedfile->get_filename();
     }
 
-    function get_manifest(stored_file $storedfile, $type) {
+    public function get_manifest(stored_file $storedfile, $type) {
 
         $config = get_config('mplayer');
 
         $mediacontentdir = str_replace('//', '/', $config->httpmediacontentdir.'/');
 
-        $str = '<?xml version="1.0" encoding="UTF-8" ?>
-<video>
-   <source>'.$storedfile->get_filename().'</source>
-   <stream>'.$this->get_access_url($storedfile).'</stream>
-   <storage>http</storage>
-   <location>'.$mediacontentdir.$storedfile->get_filename().'</location>
-   <type>'.$type.'</type>
-</video>
-';
+        $str = '<?xml version="1.0" encoding="UTF-8" ?>';
+        $str .= '<video>';
+        $str .= '   <source>'.$storedfile->get_filename().'</source>';
+        $str .= '   <stream>'.$this->get_access_url($storedfile).'</stream>';
+        $str .= '   <storage>http</storage>';
+        $str .= '   <location>'.$mediacontentdir.$storedfile->get_filename().'</location>';
+        $str .= '   <type>'.$type.'</type>';
+        $str .= '</video>';
 
         return $str;
     }
@@ -66,7 +64,7 @@ class http_storage extends media_storage {
     /**
      * stores media into remote storage location
      */
-    function store_media(stored_file $storedfile) {
+    public function store_media(stored_file $storedfile) {
 
         $config = get_config('mplayer');
 
@@ -76,18 +74,19 @@ class http_storage extends media_storage {
         $storedfile->copy_content_to($mediacontentdir.$storedfile->get_filename());
     }
 
-    function delete_media($medianame) {
+    public function delete_media($medianame) {
         $config = get_config('mplayer');
         $mediacontentdir = str_replace('//', '/', $config->httpmediacontentdir.'/');
         unlink($mediacontentdir.$medianame);
     }
 
-    function get_settings(&$settings) {
+    public function get_settings(&$settings) {
         $settings->add(new admin_setting_configtext('mplayer/httpmediaserver', get_string('httpmediaserver', 'mplayer'), '', ''));
 
         $settings->add(new admin_setting_configtext('mplayer/httpmediapath', get_string('httpmediapath', 'mplayer'), '', ''));
 
-        // Physical path for direct storage of media files
-        $settings->add(new admin_setting_configtext('mplayer/httpmediacontentdir', get_string('httpmediacontentdir', 'mplayer'), '', ''));
+        // Physical path for direct storage of media files.
+        $label = get_string('httpmediacontentdir', 'mplayer');
+        $settings->add(new admin_setting_configtext('mplayer/httpmediacontentdir', $label, '', ''));
     }
 }
