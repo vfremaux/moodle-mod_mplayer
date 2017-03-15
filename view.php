@@ -15,54 +15,26 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * @package   mod_mplayer
- * @category  mod
- * @author    Matt Bury - matbury@gmail.com
- * @author    Valery Fremaux <valery.fremaux@gmail.com>
- * @copyright (C) 2009  Matt Bury
- * @licence   http://www.gnu.org/copyleft/gpl.html GNU Public Licence
- */
-
-/**
  * This page prints a particular instance of mplayer
  *
- * @author Matt Bury - matbury@gmail.com
- * @version $Id: view.php,v 1.1 2010/01/15 matbury Exp $
- * @licence http://www.gnu.org/copyleft/gpl.html GNU Public Licence
- * @package mplayer
+ * @package     mod_mplayer
+ * @category    mod
+ * @author      Matt Bury - matbury@gmail.com  < 2.x
+ * @author      Valery Fremaux <valery.fremaux@gmail.com> > 2.x
+ * @copyright   (C) 2009  Matt Bury
+ * @copyright   (C) 2015  Valery Fremaux (http://www.mylearningfactory.com)
+ * @licence     http://www.gnu.org/copyleft/gpl.html GNU Public Licence
  */
 
 require('../../config.php');
 require_once($CFG->dirroot.'/mod/mplayer/lib.php');
 
-$id = optional_param('id', 0, PARAM_INT); // Course Module ID, or
-$a  = optional_param('a', 0, PARAM_INT);  // mplayer ID
+list($cm, $mplayer, $course) = get_mplayer_context();
 
-if ($id) {
-    if (! $cm = $DB->get_record('course_modules', array('id' => $id))) {
-        print_error('invalidcoursemodule');
-    }
-    if (! $course = $DB->get_record('course', array('id' => $cm->course))) {
-        print_error('coursemisconf');
-    }
-    if (! $mplayer = $DB->get_record('mplayer', array('id' => $cm->instance))) {
-        print_error('invalidmplayerid', 'mplayer');
-    }
-} else {
-    if (! $mplayer = $DB->get_record('mplayer', array('id' => $a))) {
-        print_error('invalidmplayerid', 'mplayer');
-    }
-    if (! $course = $DB->get_record('course', array('id' => $mplayer->course))) {
-        print_error('coursemisconf');
-    }
-    if (! $cm = get_coursemodule_from_instance('mplayer', $mplayer->id, $course->id)) {
-        print_error('invalidcoursemodule');
-    }
-}
 $url = new moodle_url('/mod/mplayer/view.php', array('id' => $cm->id));
 $PAGE->set_url($url);
 
-// Security. 
+// Security.
 require_login($course->id);
 
 if (!isset($CFG->mplayer_default_player)) {
@@ -73,7 +45,6 @@ $PAGE->requires->jquery();
 if ($mplayer->technology == 'jw') {
     $PAGE->requires->js('/mod/mplayer/jw/6.11/jwplayer.html5.js');
 } else {
-    // $PAGE->requires->js('/mod/mplayer/flowplayer/flowplayer.js');
     $PAGE->requires->js('/mod/mplayer/flowplayer6/flowplayer.js');
 }
 
@@ -111,7 +82,7 @@ $mplayer->instance = $id;
 
 $renderer = $PAGE->get_renderer('mod_mplayer');
 
-echo $renderer->print_body($mplayer); // mod/mplayer/lib.php
+echo $renderer->print_body($mplayer); // See mod/mplayer/lib.php.
 
 echo $renderer->intro($mplayer);
 
@@ -119,10 +90,12 @@ if ($COURSE->format != 'singleactivity' && !($COURSE->format == 'page' && option
     echo '<center>';
     require_once($CFG->dirroot.'/course/format/page/xlib.php');
     page_print_page_format_navigation($cm, false);
-    echo $OUTPUT->single_button(new moodle_url('/course/view.php', array('id' => $course->id)), get_string('backtocourse', 'mplayer'));
+    $params = array('id' => $course->id);
+    $label = get_string('backtocourse', 'mplayer');
+    echo $OUTPUT->single_button(new moodle_url('/course/view.php', $params), $label);
     echo '</center>';
 }
 
-/// Finish the page
+// Finish the page.
 echo $OUTPUT->footer($course);
-// End of mod/mplayer/view.php
+// End of mod/mplayer/view.php.

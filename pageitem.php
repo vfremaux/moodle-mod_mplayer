@@ -32,7 +32,7 @@ require_once($CFG->dirroot.'/mod/mplayer/locallib.php');
  * format.
  */
 function mplayer_set_instance(&$block) {
-    global $DB, $PAGE, $CFG, $COURSE;
+    global $DB, $PAGE;
 
     $str = '';
 
@@ -41,7 +41,6 @@ function mplayer_set_instance(&$block) {
     $mplayer = $DB->get_record('mplayer', array('id' => $block->cm->instance));
 
     // Transfer content from title to content.
-    // $block->content->text = $block->title;
     $block->title = format_string($mplayer->name);
 
     $renderer = $PAGE->get_renderer('mplayer');
