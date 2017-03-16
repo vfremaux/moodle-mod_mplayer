@@ -492,9 +492,9 @@ function mplayer_list_linktarget() {
  * Define type of media to serve
  * @return array
  */
-function mplayer_list_type($player) {
+function mplayer_list_type($technology) {
 
-    if ($player->technology == 'jw') {
+    if ($technology == 'jw') {
         return array('video' => get_string('video', 'mplayer'),
                      'youtube' => 'YouTube',
                      'url' => get_string('fullurl', 'mplayer'),
