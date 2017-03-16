@@ -179,6 +179,7 @@ class mod_mplayer_mod_form extends moodleform_mod {
         $options = array('subdirs' => true, 'courseid' => $COURSE->id, 'maxfiles' => 60);
         $mform->addElement('filemanager', 'mplayerfiles', get_string('mplayerfiles', 'mplayer'), null, $options);
 
+<<<<<<< HEAD
         // Type.
         $mform->addElement('select', 'type', get_string('type', 'mplayer'), mplayer_list_type($instance));
         $mform->setDefault('type', 'video');
@@ -198,6 +199,8 @@ class mod_mplayer_mod_form extends moodleform_mod {
 >>>>>>> MOODLE_32_STABLE
 =======
 =======
+=======
+>>>>>>> MOODLE_32_STABLE
         if (!empty($config->allowchoice)) {
             // Button to update player-specific options on technology change (will be hidden by JavaScript).
             $mform->registerNoSubmitButton('updatetechnology');
@@ -315,6 +318,22 @@ class mod_mplayer_mod_form extends moodleform_mod {
         $config = get_config('mplayer');
 
         $elements = array();
+
+<<<<<<< HEAD
+>>>>>>> MOODLE_32_STABLE
+=======
+        // Type.
+        $mform->addElement('select', 'type', get_string('type', 'mplayer'), mplayer_list_type($technology));
+        $mform->setDefault('type', 'video');
+
+        // External url alternative.
+        $attrs = array('rows' => 5, 'style' => 'width:97%', 'height' => 0);
+        $mform->addElement('textarea', 'external', get_string('external', 'mplayer'), $attrs);
+
+        $mform->addElement('select', 'streamer', get_string('streamer', 'mplayer'), mplayer_list_streamer());
+        $mform->disabledIf('streamer', 'type', 'neq', 'rtmp');
+        $mform->setDefault('streamer', 'none');
+        $mform->setAdvanced('streamer');
 
 >>>>>>> MOODLE_32_STABLE
         // PLAYLISTS.

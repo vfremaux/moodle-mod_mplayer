@@ -687,6 +687,7 @@ function mplayer_list_linktarget() {
  * @return array
  */
 <<<<<<< HEAD
+<<<<<<< HEAD
 function mplayer_list_type() {
     return array('video' => 'Video',
                 'youtube' => 'YouTube',
@@ -699,8 +700,11 @@ function mplayer_list_type() {
                 'rtmp' => 'RTMP Streaming');
 =======
 function mplayer_list_type($player) {
+=======
+function mplayer_list_type($technology) {
+>>>>>>> MOODLE_32_STABLE
 
-    if ($player->technology == 'jw') {
+    if ($technology == 'jw') {
         return array('video' => get_string('video', 'mplayer'),
                      'youtube' => 'YouTube',
                      'url' => get_string('fullurl', 'mplayer'),
