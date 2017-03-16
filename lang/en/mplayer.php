@@ -34,6 +34,7 @@ $string['httpxmlplaylist'] = 'Remote XML Playlist (by http)';
 $string['external'] = 'External Url';
 $string['none'] = 'None';
 $string['videomplayer'] = 'Video';
+$string['updatetechnology'] = 'Change the player technology';
 
 // Titles for mod/mplayer/mod_form.php sections.
 $string['mplayername'] = 'Name';
