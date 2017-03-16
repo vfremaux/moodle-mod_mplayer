@@ -1,0 +1,9 @@
+{
+    "moodle-mplayer-technologychooser": {
+        "requires": [
+            "base",
+            "node",
+            "node-event-simulate"
+        ]
+    }
+}
