@@ -42,6 +42,7 @@ $string['pluginname'] = 'Media Player';
 $string['pluginadministration'] = 'Administration du Media Player';
 $string['modulename'] = 'Media Player';
 $string['modulenameplural'] = 'Media Players';
+$string['updatetechnology'] = 'Changer de technologie';
 
 // Titles for mod/mplayer/mod_form.php sections.
 $string['player'] = 'Player';
@@ -62,7 +63,7 @@ $string['invalidmplayerid'] = 'Cet ID de player est invalide';
 $string['nomplayers'] = 'Aucun player vidéo dans ce cours';
 $string['technology'] = 'Technologie';
 $string['allowtechnologychoice'] = 'Les auteurs peuvent choisir';
-$string['allowtechnologychoicedesc'] = 'si activé, les auteurs peuvent choisir la technologie du player instance par instance.';
+$string['allowtechnologychoicedesc'] = 'Si activé, les auteurs peuvent choisir la technologie du player instance par instance.';
 $string['configsubtitles'] = 'Option des sous-titres';
 $string['langselection'] = 'Langue des sous-titres';
 $string['langcourse'] = 'Langue du cours';

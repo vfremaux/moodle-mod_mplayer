@@ -146,7 +146,7 @@ var FlowplayerConfig = new ClassBuilder( {
         // Select the above element as player container.
         var container = document.getElementById("flp" + id);
 
-        // install flowplayer into selected container
+        // Install flowplayer into selected container.
         flowplayer(container, this);
         api = flowplayer("#flp" + id);
         this._is_renderer = true;
