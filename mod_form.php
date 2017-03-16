@@ -114,7 +114,7 @@ class mod_mplayer_mod_form extends moodleform_mod {
             // Button to update player-specific options on technology change (will be hidden by JavaScript).
             $mform->registerNoSubmitButton('updatetechnology');
             $mform->addElement('submit', 'updatetechnology', get_string('updatetechnology', 'mplayer'));
-    
+
             // Just a placeholder for the player options.
             $mform->addElement('hidden', 'addtechnologyoptionshere');
             $mform->setType('addtechnologyoptionshere', PARAM_BOOL);
