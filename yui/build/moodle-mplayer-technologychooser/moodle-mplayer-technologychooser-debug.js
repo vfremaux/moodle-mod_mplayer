@@ -7,7 +7,7 @@ var TECHNOLOGYCHOOSER = function() {
 Y.extend(TECHNOLOGYCHOOSER, Y.Base, {
     initializer : function(params) {
         if (params && params.formid) {
-            var updatebut = Y.one('#'+params.formid+' #id_updatetechnology');
+            var updatebut = Y.one('#' + params.formid + ' #id_updatetechnology');
             var technologyselect = Y.one('#'+params.formid+' #id_technology');
             var ancestor = updatebut.ancestor('fieldset');
             var action = Y.one('form.mform').get('action');
