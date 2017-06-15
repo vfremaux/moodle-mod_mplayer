@@ -614,7 +614,7 @@ class mod_mplayer_renderer extends plugin_renderer_base {
     }
 
     /**
-     * Writes once only the js calls
+     * this is to include once the complementary JS we need.
      * @param string $playlistsheet
      */
     public function flowplayer_init_scripts($playlistsheet) {
@@ -644,9 +644,6 @@ class mod_mplayer_renderer extends plugin_renderer_base {
                 <script type="text/javascript" src="'.$flowplayerjscodeurl.'"></script>
                 <link rel="stylesheet" type="text/css" href="'.$flowplayercssurl.'">
                 <link rel="stylesheet" type="text/css" href="'.$flowplayerplaylistcssurl.'">
-                <script type="text/javascript">
-                var wwwroot = \''.$CFG->wwwroot.'\';
-                </script>
             ';
 
             $loaded = true;
@@ -730,6 +727,7 @@ class mod_mplayer_renderer extends plugin_renderer_base {
         global $CFG;
 
         $listbar = $mplayer->playlist ? $mplayer->playlist : 'none';
+        $mute = $mplayer->mute ? 'true' : 'false';
 
         if (1) {
             switch ($mplayer->type) {
@@ -759,36 +757,65 @@ class mod_mplayer_renderer extends plugin_renderer_base {
             if (is_array($urlarray)) {
                 foreach ($urlarray as $index => $url) {
                     if ($index !== '' && $url) {
-                        $this->playlist[] = array(
-                            'file'  => $url,
-                            'image' => isset($playlistthumb[$index]) ? $playlistthumb[$index] : '',
-                            'title' => 'test'
-                        );
+                        $playlistitem = new StdClass;
+                        $playlistitem->file = $url;
+                        $playlistitem->image = isset($playlistthumb[$index]) ? $playlistthumb[$index] : '';
+                        $plyalistitem->title = 'test';
+                        $this->playlist[] = $playlistitem;
                     }
                 }
             }
         }
 
-        $jwbody = '<script type="text/javascript" src="'.$CFG->wwwroot.'/mod/mplayer/jw/6.11/jwplayer.js"></script>
-        <script type="text/javascript">jwplayer.key="pZDZgizUElLVj2BEBWMBql9bbp9Bnckbg7qQxw==";</script>
-        <div id="jw-player">'.get_string('loadingplayer', 'mplayer').'</div>
-        <script type="text/javascript">
-            jwplayer("jw-player").setup({
-                "file" : "'.$urlarray[0].'",
+        $jwbody = '<script type="text/javascript" src="'.$CFG->wwwroot.'/mod/mplayer/jw/6.11/jwplayer.js"></script>';
+        $jwbody .= '<script type="text/javascript">jwplayer.key="pZDZgizUElLVj2BEBWMBql9bbp9Bnckbg7qQxw==";</script>';
+        $jwbody .= '<div id="jwplayer_'.$mplayer->id.'">'.get_string('loadingplayer', 'mplayer').'</div>';
+
+        $jwbody = '<script type="text/javascript">
+            jwplayer("jwplayer_'.$mplayer->id.'").setup({
+                "file": "'.$urlarray[0].'",
                 "image": "'.mplayer_get_file_url($mplayer, 'mplayerfiles', $context, '/posters/').'",
-                "playlist" : '.json_encode($this->playlist).',
-                "height" : "'.$mplayer->height.'",
-                "width" : "'.$mplayer->width.'",
-                volume: "'.$mplayer->volume.'",
-                autostart: "'.$mplayer->autostart.'",
-                listbar: {
-                    position: "'.$listbar.'",
-                    size: "'.$mplayer->playlistsize.'"
+                "playlist": '.json_encode($this->playlist).',
+                "height": "'.$mplayer->height.'",
+                "width": "'.$mplayer->width.'",
+                "volume": "'.$mplayer->volume.'",
+                "mute": "'.$mute.'",
+                "autostart": "'.$mplayer->autostart.'",
+                "stretching": "'.$mplayer->stretching.'",
+                "listbar": {
+                    "position": "'.$listbar.'",
+                    "size": "'.$mplayer->playlistsize.'"
                 }
             });
         </script>';
 
         return $jwbody;
+    }
+
+    /**
+     * this is to include once the complementary JS we need.
+     * @param string $playlistsheet
+     */
+    public function jwplayer_init_scripts() {
+        global $CFG, $PAGE;
+        static $loaded = false;
+
+        $scriptloadfragment = '';
+        if (!$loaded) {
+            $jwplayercompletionjscodeurl = new moodle_url('/mod/mplayer/js/completion.jw.js');
+            $jwplayerjscodeurl = new moodle_url('/mod/mplayer/jw/7.10/src/js/jwplayer.js');
+
+            if (isloggedin() && !is_guest($PAGE->context)) {
+                $scriptloadfragment .= '
+                    <script type="text/javascript" src="'.$flowplayercompletionjscodeurl.'"></script>';
+            }
+            $scriptloadfragment .= '
+                <script type="text/javascript" src="'.$flowplayerjscodeurl.'"></script>
+            ';
+
+            $loaded = true;
+        }
+        return $scriptloadfragment;
     }
 
     /**

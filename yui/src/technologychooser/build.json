@@ -1,0 +1,10 @@
+{
+    "name": "moodle-mplayer-technologychooser",
+    "builds": {
+        "moodle-mplayer-technologychooser": {
+            "jsfiles": [
+                "technologychooser.js"
+            ]
+        }
+    }
+}
