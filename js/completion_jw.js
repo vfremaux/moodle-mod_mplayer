@@ -8,7 +8,7 @@
 
 function fire_video_finished(e, api) {
 
-    var mpid = this.id.replace('flowplayer_', '');
+    var mpid = this.id.replace('jwplayer_', '');
     var url = M.cfg.wwwroot + '/mod/mplayer/ajax/markmediacompletion.php';
     url += 'mpid=' + mpid + '&what=finished';
 
