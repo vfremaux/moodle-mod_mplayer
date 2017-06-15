@@ -34,6 +34,7 @@ $string['httpxmlplaylist'] = 'Remote XML Playlist (by http)';
 $string['external'] = 'External Url';
 $string['none'] = 'None';
 $string['videomplayer'] = 'Video';
+$string['updatetechnology'] = 'Change the player technology';
 
 // Titles for mod/mplayer/mod_form.php sections.
 $string['mplayername'] = 'Name';
@@ -58,9 +59,6 @@ $string['langforced'] = 'Force language';
 $string['showdebugcode'] = 'Show debug code';
 $string['loadingplayer'] = 'Loading player...';
 
-/*---------------------------------------------------------------------------------------------
- * Labels for mod/mplayer/mod_form.php
- */
 // Source.
 $string['mplayerresources'] = 'Media Resources';
 $string['mplayerfiles'] = 'Media definition files';
@@ -228,9 +226,6 @@ $string['wowzacontentdir'] = 'Content Directory';
 $string['configwowzacontentdir'] = 'This content dir should be a remote mounted network storage volume on the streaming server';
 
 
-/*
- * ---------------------------------------------------------------------------------------------
- */
 // SWF embed alternative content error message for mod/swf/view.php.
 $string['embederror1'] = '<h3>Oops! There\'s a problem.</h3>
 <h4>Flash Player ';
@@ -562,7 +557,7 @@ or let the teacher choose which to use.</p>
 
 $string['mplayer_track'] = 'Subtitles';
 $string['mplayer_track_help'] = '
-Admits a VTT file which is a simply text formatted file that gives subtitles 
+Admits a VTT file which is a simply text formatted file that gives subtitles
 mapped to timestamps.
 
 ----
@@ -581,13 +576,11 @@ And a third one
 ...
 ----
 
-Refer to http://www.delphiki.com/webvtt/ for a full format specification.
+Refer to http://www.delphiki.com/webvtt/ for a full format specification.';
 
-';
-
-$string['modulename_help'] = 'the MPlayer module offers a rich, flexible and full featured way to integrate videos 
+$string['modulename_help'] = 'the MPlayer module offers a rich, flexible and full featured way to integrate videos
 into a Moodle course with strong pedagogic interaction.
 
-You may publish video as local files, remote URLs, make playlists, display subtitles and break the video flow 
+You may publish video as local files, remote URLs, make playlists, display subtitles and break the video flow
 with pedagogic cuepoints.
 ';
