@@ -85,6 +85,8 @@ class mod_mplayer_mod_form extends moodleform_mod {
             $mform->addElement('select', 'technology', get_string('technology', 'mplayer'), mplayer_list_technologies());
             $mform->setDefault('technology', $config->default_player);
 
+        } else {
+            $mform->addElement('hidden', 'technology', $config->default_player);
         }
 
         // MEDIA SOURCE.
@@ -96,19 +98,6 @@ class mod_mplayer_mod_form extends moodleform_mod {
         // Mplayerfile.
         $options = array('subdirs' => true, 'courseid' => $COURSE->id, 'maxfiles' => 60);
         $mform->addElement('filemanager', 'mplayerfiles', get_string('mplayerfiles', 'mplayer'), null, $options);
-
-        // Type.
-        $mform->addElement('select', 'type', get_string('type', 'mplayer'), mplayer_list_type($instance));
-        $mform->setDefault('type', 'video');
-
-        // External url alternative.
-        $attrs = array('rows' => 5, 'style' => 'width:97%', 'height' => 0);
-        $mform->addElement('textarea', 'external', get_string('external', 'mplayer'), $attrs);
-
-        $mform->addElement('select', 'streamer', get_string('streamer', 'mplayer'), mplayer_list_streamer());
-        $mform->disabledIf('streamer', 'type', 'neq', 'rtmp');
-        $mform->setDefault('streamer', 'none');
-        $mform->setAdvanced('streamer');
 
         if (!empty($config->allowchoice)) {
             // Button to update player-specific options on technology change (will be hidden by JavaScript).
@@ -227,6 +216,19 @@ class mod_mplayer_mod_form extends moodleform_mod {
         $config = get_config('mplayer');
 
         $elements = array();
+
+        // Type.
+        $mform->addElement('select', 'type', get_string('type', 'mplayer'), mplayer_list_type($technology));
+        $mform->setDefault('type', 'video');
+
+        // External url alternative.
+        $attrs = array('rows' => 5, 'style' => 'width:97%', 'height' => 0);
+        $mform->addElement('textarea', 'external', get_string('external', 'mplayer'), $attrs);
+
+        $mform->addElement('select', 'streamer', get_string('streamer', 'mplayer'), mplayer_list_streamer());
+        $mform->disabledIf('streamer', 'type', 'neq', 'rtmp');
+        $mform->setDefault('streamer', 'none');
+        $mform->setAdvanced('streamer');
 
         // PLAYLISTS.
 
@@ -396,7 +398,7 @@ class mod_mplayer_mod_form extends moodleform_mod {
         // BEHAVIOUR.
 
         $elements[] = $mform->addElement('header', 'behaviour', get_string('behaviour', 'mplayer'));
-        // $mform->addHelpButton('behaviour', 'mplayer_behaviour', 'mplayer');
+        $mform->addHelpButton('behaviour', 'mplayer_behaviour', 'mplayer');
 
         // Autostart.
         $elements[] = $mform->addElement('select', 'autostart', get_string('autostart', 'mplayer'), mplayer_list_truefalse());
