@@ -261,7 +261,10 @@ class mod_mplayer_mod_form extends moodleform_mod {
 
         $mform = $this->_form;
 
-        $technologyvalue = array_pop($mform->getElementValue('technology'));
+        $technologyvalue = $mform->getElementValue('technology');
+        if (is_array($technologyvalue)) {
+            $technologyvalue = array_pop($technologyvalue);
+        }
         $playerelements = $this->get_player_elements($technologyvalue);
 
         // Add technology options.
@@ -526,7 +529,7 @@ class mod_mplayer_mod_form extends moodleform_mod {
         // Width.
         $elements[] = $mform->addElement('text', 'width', get_string('width', 'mplayer'), $mplayerintarray);
         $mform->setType('width', PARAM_TEXT);
-        $mform->addRule('width', get_string('required'), 'required', null, 'client');
+        // $mform->addRule('width', get_string('required'), 'required', null, 'client');
         if (empty($config->default_width)) {
             set_config('default_width', '100%', 'mplayer');
             $config->default_width = '100%';
@@ -536,7 +539,7 @@ class mod_mplayer_mod_form extends moodleform_mod {
         // Height.
         $elements[] = $mform->addElement('text', 'height', get_string('height', 'mplayer'), $mplayerintarray);
         $mform->setType('height', PARAM_TEXT);
-        $mform->addRule('height', get_string('required'), 'required', null, 'client');
+        // $mform->addRule('height', get_string('required'), 'required', null, 'client');
         if (empty($CFG->default_height)) {
             $CFG->mplayer_default_height = 570;
             $config->default_height = 570;
