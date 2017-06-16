@@ -167,6 +167,8 @@ class mod_mplayer_mod_form extends moodleform_mod {
             $mform->addElement('select', 'technology', get_string('technology', 'mplayer'), mplayer_list_technologies());
             $mform->setDefault('technology', $config->default_player);
 
+        } else {
+            $mform->addElement('hidden', 'technology', $config->default_player);
         }
 
         // MEDIA SOURCE.
@@ -671,7 +673,7 @@ class mod_mplayer_mod_form extends moodleform_mod {
 >>>>>>> MOODLE_32_STABLE
 
         $elements[] = $mform->addElement('header', 'behaviour', get_string('behaviour', 'mplayer'));
-        // $mform->addHelpButton('behaviour', 'mplayer_behaviour', 'mplayer');
+        $mform->addHelpButton('behaviour', 'mplayer_behaviour', 'mplayer');
 
 <<<<<<< HEAD
 <<<<<<< HEAD

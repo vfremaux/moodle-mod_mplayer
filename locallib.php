@@ -650,8 +650,8 @@ function mplayer_print_body_flashvars($mplayer) {
  * @return array
  */
 function mplayer_list_truefalse() {
-    return array('true' => 'true',
-                 'false' => 'false');
+    return array('true' => get_string('yes'),
+                 'false' => get_string('no'));
 }
 
 /**
@@ -659,12 +659,12 @@ function mplayer_list_truefalse() {
  * @return array
  */
 function mplayer_list_quality() {
-    return array('best' => 'best',
-                 'high' => 'high',
-                 'medium' => 'medium',
-                 'autohigh' => 'autohigh',
-                 'autolow' => 'autolow',
-                 'low' => 'low');
+    return array('best' => get_string('best', 'mplayer'),
+                 'high' => get_string('high', 'mplayer'),
+                 'medium' => get_string('medium', 'mplayer'),
+                 'autohigh' => get_string('autohigh', 'mplayer'),
+                 'autolow' => get_string('autolow', 'mplayer'),
+                 'low' => get_string('low', 'mplayer'));
 }
 
 /**
@@ -672,6 +672,7 @@ function mplayer_list_quality() {
  * @return array
  */
 function mplayer_list_linktarget() {
+<<<<<<< HEAD
     return array('_blank' => 'new window',
 <<<<<<< HEAD
                 '_self' => 'same page',
@@ -679,6 +680,11 @@ function mplayer_list_linktarget() {
 =======
                  '_self' => 'same page',
                  'none' => 'none');
+>>>>>>> MOODLE_32_STABLE
+=======
+    return array('_blank' => get_string('newwindow', 'mplayer'),
+                 '_self' => get_string('samepage', 'mplayer'),
+                 'none' => get_string('none', 'mplayer'));
 >>>>>>> MOODLE_32_STABLE
 }
 
@@ -706,22 +712,22 @@ function mplayer_list_type($technology) {
 
     if ($technology == 'jw') {
         return array('video' => get_string('video', 'mplayer'),
-                     'youtube' => 'YouTube',
+                     'youtube' => get_string('youtube', 'mplayer'),
                      'url' => get_string('fullurl', 'mplayer'),
-                     'xml' => 'XML Playlist',
-                     'sound' => 'Sound',
-                     'image' => 'Image',
-                     'http' => 'HTTP (pseudo) Streaming',
-                     'lighttpd' => 'Lighttpd Streaming',
-                     'rtmp' => 'RTMP Streaming');
+                     'xml' => get_string('xmlplaylist', 'mplayer'),
+                     'sound' => get_string('sound', 'mplayer'),
+                     'image' => get_string('stillimage', 'mplayer'),
+                     'http' => get_string('httppseudostreaming', 'mplayer'),
+                     'lighttpd' => get_string('lighthttpdstreaming', 'mplayer'),
+                     'rtmp' => get_string('rtmpstreaming', 'mplayer'));
     } else {
         return array('video' => get_string('video', 'mplayer'),
                      'url' => get_string('fullurl', 'mplayer'),
                      'xml' => get_string('xmlplaylist', 'mplayer'),
                      'httpxml' => get_string('httpxmlplaylist', 'mplayer'),
-                     'xmlrtmp' => 'RTMP XML Playlist',
-                     'xmlhttprtmp' => 'RTMP HTTP XML Playlist',
-                     'rtmp' => 'RTMP Streaming');
+                     'xmlrtmp' => get_string('rtmpxmlplaylist', 'mplayer'),
+                     'xmlhttprtmp' => get_string('rtmphttpxmlplaylist', 'mplayer'),
+                     'rtmp' => get_string('rtmpstreaming', 'mplayer'));
     }
 }
 
@@ -788,6 +794,7 @@ function mplayer_list_streamer() {
 =======
     $config = get_config('mplayer');
 
+<<<<<<< HEAD
     return array('' => 'none',
                  'http' => 'Remote HTTP',
 <<<<<<< HEAD
@@ -796,6 +803,11 @@ function mplayer_list_streamer() {
                  );
 =======
                  'wowza' => 'Wowza');
+>>>>>>> MOODLE_32_STABLE
+=======
+    return array('' => get_string('none', 'mplayer'),
+                 'http' => get_string('apacheh264', 'mplayer'),
+                 'wowza' => get_string('wowza', 'mplayer'));
 >>>>>>> MOODLE_32_STABLE
 }
 
@@ -806,8 +818,8 @@ function mplayer_list_streamer() {
  */
 function mplayer_list_searchbarscript() {
 
-    return array('' => 'none',
-                 'http://gdata.youtube.com/feeds/api/videos?vq=QUERY&format=5' => 'YouTube.com Search');
+    return array('' => get_string('none', 'mplayer'),
+                 'http://gdata.youtube.com/feeds/api/videos?vq=QUERY&format=5' => get_string('youtubesearch', 'mplayer'));
 }
 
 /**
@@ -828,9 +840,9 @@ function mplayer_list_snapshotscript() {
  * @return array
  */
 function mplayer_list_controlbar() {
-    return array('bottom' => 'bottom',
-                 'over' => 'over',
-                 'none' => 'none');
+    return array('bottom' => get_string('bottom', 'mplayer'),
+                 'over' => get_string('over', 'mplayer'),
+                 'none' => get_string('none', 'mplayer'));
 }
 
 /**
@@ -870,10 +882,10 @@ function mplayer_list_playliststyles() {
  * @return array
  */
 function mplayer_list_infoboxposition() {
-    return array('none' => 'none',
-                 'bottom' => 'bottom',
-                 'over' => 'over',
-                 'top' => 'top');
+    return array('none' => get_string('none', 'mplayer'),
+                 'bottom' => get_string('bottom', 'mplayer'),
+                 'over' => get_string('over', 'mplayer'),
+                 'top' => get_string('top', 'mplayer'));
 }
 
 /**
@@ -881,8 +893,8 @@ function mplayer_list_infoboxposition() {
  * @return array
  */
 function mplayer_list_logoboxalign() {
-    return array('left' => 'left',
-                 'right' => 'right');
+    return array('left' => get_string('left', 'mplayer'),
+                 'right' => get_string('right', 'mplayer'));
 }
 
 /**
@@ -894,12 +906,12 @@ function mplayer_list_logoboxalign() {
  * @return array
  */
 function mplayer_list_metaviewerposition() {
-    return array('' => 'none',
-                 'over' => 'over',
-                 'left' => 'left',
-                 'right' => 'right',
-                 'top' => 'top',
-                 'bottom' => 'bottom');
+    return array('' => get_string('none', 'mplayer'),
+                 'over' => get_string('over', 'mplayer'),
+                 'left' => get_string('left', 'mplayer'),
+                 'right' => get_string('right', 'mplayer'),
+                 'top' => get_string('top', 'mplayer'),
+                 'bottom' => get_string('bottom', 'mplayer'));
 }
 
 /**
@@ -911,9 +923,9 @@ function mplayer_list_metaviewerposition() {
  * @return array
  */
 function mplayer_list_searchbarposition() {
-    return array('none' => 'none',
-                 'top' => 'top',
-                 'bottom' => 'bottom');
+    return array('none' => get_string('none', 'mplayer'),
+                 'top' => get_string('top', 'mplayer'),
+                 'bottom' => get_string('bottom', 'mplayer'));
 }
 
 /**
@@ -921,10 +933,10 @@ function mplayer_list_searchbarposition() {
  * @return array
  */
 function mplayer_list_logoposition() {
-    return array('bottom-left' => 'bottom-left',
-                 'bottom-right' => 'bottom-right',
-                 'top-left' => 'top-left',
-                 'top-right' => 'top-right');
+    return array('bottom-left' => get_string('bottomleft', 'mplayer'),
+                 'bottom-right' => get_string('bottomright', 'mplayer'),
+                 'top-left' => get_string('topleft', 'mplayer'),
+                 'top-right' => get_string('topright', 'mplayer'));
 }
 
 /**
@@ -1013,23 +1025,29 @@ function mplayer_list_bufferlength() {
  * @return array
  */
 function mplayer_list_displayclick() {
-    return array('play' => 'play',
-                 'link' => 'link',
-                 'fullscreen' => 'fullscreen',
-                 'none' => 'none',
-                 'mute' => 'mute',
-                 'next' => 'next');
+    return array('play' => get_string('play', 'mplayer'),
+                 'link' => get_string('link', 'maplyer'),
+                 'fullscreen' => get_string('fullscreen', 'mplayer'),
+                 'none' => get_string('none', 'mplayer'),
+                 'mute' => get_strign('mute', 'mplayer'),
+                 'next' => get_string('next', 'mplayer'));
 }
 
 /**
  * Define playlist repeat behaviour
  * @return array
  */
-function mplayer_list_repeat() {
-    return array('none' => 'none',
-                 'list' => 'list',
-                 'always' => 'always',
-                 'single' => 'single');
+function mplayer_list_repeat($technology = 'flowplayer') {
+
+    if ($technology == 'flowplayer') {
+        return array('no' => get_string('norepeat', 'mplayer'),
+                     'list' => get_string('list', 'mplayer'),
+                     'always' => get_string('always', 'mplayer'),
+                     'single' => get_string('single', 'mplayer'));
+    } else {
+        return array('false' => get_string('norepeat', 'mplayer'),
+                     'true' => get_string('list', 'mplayer'));
+    }
 }
 
 /**
@@ -1042,10 +1060,10 @@ function mplayer_list_repeat() {
  * @return array
  */
 function mplayer_list_stretching() {
-    return array('none' => 'none',
-                 'uniform' => 'uniform',
-                 'exactfit' => 'exactfit',
-                 'fill' => 'fill');
+    return array('none' => get_string('none', 'mplayer'),
+                 'uniform' => get_string('uniform', 'mplayer'),
+                 'exactfit' => get_string('exactfit', 'mplayer'),
+                 'fill' => get_string('fill', 'mplayer'));
 }
 
 /**
