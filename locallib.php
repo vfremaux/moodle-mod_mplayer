@@ -30,6 +30,8 @@ defined('MOODLE_INTERNAL') || die();
  *
  */
 function get_mplayer_context() {
+    global $DB;
+
     $id = optional_param('id', 0, PARAM_INT); // Course Module ID, or.
     $a  = optional_param('a', 0, PARAM_INT); // Mplayer ID.
 
