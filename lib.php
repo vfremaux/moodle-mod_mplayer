@@ -136,7 +136,7 @@ function mplayer_add_instance($mplayer) {
         $mplayer->technology = $config->default_player;
     }
 
-    $notes = $mplayer->notes;
+    $notes = @$mplayer->notes_editor;
     $mplayer->notes = $notes['text'];
     $mplayer->notesformat = $notes['format'];
 
