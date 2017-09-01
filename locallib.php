@@ -1,7 +1,4 @@
 <?php
-<<<<<<< HEAD
-
-=======
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -33,11 +30,8 @@ defined('MOODLE_INTERNAL') || die();
  *
  */
 function get_mplayer_context() {
-<<<<<<< HEAD
-=======
     global $DB;
 
->>>>>>> MOODLE_33_STABLE
     $id = optional_param('id', 0, PARAM_INT); // Course Module ID, or.
     $a  = optional_param('a', 0, PARAM_INT); // Mplayer ID.
 
@@ -70,7 +64,6 @@ function get_mplayer_context() {
  * @param objectref &$mplayer
  * @param string $filearea name of a filearea to process for saving
  */
->>>>>>> MOODLE_32_STABLE
 function mplayer_save_draft_file(&$mplayer, $filearea) {
     global $USER;
     static $fs;
@@ -93,16 +86,10 @@ function mplayer_save_draft_file(&$mplayer, $filearea) {
     }
 
     $mplayer->$filearea = 0;
-<<<<<<< HEAD
-    if (!$fs->is_area_empty($usercontext->id, 'user', 'draft', $filepickeritemid, true)){
-        $filearea = str_replace('fileid', '', $filearea);
-        file_save_draft_area_files($filepickeritemid, $context->id, 'mod_mplayer', $filearea, 0);
-=======
     $subdirs = ($filearea == 'mplayerfiles') ? true : false;
     if (!$fs->is_area_empty($usercontext->id, 'user', 'draft', $filepickeritemid, false)) {
         $options = array('subdirs' => $subdirs);
         file_save_draft_area_files($filepickeritemid, $context->id, 'mod_mplayer', $filearea, 0, $options);
->>>>>>> MOODLE_32_STABLE
         if ($savedfiles = $fs->get_area_files($context->id, 'mod_mplayer', $filearea, 0)) {
             $savedfile = array_pop($savedfiles);
             $mplayer->$filearea = $savedfile->get_id();
@@ -112,14 +99,10 @@ function mplayer_save_draft_file(&$mplayer, $filearea) {
 
 /**
  * Gives the physical file location of a complementary file
-<<<<<<< HEAD
- * sotred into mplayer fileareas.
-=======
  * stored into mplayer fileareas.
  * @param objectref &$mplayer
  * @param string $filearea name of a filearea to process for saving
  * @param object $context give the module context if already available on call. It will be reprocessed if not given.
->>>>>>> MOODLE_32_STABLE
  */
 function mplayer_get_file_location(&$mplayer, $filearea, $context = null) {
     global $CFG;
@@ -147,12 +130,6 @@ function mplayer_get_file_location(&$mplayer, $filearea, $context = null) {
 }
 
 /**
-<<<<<<< HEAD
- * Gives the file url of a complementary file
- * sotred into mplayer fileareas.
- */
-function mplayer_get_file_url(&$mplayer, $filearea, $context = null) {
-=======
  * Get dynamically a remote file and store it. If the play list changes at remote endpoint,
  * changes will be immediately reported.
  * @return a local temp location of the file.
@@ -208,7 +185,6 @@ function mplayer_load_remote_file($mplayer, $url, $context) {
  * @return mixed, array or single URL as string
  */
 function mplayer_get_file_url(&$mplayer, $filearea, $context = null, $path = '/', $array = false) {
->>>>>>> MOODLE_32_STABLE
     global $CFG;
 
     $url = false;
@@ -222,22 +198,8 @@ function mplayer_get_file_url(&$mplayer, $filearea, $context = null, $path = '/'
     $fs = get_file_storage();
 
     if (!$fs->is_area_empty($context->id, 'mod_mplayer', $filearea, 0, true)) {
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-        if ($areafiles = $fs->get_area_files($context->id, 'mod_mplayer', $filearea, 0)) {
-            $storedfile = array_pop($areafiles);
-            $url = $CFG->wwwroot.'/pluginfile.php/'.$context->id.'/mod_mplayer/'.$filearea.'/0/'.$storedfile->get_filename();
-=======
-        if ($areafiles = $fs->get_directory_files($context->id, 'mod_mplayer', $filearea, 0, $path, true, false, 'itemid, filepath,filename')) {
-=======
         $order = 'itemid, filepath, filename';
         if ($areafiles = $fs->get_directory_files($context->id, 'mod_mplayer', $filearea, 0, $path, true, false, $order)) {
->>>>>>> MOODLE_32_STABLE
-=======
-        $order = 'itemid, filepath, filename';
-        if ($areafiles = $fs->get_directory_files($context->id, 'mod_mplayer', $filearea, 0, $path, true, false, $order)) {
->>>>>>> MOODLE_33_STABLE
             if ($array) {
                 $url = array();
                 foreach ($areafiles as $storedfile) {
@@ -250,51 +212,11 @@ function mplayer_get_file_url(&$mplayer, $filearea, $context = null, $path = '/'
                 $url = $CFG->wwwroot.'/pluginfile.php/'.$context->id.'/mod_mplayer/'.$filearea.'/0';
                 $url .= $storedfile->get_filepath().$storedfile->get_filename();
             }
->>>>>>> MOODLE_32_STABLE
         }
     }
     return $url;
 }
 
-<<<<<<< HEAD
-function mplayer_clear_area(&$mplayer, $filearea) {
-
-    if (!$cm = get_coursemodule_from_instance('mplayer', $mplayer->id)) {
-        return false;
-    }
-
-    $context = context_module::instance($cm->id);
-
-    $fs = get_file_storage();
-    $fs->delete_area_files($context->id, 'mod_mplayer', $filearea);
-}
-
-function mplayer_get_playlist_thumb_url($image, $context) {
-    global $CFG;
-
-    return $CFG->wwwroot.'/pluginfile.php/'.$context->id.'/mod_mplayer/playlistthumb/0/'.$image;
-}
-
-function mplayer_require_js(){
-    global $CFG, $PAGE;
-    
-    if ($CFG->mplayer_default_player == 'jw') {
-        $PAGE->requires->js('/mod/mplayer/jw/6.9/jwplayer.js');
-    }
-}
-
-function mplayer_check_jquery() {
-    global $CFG, $PAGE, $JQUERYVERSION;
-
-    $current = '1.11.0';
-    if (empty($JQUERYVERSION)) {
-        $JQUERYVERSION = '1.11.0';
-        $PAGE->requires->js('/mod/mplayer/js/jquery-'.$current.'.min.js', true);
-    } else {
-        if ($JQUERYVERSION < $current) {
-            debugging('the previously loaded version of jquery is lower than required. This may cause issues to dashboard. Programmers might consider upgrading JQuery version in the component that preloads JQuery library.', DEBUG_DEVELOPER, array('notrace'));
-        }
-=======
 /**
  * Get clips from loaded files depending on their organisation
  * Following rules are checked :
@@ -500,7 +422,6 @@ function mplayer_require_js() {
 
     if ($CFG->mplayer_default_player == 'jw') {
         $PAGE->requires->js('/mod/mplayer/jw/6.9/jwplayer.js');
->>>>>>> MOODLE_32_STABLE
     }
 }
 
@@ -508,21 +429,8 @@ function mplayer_require_js() {
  * Get all file areas used in module
  */
 function mplayer_get_fileareas() {
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-    return array('intro', 'mplayerfile', 'playlistfile', 'playlistthumb', 'configxml', 'image', 'audiodescriptionfile', 'captionsfile', 'hdfile', 'livestreamfile', 'livestreamimage', 'logoboxfile', 'logofile');
-=======
-    return array('mplayerfiles', 'configxml', 'audiodescriptionfile', 'captionsfile', 'hdfile', 'livestreamfile', 'livestreamimagefile', 'logoboxfile', 'logofile');
->>>>>>> MOODLE_32_STABLE
-=======
     return array('mplayerfiles', 'configxml', 'audiodescriptionfile', 'captionsfile', 'hdfile', 'livestreamfile',
                  'livestreamimagefile', 'logoboxfile', 'logofile');
->>>>>>> MOODLE_32_STABLE
-=======
-    return array('mplayerfiles', 'configxml', 'audiodescriptionfile', 'captionsfile', 'hdfile', 'livestreamfile',
-                 'livestreamimagefile', 'logoboxfile', 'logofile');
->>>>>>> MOODLE_33_STABLE
 }
 
 /**
@@ -533,27 +441,6 @@ function mplayer_get_fileareas() {
  * @return string
  */
 function mplayer_print_header_js($mplayer) {
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-    // Build Javascript code for view.php print_header() function
-=======
-    // Build Javascript code for view.php print_header() function.
->>>>>>> MOODLE_32_STABLE
-    $mplayer_header_js = '<script type="text/javascript" src="swfobject/swfobject.js"></script>
-        <script type="text/javascript">
-            swfobject.registerObject("jwPlayer", "'.$mplayer->fpversion.'");
-        </script>';
-<<<<<<< HEAD
-    // Don't show default dotted outline around Flash Player window in Firefox 3
-=======
-    // Don't show default dotted outline around Flash Player window in Firefox 3.
->>>>>>> MOODLE_32_STABLE
-    $mplayer_header_js .= '<style type="text/css" media="screen">
-            object { outline:none; }
-        </style>';
-    return $mplayer_header_js;
-=======
 
     // Build Javascript code for view.php print_header() function.
 
@@ -567,113 +454,8 @@ function mplayer_print_header_js($mplayer) {
     $js .= '</style>';
 
     return $js;
->>>>>>> MOODLE_32_STABLE
 }
 
-<<<<<<< HEAD
-/**
- * Print alternative FlashVars embed parameters
- *
- * @param $mplayer
- * @return string
- */
-function mplayer_print_body_flashvars($mplayer) {
-    // Build URL to moodledata directory
-    $mplayer = mplayer_set_moodledata($mplayer);
-    // Assign the correct path to the file parameter (media source)
-    $mplayer = mplayer_set_type($mplayer);
-    // Build URLs for FlashVars embed parameters
-    $mplayer = mplayer_set_paths($mplayer);
-
-    $mplayer_flashvars = '<param name="flashvars" value="'.
-                $mplayer->author.
-                $mplayer->autostart.
-                $mplayer->audiodescriptionfile.
-                $mplayer->audiodescriptionstate.
-                $mplayer->audiodescriptionvolume.
-                $mplayer->backcolor.
-                $mplayer->bufferlength.
-                $mplayer->captionsback.
-                $mplayer->captionsfile.
-                $mplayer->captionsfontsize.
-                $mplayer->captionsstate.
-                $mplayer->configxml.
-                $mplayer->controlbar.
-                $mplayer->mplayerdate.
-                $mplayer->description.
-                $mplayer->mplayerfile.
-                $mplayer->frontcolor.
-                $mplayer->hdbitrate.
-                $mplayer->hdfile.
-                $mplayer->hdfullscreen.
-                $mplayer->hdstate.
-                $mplayer->icons.
-                $mplayer->image.
-                $mplayer->item.
-                $mplayer->lightcolor.
-                $mplayer->infoboxcolor.
-                $mplayer->infoboxposition.
-                $mplayer->infoboxsize.
-                $mplayer->livestreamfile.
-                $mplayer->livestreamimage.
-                $mplayer->livestreaminterval.
-                $mplayer->livestreammessage.
-                $mplayer->livestreamstreamer.
-                $mplayer->livestreamtags.
-                $mplayer->logoboxalign.
-                $mplayer->logoboxfile.
-                $mplayer->logoboxlink.
-                $mplayer->logoboxmargin.
-                $mplayer->logoboxposition.
-                $mplayer->logofile.
-                $mplayer->logolink.
-                $mplayer->logohide.
-                $mplayer->logoposition.
-                $mplayer->metaviewerposition.
-                $mplayer->metaviewersize.
-                $mplayer->mute.
-                $mplayer->playlist.
-                $mplayer->playlistsize.
-                $mplayer->plugins.
-                $mplayer->mplayerrepeat.
-                $mplayer->resizing.
-                $mplayer->screencolor.
-                $mplayer->searchbarcolor.
-                $mplayer->searchbarlabel.
-                $mplayer->searchbarposition.
-                $mplayer->searchbarscript.
-                $mplayer->shuffle.
-                $mplayer->skin.
-                $mplayer->snapshotbitmap.
-                $mplayer->snapshotscript.
-                $mplayer->mplayerstart.
-                $mplayer->streamer.
-                $mplayer->stretching.
-                $mplayer->tags.
-                $mplayer->title.
-                $mplayer->tracecall.
-                $mplayer->type.
-                $mplayer->volume.'" />';
-    return $mplayer_flashvars;
-=======
-
-    // Build Javascript code for view.php print_header() function.
-
-    $js = '<script type="text/javascript" src="swfobject/swfobject.js"></script>';
-    $js .= '    <script type="text/javascript">';
-    $js .= '        swfobject.registerObject("jwPlayer", "'.$mplayer->fpversion.'");';
-    $js .= '    </script>';
-    $js .= '// Don\'t show default dotted outline around Flash Player window in Firefox 3.';
-    $js .= '<style type="text/css" media="screen">';
-    $js .= '    object { outline:none; }';
-    $js .= '</style>';
-
-    return $js;
->>>>>>> MOODLE_33_STABLE
-}
-
-=======
->>>>>>> MOODLE_32_STABLE
 /* functions for Form */
 
 /**
@@ -703,53 +485,16 @@ function mplayer_list_quality() {
  * @return array
  */
 function mplayer_list_linktarget() {
-<<<<<<< HEAD
-<<<<<<< HEAD
-    return array('_blank' => 'new window',
-<<<<<<< HEAD
-                '_self' => 'same page',
-                'none' => 'none');
-=======
-                 '_self' => 'same page',
-                 'none' => 'none');
->>>>>>> MOODLE_32_STABLE
-=======
     return array('_blank' => get_string('newwindow', 'mplayer'),
                  '_self' => get_string('samepage', 'mplayer'),
                  'none' => get_string('none', 'mplayer'));
->>>>>>> MOODLE_32_STABLE
-=======
-    return array('_blank' => get_string('newwindow', 'mplayer'),
-                 '_self' => get_string('samepage', 'mplayer'),
-                 'none' => get_string('none', 'mplayer'));
->>>>>>> MOODLE_33_STABLE
 }
 
 /**
  * Define type of media to serve
  * @return array
  */
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-function mplayer_list_type() {
-    return array('video' => 'Video',
-                'youtube' => 'YouTube',
-                'url' => 'Full URL',
-                'xml' => 'XML Playlist',
-                'sound' => 'Sound',
-                'image' => 'Image',
-                'http' => 'HTTP (pseudo) Streaming',
-                'lighttpd' => 'Lighttpd Streaming',
-                'rtmp' => 'RTMP Streaming');
-=======
-function mplayer_list_type($player) {
-=======
 function mplayer_list_type($technology) {
->>>>>>> MOODLE_32_STABLE
-=======
-function mplayer_list_type($technology) {
->>>>>>> MOODLE_33_STABLE
 
     if ($technology == 'jw') {
         return array('video' => get_string('video', 'mplayer'),
@@ -807,7 +552,6 @@ function mplayer_list_availablelangoptions() {
      * TODO : Extend language choice to wider list.
      */
     return get_string_manager()->get_list_of_translations();
->>>>>>> MOODLE_32_STABLE
 }
 
 /**
@@ -827,35 +571,11 @@ function mplayer_list_availablelangoptions() {
  */
 function mplayer_list_streamer() {
 
-<<<<<<< HEAD
-    return array('' => 'none'
-                 //, $CFG->wwwroot.'/mod/mplayer/xmoov/xmoov.php' => 'Xmoov-php (http)'
-                 //, 'lighttpd' => 'Lighttpd'
-                 //, 'rtmp://yourstreamingserver.com/yourmediadirectory' => 'RTMP'
-=======
     $config = get_config('mplayer');
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-    return array('' => 'none',
-                 'http' => 'Remote HTTP',
-<<<<<<< HEAD
-                 'wowza' => 'Wowza'
->>>>>>> MOODLE_32_STABLE
-                 );
-=======
-                 'wowza' => 'Wowza');
->>>>>>> MOODLE_32_STABLE
-=======
     return array('' => get_string('none', 'mplayer'),
                  'http' => get_string('apacheh264', 'mplayer'),
                  'wowza' => get_string('wowza', 'mplayer'));
->>>>>>> MOODLE_32_STABLE
-=======
-    return array('' => get_string('none', 'mplayer'),
-                 'http' => get_string('apacheh264', 'mplayer'),
-                 'wowza' => get_string('wowza', 'mplayer'));
->>>>>>> MOODLE_33_STABLE
 }
 
 /**
@@ -908,26 +628,9 @@ function mplayer_list_playlistposition() {
  * @return array
  */
 function mplayer_list_playliststyles() {
-<<<<<<< HEAD
-<<<<<<< HEAD
-    return array(
-<<<<<<< HEAD
-=======
-        '' => get_string('none', 'mplayer'),
->>>>>>> MOODLE_32_STABLE
-        'dots' => get_string('dots', 'mplayer'),
-        'thumbs' => get_string('thumbs', 'mplayer')
-    );
-=======
     return array('' => get_string('none', 'mplayer'),
                  'dots' => get_string('dots', 'mplayer'),
                  'thumbs' => get_string('thumbs', 'mplayer'));
->>>>>>> MOODLE_32_STABLE
-=======
-    return array('' => get_string('none', 'mplayer'),
-                 'dots' => get_string('dots', 'mplayer'),
-                 'thumbs' => get_string('thumbs', 'mplayer'));
->>>>>>> MOODLE_33_STABLE
 }
 
 /**
@@ -951,11 +654,7 @@ function mplayer_list_logoboxalign() {
 }
 
 /**
-<<<<<<< HEAD
- * Define position of metaviewer
-=======
  * Define position of metaviewer (JW Player only)
->>>>>>> MOODLE_32_STABLE
  * @return array
  */
 function mplayer_list_metaviewerposition() {
@@ -968,11 +667,7 @@ function mplayer_list_metaviewerposition() {
 }
 
 /**
-<<<<<<< HEAD
- * Define position of searchbar
-=======
  * Define position of searchbar (JW Player)
->>>>>>> MOODLE_32_STABLE
  * @return array
  */
 function mplayer_list_searchbarposition() {
@@ -1104,11 +799,7 @@ function mplayer_list_repeat($technology = 'flowplayer') {
 }
 
 /**
-<<<<<<< HEAD
- * Define scaling properties of video stream
-=======
  * Define scaling properties of video stream (JW Player)
->>>>>>> MOODLE_32_STABLE
  * i.e. the way the video adjusts its dimensions to fit the FLV player window
  * @return array
  */
@@ -1147,8 +838,6 @@ function mplayer_list_volume() {
                  '100' => '100');
 }
 
-<<<<<<< HEAD
-=======
 /**
  * converts the local storage into a local proxy and remote storage.
  * this function will process the whole filearea keeping no video files inside.
@@ -1435,4 +1124,3 @@ function mplayer_get_media_storage($storage) {
     $storageobj = new $storageclass();
     return $storageobj;
 }
->>>>>>> MOODLE_32_STABLE
