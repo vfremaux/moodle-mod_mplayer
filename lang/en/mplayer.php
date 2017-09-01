@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 <?php
 <<<<<<< HEAD
 
@@ -796,6 +797,8 @@ You may publish video as local files, remote URLs, make playlists, display subti
 with pedagogic cuepoints.
 >>>>>>> MOODLE_32_STABLE
 =======
+=======
+>>>>>>> MOODLE_33_STABLE
 <?php
 // This file is part of Moodle - http://moodle.org/
 //
@@ -1373,5 +1376,8 @@ into a Moodle course with strong pedagogic interaction.
 
 You may publish video as local files, remote URLs, make playlists, display subtitles and break the video flow
 with pedagogic cuepoints.
+<<<<<<< HEAD
 >>>>>>> MOODLE_32_STABLE
+=======
+>>>>>>> MOODLE_33_STABLE
 ';

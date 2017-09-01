@@ -32,6 +32,7 @@ How to install the Media Player
 PLEASE NOTE: THIS MAY NOT BE THE LATEST VERSION OF THE MODULE. PLEASE FIND THE LATEST VERSION AT:
 http://code.google.com/p/moodle-mplayer/downloads/list
 
+<<<<<<< HEAD
 The SWF Activity Module is the most flexible, functional, robust and powerful way to deploy Flash animations and applications in Moodle 1.9. It supports any version of Flash and Actionscript.
 
     Upload the /mplayer/ directory and all its contents to ***YOUR MOODLE***/mod/
@@ -49,6 +50,19 @@ Do not be to greedy anyway : video and live media are very complex and heavy tec
 of major providers such as Kaltura, Livemedia or other professional providers. This plugin has limited goals and no service garantees
 as being free development initiative. It will probably be in "on progress" status driven by our internal needs and challenges.
 >>>>>>> MOODLE_32_STABLE
+=======
+This version is a preliminary publication after formal review.  This is yet a beta version where we tried to rearchitecture
+main features. Documentation writing and review is in progress. There are advanced features that are not yet fully tested
+such as simple dealing with streamers or pseudo-streaming. A further package may clean the "bad ideas" options when we can
+finish the complete qualification.
+
+Our final goal is to provide an economic minimal viable way for small institutions to diffuse a reasonable set of videos with
+a very simple as possible, lightweight and costless solution. 
+
+Do not be to greedy anyway : video and live media are very complex and heavy technologies that fully justify the "cost of service"
+of major providers such as Kaltura, Livemedia or other professional providers. This plugin has limited goals and no service garantees
+as being free development initiative. It will probably be in "on progress" status driven by our internal needs and challenges.
+>>>>>>> MOODLE_33_STABLE
 
 Design Notes
 ===============

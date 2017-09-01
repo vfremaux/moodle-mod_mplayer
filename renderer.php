@@ -36,7 +36,10 @@ require_once($CFG->dirroot . '/mod/mplayer/locallib.php');
 defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->dirroot.'/mod/mplayer/locallib.php');
+<<<<<<< HEAD
 >>>>>>> MOODLE_32_STABLE
+=======
+>>>>>>> MOODLE_33_STABLE
 
 /**
  * A custom renderer class that extends the plugin_renderer_base and is used by the assign module.
@@ -51,6 +54,7 @@ require_once($CFG->dirroot.'/mod/mplayer/locallib.php');
 class mod_mplayer_renderer extends plugin_renderer_base {
 
     /**
+<<<<<<< HEAD
 <<<<<<< HEAD
      * Construct Javascript SWFObject embed code for <body> section of view.php
      * Please note: some URLs append a '?'.time(); query to prevent browser caching
@@ -88,6 +92,10 @@ class mod_mplayer_renderer extends plugin_renderer_base {
 =======
      * @param objectref &$mplayer
      */
+=======
+     * @param objectref &$mplayer
+     */
+>>>>>>> MOODLE_33_STABLE
     public function intro(&$mplayer) {
         $str = '';
 
@@ -145,11 +153,19 @@ class mod_mplayer_renderer extends plugin_renderer_base {
             }
         } else {
             $mplayerbody = $this->jwplayer_body($mplayer, $cm, $context);
+<<<<<<< HEAD
+=======
+        }
+
+        if (!empty($mplayer->notes)) {
+            $mplayerbody .= '<div class="mplayer-notes"><p>'.$mplayer->notes.'</p></div>';
+>>>>>>> MOODLE_33_STABLE
         }
 <<<<<<< HEAD
         
 =======
 
+<<<<<<< HEAD
         if (!empty($mplayer->notes)) {
             $mplayerbody .= '<div class="mplayer-notes"><p>'.$mplayer->notes.'</p></div>';
         }
@@ -160,10 +176,14 @@ class mod_mplayer_renderer extends plugin_renderer_base {
 =======
         return $mplayerbody;
 >>>>>>> MOODLE_32_STABLE
+=======
+        return $mplayerbody;
+>>>>>>> MOODLE_33_STABLE
     }
 
     /**
      * prints the flowplayer effective body (html5)
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
      *
@@ -174,6 +194,9 @@ class mod_mplayer_renderer extends plugin_renderer_base {
 =======
      *
 >>>>>>> MOODLE_32_STABLE
+=======
+     *
+>>>>>>> MOODLE_33_STABLE
      * @param objectref &$mplayer the MPlayer instance
      * @param objectref &$cm the associated course module object
      * @param objectref &$context the context object for this module

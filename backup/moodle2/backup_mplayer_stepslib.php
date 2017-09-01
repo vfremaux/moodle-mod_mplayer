@@ -21,6 +21,7 @@
 
 /**
 <<<<<<< HEAD
+<<<<<<< HEAD
  * @package mod_mplayer
 >>>>>>> MOODLE_32_STABLE
  * @category mod
@@ -30,6 +31,11 @@
  * @category    mod
  * @author  Valery Fremaux (valery.fremaux@gmail.com)
 >>>>>>> MOODLE_32_STABLE
+=======
+ * @package     mod_mplayer
+ * @category    mod
+ * @author  Valery Fremaux (valery.fremaux@gmail.com)
+>>>>>>> MOODLE_33_STABLE
  */
 defined('MOODLE_INTERNAL') || die();
 
@@ -38,6 +44,7 @@ class backup_mplayer_activity_structure_step extends backup_activity_structure_s
     protected function define_structure() {
 
         $mplayer = new backup_nested_element('mplayer', array('id'), array(
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
             'name', 'intro', 'introformat', 'timecreated', 'timemodified', 'configxml', 'author', 'mplayerdate', 'description',
@@ -60,6 +67,8 @@ class backup_mplayer_activity_structure_step extends backup_activity_structure_s
             'searchbarscript', 'snapshotbitmap', 'snapshotscript', 'splashmode', 'completionmediaviewed'));
 >>>>>>> MOODLE_32_STABLE
 =======
+=======
+>>>>>>> MOODLE_33_STABLE
             'name', 'intro', 'introformat', 'timecreated', 'timemodified', 'technology', 'configxml', 'author', 'mplayerdate',
             'description', 'infoboxcolor', 'infoboxposition', 'infoboxsize', 'duration', 'mplayerfile', 'external', 'cuelists',
             'hdbitrate', 'hdfile', 'hdfullscreen', 'hdstate', 'livestreamfile', 'livestreamimage', 'livestreaminterval',
@@ -72,7 +81,10 @@ class backup_mplayer_activity_structure_step extends backup_activity_structure_s
             'captionsfile', 'captionsfontsize', 'captionsstate', 'fpversion', 'notes', 'metaviewerposition', 'metaviewersize',
             'searchbarcolor', 'searchbarlabel', 'searchbarposition', 'searchbarscript', 'snapshotbitmap', 'snapshotscript',
             'splashmode', 'completionmediaviewed'));
+<<<<<<< HEAD
 >>>>>>> MOODLE_32_STABLE
+=======
+>>>>>>> MOODLE_33_STABLE
 
         // Sources.
         $mplayer->set_source_table('mplayer', array('id' => backup::VAR_ACTIVITYID));
@@ -81,6 +93,7 @@ class backup_mplayer_activity_structure_step extends backup_activity_structure_s
             assert(1);
         }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
         // Define file annotations
         $mplayer->annotate_files('mod_mplayer', 'intro', null); // This file areas haven't itemid
@@ -100,6 +113,10 @@ class backup_mplayer_activity_structure_step extends backup_activity_structure_s
         // Define file annotations.
         $mplayer->annotate_files('mod_mplayer', 'intro', null); // This file areas haven't itemid.
 >>>>>>> MOODLE_32_STABLE
+=======
+        // Define file annotations.
+        $mplayer->annotate_files('mod_mplayer', 'intro', null); // This file areas haven't itemid.
+>>>>>>> MOODLE_33_STABLE
         $mplayer->annotate_files('mod_mplayer', 'mplayerfiles', null);
         $mplayer->annotate_files('mod_mplayer', 'notes', null);
 

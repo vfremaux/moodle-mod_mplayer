@@ -33,6 +33,11 @@ defined('MOODLE_INTERNAL') || die();
  *
  */
 function get_mplayer_context() {
+<<<<<<< HEAD
+=======
+    global $DB;
+
+>>>>>>> MOODLE_33_STABLE
     $id = optional_param('id', 0, PARAM_INT); // Course Module ID, or.
     $a  = optional_param('a', 0, PARAM_INT); // Mplayer ID.
 
@@ -219,6 +224,7 @@ function mplayer_get_file_url(&$mplayer, $filearea, $context = null, $path = '/'
     if (!$fs->is_area_empty($context->id, 'mod_mplayer', $filearea, 0, true)) {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         if ($areafiles = $fs->get_area_files($context->id, 'mod_mplayer', $filearea, 0)) {
             $storedfile = array_pop($areafiles);
             $url = $CFG->wwwroot.'/pluginfile.php/'.$context->id.'/mod_mplayer/'.$filearea.'/0/'.$storedfile->get_filename();
@@ -228,6 +234,10 @@ function mplayer_get_file_url(&$mplayer, $filearea, $context = null, $path = '/'
         $order = 'itemid, filepath, filename';
         if ($areafiles = $fs->get_directory_files($context->id, 'mod_mplayer', $filearea, 0, $path, true, false, $order)) {
 >>>>>>> MOODLE_32_STABLE
+=======
+        $order = 'itemid, filepath, filename';
+        if ($areafiles = $fs->get_directory_files($context->id, 'mod_mplayer', $filearea, 0, $path, true, false, $order)) {
+>>>>>>> MOODLE_33_STABLE
             if ($array) {
                 $url = array();
                 foreach ($areafiles as $storedfile) {
@@ -500,6 +510,7 @@ function mplayer_require_js() {
 function mplayer_get_fileareas() {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     return array('intro', 'mplayerfile', 'playlistfile', 'playlistthumb', 'configxml', 'image', 'audiodescriptionfile', 'captionsfile', 'hdfile', 'livestreamfile', 'livestreamimage', 'logoboxfile', 'logofile');
 =======
     return array('mplayerfiles', 'configxml', 'audiodescriptionfile', 'captionsfile', 'hdfile', 'livestreamfile', 'livestreamimagefile', 'logoboxfile', 'logofile');
@@ -508,6 +519,10 @@ function mplayer_get_fileareas() {
     return array('mplayerfiles', 'configxml', 'audiodescriptionfile', 'captionsfile', 'hdfile', 'livestreamfile',
                  'livestreamimagefile', 'logoboxfile', 'logofile');
 >>>>>>> MOODLE_32_STABLE
+=======
+    return array('mplayerfiles', 'configxml', 'audiodescriptionfile', 'captionsfile', 'hdfile', 'livestreamfile',
+                 'livestreamimagefile', 'logoboxfile', 'logofile');
+>>>>>>> MOODLE_33_STABLE
 }
 
 /**
@@ -518,6 +533,7 @@ function mplayer_get_fileareas() {
  * @return string
  */
 function mplayer_print_header_js($mplayer) {
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
     // Build Javascript code for view.php print_header() function
@@ -639,6 +655,21 @@ function mplayer_print_body_flashvars($mplayer) {
                 $mplayer->type.
                 $mplayer->volume.'" />';
     return $mplayer_flashvars;
+=======
+
+    // Build Javascript code for view.php print_header() function.
+
+    $js = '<script type="text/javascript" src="swfobject/swfobject.js"></script>';
+    $js .= '    <script type="text/javascript">';
+    $js .= '        swfobject.registerObject("jwPlayer", "'.$mplayer->fpversion.'");';
+    $js .= '    </script>';
+    $js .= '// Don\'t show default dotted outline around Flash Player window in Firefox 3.';
+    $js .= '<style type="text/css" media="screen">';
+    $js .= '    object { outline:none; }';
+    $js .= '</style>';
+
+    return $js;
+>>>>>>> MOODLE_33_STABLE
 }
 
 =======
@@ -673,6 +704,7 @@ function mplayer_list_quality() {
  */
 function mplayer_list_linktarget() {
 <<<<<<< HEAD
+<<<<<<< HEAD
     return array('_blank' => 'new window',
 <<<<<<< HEAD
                 '_self' => 'same page',
@@ -686,12 +718,18 @@ function mplayer_list_linktarget() {
                  '_self' => get_string('samepage', 'mplayer'),
                  'none' => get_string('none', 'mplayer'));
 >>>>>>> MOODLE_32_STABLE
+=======
+    return array('_blank' => get_string('newwindow', 'mplayer'),
+                 '_self' => get_string('samepage', 'mplayer'),
+                 'none' => get_string('none', 'mplayer'));
+>>>>>>> MOODLE_33_STABLE
 }
 
 /**
  * Define type of media to serve
  * @return array
  */
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 function mplayer_list_type() {
@@ -709,6 +747,9 @@ function mplayer_list_type($player) {
 =======
 function mplayer_list_type($technology) {
 >>>>>>> MOODLE_32_STABLE
+=======
+function mplayer_list_type($technology) {
+>>>>>>> MOODLE_33_STABLE
 
     if ($technology == 'jw') {
         return array('video' => get_string('video', 'mplayer'),
@@ -795,6 +836,7 @@ function mplayer_list_streamer() {
     $config = get_config('mplayer');
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     return array('' => 'none',
                  'http' => 'Remote HTTP',
 <<<<<<< HEAD
@@ -809,6 +851,11 @@ function mplayer_list_streamer() {
                  'http' => get_string('apacheh264', 'mplayer'),
                  'wowza' => get_string('wowza', 'mplayer'));
 >>>>>>> MOODLE_32_STABLE
+=======
+    return array('' => get_string('none', 'mplayer'),
+                 'http' => get_string('apacheh264', 'mplayer'),
+                 'wowza' => get_string('wowza', 'mplayer'));
+>>>>>>> MOODLE_33_STABLE
 }
 
 /**
@@ -862,6 +909,7 @@ function mplayer_list_playlistposition() {
  */
 function mplayer_list_playliststyles() {
 <<<<<<< HEAD
+<<<<<<< HEAD
     return array(
 <<<<<<< HEAD
 =======
@@ -875,6 +923,11 @@ function mplayer_list_playliststyles() {
                  'dots' => get_string('dots', 'mplayer'),
                  'thumbs' => get_string('thumbs', 'mplayer'));
 >>>>>>> MOODLE_32_STABLE
+=======
+    return array('' => get_string('none', 'mplayer'),
+                 'dots' => get_string('dots', 'mplayer'),
+                 'thumbs' => get_string('thumbs', 'mplayer'));
+>>>>>>> MOODLE_33_STABLE
 }
 
 /**

@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 <?php
 <<<<<<< HEAD
 =======
@@ -801,6 +802,8 @@ Vous pouvez gérer des listes de chapitrage, des sous-titres en plusieurs langue
 intercaler des actvitiés pédagogiques au milieu du visionnage.
 >>>>>>> MOODLE_32_STABLE
 =======
+=======
+>>>>>>> MOODLE_33_STABLE
 <?php
 // This file is part of Moodle - http://moodle.org/
 //
@@ -1311,5 +1314,8 @@ des URLs ou des serveurs de flux déportés.
 
 Vous pouvez gérer des listes de chapitrage, des sous-titres en plusieurs langues ainsi que des points d\'arrêts pédagogiques qui peuvent
 intercaler des actvitiés pédagogiques au milieu du visionnage.
+<<<<<<< HEAD
 >>>>>>> MOODLE_32_STABLE
+=======
+>>>>>>> MOODLE_33_STABLE
 ';

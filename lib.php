@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 <?php
 <<<<<<< HEAD
 =======
@@ -1179,6 +1180,8 @@ function mplayer_get_completion_state($course, $cm, $userid, $type) {
 }
 >>>>>>> MOODLE_32_STABLE
 =======
+=======
+>>>>>>> MOODLE_33_STABLE
 <?php
 // This file is part of Moodle - http://moodle.org/
 //
@@ -1317,7 +1320,11 @@ function mplayer_add_instance($mplayer) {
         $mplayer->technology = $config->default_player;
     }
 
+<<<<<<< HEAD
     $notes = $mplayer->notes;
+=======
+    $notes = @$mplayer->notes_editor;
+>>>>>>> MOODLE_33_STABLE
     $mplayer->notes = $notes['text'];
     $mplayer->notesformat = $notes['format'];
 
@@ -1639,4 +1646,7 @@ function mplayer_get_completion_state($course, $cm, $userid, $type) {
 
     return $result;
 }
+<<<<<<< HEAD
 >>>>>>> MOODLE_32_STABLE
+=======
+>>>>>>> MOODLE_33_STABLE

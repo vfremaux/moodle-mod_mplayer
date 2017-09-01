@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 <?php
 <<<<<<< HEAD
 /**
@@ -72,6 +73,8 @@ $plugin->maturity = MATURITY_BETA;
 $plugin->codeincrement = '3.2.0001';
 >>>>>>> MOODLE_32_STABLE
 =======
+=======
+>>>>>>> MOODLE_33_STABLE
 <?php
 // This file is part of Moodle - http://moodle.org/
 //
@@ -101,6 +104,7 @@ $plugin->codeincrement = '3.2.0001';
 
 defined('MOODLE_INTERNAL') || die();
 
+<<<<<<< HEAD
 $plugin->version  = 2016033101;  // The current module version (Date: YYYYMMDDXX).
 $plugin->requires = 2016112900;
 $plugin->component = 'mod_mplayer';
@@ -110,3 +114,13 @@ $plugin->maturity = MATURITY_BETA;
 // Non Moodle attributes.
 $plugin->codeincrement = '3.2.0001';
 >>>>>>> MOODLE_32_STABLE
+=======
+$plugin->version  = 2017083100;  // The current module version (Date: YYYYMMDDXX).
+$plugin->requires = 2017050500;
+$plugin->component = 'mod_mplayer';
+$plugin->release = 'Moodle 3.3.0 (Build 2017083100)';
+$plugin->maturity = MATURITY_BETA;
+
+// Non Moodle attributes.
+$plugin->codeincrement = '3.3.0002';
+>>>>>>> MOODLE_33_STABLE

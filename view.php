@@ -1,5 +1,6 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 <?php  // $Id: view.php,v 0.2 2010/01/15 matbury Exp $
 =======
 <?php
@@ -103,6 +104,8 @@ $strmplayer  = get_string('modulename', 'mplayer');
 $PAGE->set_title(format_string($mplayer->name));
 $PAGE->set_heading('');
 =======
+=======
+>>>>>>> MOODLE_33_STABLE
 <?php
 // This file is part of Moodle - http://moodle.org/
 //
@@ -177,11 +180,15 @@ $strmplayers = get_string('modulenameplural', 'mplayer');
 $strmplayer  = get_string('modulename', 'mplayer');
 $PAGE->set_title(format_string($mplayer->name));
 $PAGE->set_heading('');
+<<<<<<< HEAD
 >>>>>>> MOODLE_32_STABLE
+=======
+>>>>>>> MOODLE_33_STABLE
 $PAGE->navbar->add(get_string('mplayer', 'mplayer').': '.$mplayer->name);
 $PAGE->set_focuscontrol('');
 $PAGE->set_cacheable(true);
 $PAGE->set_button(update_module_button($cm->id, $course->id, $strmplayer));
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
 // Security. 
@@ -259,6 +266,8 @@ if ($COURSE->format != 'singleactivity' && !($COURSE->format == 'page' && option
 echo $OUTPUT->footer($course);
 // End of mod/mplayer/view.php
 =======
+=======
+>>>>>>> MOODLE_33_STABLE
 echo $OUTPUT->header();
 
 $mplayer->instance = $id;
@@ -282,4 +291,7 @@ if ($COURSE->format != 'singleactivity' && !($COURSE->format == 'page' && option
 // Finish the page.
 echo $OUTPUT->footer($course);
 // End of mod/mplayer/view.php.
+<<<<<<< HEAD
 >>>>>>> MOODLE_32_STABLE
+=======
+>>>>>>> MOODLE_33_STABLE

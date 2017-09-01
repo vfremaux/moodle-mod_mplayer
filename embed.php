@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 <?php
 <<<<<<< HEAD
 =======
@@ -127,6 +128,8 @@ echo mplayer_print_body($mplayer);
 // Don't print any footers here.
 >>>>>>> MOODLE_32_STABLE
 =======
+=======
+>>>>>>> MOODLE_33_STABLE
 <?php
 // This file is part of Moodle - http://moodle.org/
 //
@@ -186,4 +189,7 @@ $mplayer->instance = $id;
 echo mplayer_print_body($mplayer);
 
 // Don't print any footers here.
+<<<<<<< HEAD
 >>>>>>> MOODLE_32_STABLE
+=======
+>>>>>>> MOODLE_33_STABLE

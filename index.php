@@ -212,4 +212,7 @@ echo html_writer::table($table);
 
 // Finish the page.
 echo $OUTPUT->footer($course);
+<<<<<<< HEAD
 >>>>>>> MOODLE_32_STABLE
+=======
+>>>>>>> MOODLE_33_STABLE

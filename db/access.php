@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 <?php
 /**
 <<<<<<< HEAD
@@ -114,6 +115,8 @@ $capabilities = array(
 );
 
 =======
+=======
+>>>>>>> MOODLE_33_STABLE
 <?php
 // This file is part of Moodle - http://moodle.org/
 //
@@ -167,4 +170,7 @@ $capabilities = array(
     ),
 );
 
+<<<<<<< HEAD
 >>>>>>> MOODLE_32_STABLE
+=======
+>>>>>>> MOODLE_33_STABLE

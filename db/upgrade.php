@@ -1,5 +1,6 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 <?php  //$Id: upgrade.php,v 1.2 2007/08/08 22:36:54 stronk7 Exp $
 // This file keeps track of upgrades to the mplayer module
 //
@@ -180,6 +181,8 @@ function xmldb_mplayer_upgrade($oldversion=0) {
     return $result;
 }
 =======
+=======
+>>>>>>> MOODLE_33_STABLE
 <?php
 // This file is part of Moodle - http://moodle.org/
 //
@@ -374,4 +377,7 @@ function xmldb_mplayer_upgrade($oldversion=0) {
 
     return $result;
 }
+<<<<<<< HEAD
 >>>>>>> MOODLE_32_STABLE
+=======
+>>>>>>> MOODLE_33_STABLE

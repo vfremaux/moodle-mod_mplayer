@@ -1,5 +1,6 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 <?php  //$Id: settings.php,v 1.1.2.3 2008/01/24 20:29:36 skodak Exp $
 =======
 <?php
@@ -131,6 +132,8 @@ foreach($storages as $st) {
 }
 >>>>>>> MOODLE_32_STABLE
 =======
+=======
+>>>>>>> MOODLE_33_STABLE
 <?php
 // This file is part of Moodle - http://moodle.org/
 //
@@ -274,5 +277,9 @@ foreach ($storages as $st) {
     $classname = str_replace('.class.php', '', $classfile);
     $instance = new $classname();
     $instance->get_settings($settings);
+<<<<<<< HEAD
 }
 >>>>>>> MOODLE_32_STABLE
+=======
+}
+>>>>>>> MOODLE_33_STABLE
