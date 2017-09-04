@@ -38,8 +38,7 @@ class mod_mplayer_mod_form extends moodleform_mod {
         global $CFG, $COURSE, $USER, $PAGE;
 
         $mform =& $this->_form;
-        $PAGE->requires->yui_module('moodle-mplayer-technologychooser', 'M.course.init_technologychooser',
-                array(array('formid' => $mform->getAttribute('id'))));
+        $PAGE->requires->js_call_amd('mod_mplayer/technologychooser', 'init', array('formid' => $mform->getAttribute('id')));
 
         $config = get_config('mplayer');
 
