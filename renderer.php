@@ -983,7 +983,7 @@ class mod_mplayer_renderer extends plugin_renderer_base {
                         $playlistitem = new StdClass;
                         $playlistitem->file = $url;
                         $playlistitem->image = isset($playlistthumb[$index]) ? $playlistthumb[$index] : '';
-                        $plyalistitem->title = 'test';
+                        $playlistitem->title = 'test';
                         $this->playlist[] = $playlistitem;
                     }
                 }

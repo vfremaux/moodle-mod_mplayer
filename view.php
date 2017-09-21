@@ -139,6 +139,9 @@ require_once($CFG->dirroot.'/mod/mplayer/lib.php');
 
 list($cm, $mplayer, $course) = get_mplayer_context();
 
+// Check and init storage if empty.
+mplayer_init_storage($cm, 0);
+
 $url = new moodle_url('/mod/mplayer/view.php', array('id' => $cm->id));
 $PAGE->set_url($url);
 
@@ -270,7 +273,7 @@ echo $OUTPUT->footer($course);
 >>>>>>> MOODLE_33_STABLE
 echo $OUTPUT->header();
 
-$mplayer->instance = $id;
+$mplayer->instance = $cm->instance;
 
 $renderer = $PAGE->get_renderer('mod_mplayer');
 
