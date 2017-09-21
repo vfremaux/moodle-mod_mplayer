@@ -195,7 +195,7 @@ function mplayer_update_instance($mplayer) {
         mplayer_convert_storage_for_streamer($mplayer);
     }
 
-    $notes = $mplayer->notes;
+    $notes = $mplayer->notes_editor;
     $mplayer->notes = $notes['text'];
     $mplayer->notesformat = $notes['format'];
 
