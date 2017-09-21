@@ -38,8 +38,7 @@ class mod_mplayer_mod_form extends moodleform_mod {
         global $CFG, $COURSE, $USER, $PAGE;
 
         $mform =& $this->_form;
-        $PAGE->requires->yui_module('moodle-mplayer-technologychooser', 'M.course.init_technologychooser',
-                array(array('formid' => $mform->getAttribute('id'))));
+        $PAGE->requires->js_call_amd('mod_mplayer/technologychooser', 'init', array('formid' => $mform->getAttribute('id')));
 
         $config = get_config('mplayer');
 
@@ -71,23 +70,21 @@ class mod_mplayer_mod_form extends moodleform_mod {
         $mform->addRule('name', null, 'required', null, 'client');
         $mform->addRule('name', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
 
-        // Introduction.
-        $this->standard_intro_elements();
-
         // TECHNOLOGY.
 
         if (!empty($config->allowchoice)) {
-            $mform->addElement('header', 'headertechnology', get_string('technology', 'mplayer'));
-            $mform->addHelpButton('headertechnology', 'mplayer_technology', 'mplayer');
-            $mform->setExpanded('headertechnology');
-
             // Technology.
             $mform->addElement('select', 'technology', get_string('technology', 'mplayer'), mplayer_list_technologies());
             $mform->setDefault('technology', $config->default_player);
+            $mform->addHelpButton('technology', 'mplayer_technology', 'mplayer');
 
         } else {
             $mform->addElement('hidden', 'technology', $config->default_player);
+            $mform->setType('technology', PARAM_ALPHA);
         }
+
+        // Introduction.
+        $this->standard_intro_elements();
 
         // MEDIA SOURCE.
 
@@ -105,9 +102,9 @@ class mod_mplayer_mod_form extends moodleform_mod {
             $mform->addElement('submit', 'updatetechnology', get_string('updatetechnology', 'mplayer'));
 
             // Just a placeholder for the player options.
-            $mform->addElement('hidden', 'addtechnologyoptionshere');
-            $mform->setType('addtechnologyoptionshere', PARAM_BOOL);
         }
+        $mform->addElement('hidden', 'addtechnologyoptionshere');
+        $mform->setType('addtechnologyoptionshere', PARAM_BOOL);
 
         // Add standard elements, common to all modules.
         $this->standard_coursemodule_elements();
@@ -129,7 +126,7 @@ class mod_mplayer_mod_form extends moodleform_mod {
                 mplayer_init_storage($cm);
             }
 
-            $defaults = file_prepare_standard_editor($defaults, 'notes', $this->descriptionoptions, $context, 'mod_techproject',
+            $defaults = file_prepare_standard_editor($defaults, 'notes', $this->descriptionoptions, $context, 'mod_mplayer',
                                                      'notes', $defaults->id);
 
             // Saves draft customization image files into definitive filearea.
@@ -137,9 +134,10 @@ class mod_mplayer_mod_form extends moodleform_mod {
                                    'hdfile', 'livestreamfile', 'livestreamimage', 'logoboxfile', 'logofile');
             foreach ($instancefiles as $if) {
                 $draftitemid = file_get_submitted_draft_itemid($if);
-                $maxfiles = ($if == 'mplayerfiles') ? -1 : 1;
-                $subdirs = ($if == 'mplayerfiles') ? true : false;
-                file_prepare_draft_area($draftitemid, $context->id, 'mod_mplayer', $if, 0, $this->descriptionoptions);
+                $options = array();
+                $options['maxfiles'] = ($if == 'mplayerfiles') ? -1 : 1;
+                $options['subdirs'] = ($if == 'mplayerfiles') ? true : false;
+                file_prepare_draft_area($draftitemid, $context->id, 'mod_mplayer', $if, 0, $options);
                 if ($if == 'configxml') {
                     $defaults->configxmlgroup['configxml'] = $draftitemid;
                 } else {
@@ -157,9 +155,11 @@ class mod_mplayer_mod_form extends moodleform_mod {
 
         $mform = $this->_form;
 
-        $technologyvalue = $mform->getElementValue('technology');
-        if (is_array($technologyvalue)) {
-            $technologyvalue = array_pop($technologyvalue);
+        if (is_array($mform->getElementValue('technology'))) {
+            // True if it is a visible list.
+            $technologyvalue = array_pop($mform->getElementValue('technology'));
+        } else {
+            $technologyvalue = $mform->getElementValue('technology');
         }
         $playerelements = $this->get_player_elements($technologyvalue);
 
