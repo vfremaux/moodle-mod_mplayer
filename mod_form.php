@@ -126,7 +126,7 @@ class mod_mplayer_mod_form extends moodleform_mod {
                 mplayer_init_storage($cm);
             }
 
-            $defaults = file_prepare_standard_editor($defaults, 'notes', $this->descriptionoptions, $context, 'mod_techproject',
+            $defaults = file_prepare_standard_editor($defaults, 'notes', $this->descriptionoptions, $context, 'mod_mplayer',
                                                      'notes', $defaults->id);
 
             // Saves draft customization image files into definitive filearea.
@@ -134,9 +134,10 @@ class mod_mplayer_mod_form extends moodleform_mod {
                                    'hdfile', 'livestreamfile', 'livestreamimage', 'logoboxfile', 'logofile');
             foreach ($instancefiles as $if) {
                 $draftitemid = file_get_submitted_draft_itemid($if);
-                $maxfiles = ($if == 'mplayerfiles') ? -1 : 1;
-                $subdirs = ($if == 'mplayerfiles') ? true : false;
-                file_prepare_draft_area($draftitemid, $context->id, 'mod_mplayer', $if, 0, $this->descriptionoptions);
+                $options = array();
+                $options['maxfiles'] = ($if == 'mplayerfiles') ? -1 : 1;
+                $options['subdirs'] = ($if == 'mplayerfiles') ? true : false;
+                file_prepare_draft_area($draftitemid, $context->id, 'mod_mplayer', $if, 0, $options);
                 if ($if == 'configxml') {
                     $defaults->configxmlgroup['configxml'] = $draftitemid;
                 } else {
