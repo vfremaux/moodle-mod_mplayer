@@ -305,25 +305,32 @@ class mod_mplayer_mod_form extends moodleform_mod {
         $elements[] = $mform->addElement('editor', 'notes_editor', get_string('notes', 'mplayer'), null, $this->descriptionoptions);
         $mform->setType('notes_editor', PARAM_RAW);
 
+        $mform = $this->_form;
+
         // Width.
         $elements[] = $mform->addElement('text', 'width', get_string('width', 'mplayer'), $mplayerintarray);
         $mform->setType('width', PARAM_TEXT);
         // $mform->addRule('width', get_string('required'), 'required', null, 'client');
-        if (empty($config->default_width)) {
-            set_config('default_width', '100%', 'mplayer');
-            $config->default_width = '100%';
+
+        if (empty($mform->getElementValue('width'))) {
+            if (empty($config->default_width)) {
+                set_config('default_width', '100%', 'mplayer');
+                $config->default_width = '100%';
+            }
+            $mform->setDefault('width', $config->default_width);
         }
-        $mform->setDefault('width', $config->default_width);
 
         // Height.
         $elements[] = $mform->addElement('text', 'height', get_string('height', 'mplayer'), $mplayerintarray);
         $mform->setType('height', PARAM_TEXT);
         // $mform->addRule('height', get_string('required'), 'required', null, 'client');
-        if (empty($CFG->default_height)) {
-            $CFG->mplayer_default_height = 570;
-            $config->default_height = 570;
+        if (empty($mform->getElementValue('height'))) {
+            if (empty($CFG->default_height)) {
+                $CFG->mplayer_default_height = 570;
+                $config->default_height = 570;
+            }
+            $mform->setDefault('height', $config->default_height);
         }
-        $mform->setDefault('height', $config->default_height);
 
         $elements[] = $mform->addElement('hidden', 'skin', '');
         $mform->setType('skin', PARAM_TEXT);
@@ -900,4 +907,5 @@ class mod_mplayer_mod_form extends moodleform_mod {
 
         return $elements;
     }
+
 }
