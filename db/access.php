@@ -15,13 +15,13 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Capability definitions for Mplayer Activity Module.
- *
- * @package   mod_mplayer
- * @category  mod
- * @copyright Mat Bury (1.9)
- * @author   Valery Fremaux <valery.fremaux@gmail.com>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package     mod_mplayer
+ * @category    mod
+ * @author      Matt Bury - matbury@gmail.com  < 2.x
+ * @author      Valery Fremaux <valery.fremaux@gmail.com> > 2.x
+ * @copyright   (C) 2009  Matt Bury
+ * @copyright   (C) 2015  Valery Fremaux (http://www.mylearningfactory.com)
+ * @licence     http://www.gnu.org/copyleft/gpl.html GNU Public Licence
  */
 defined('MOODLE_INTERNAL') || die();
 
@@ -49,6 +49,5 @@ $capabilities = array(
             'manager' => CAP_ALLOW
         )
     ),
-
 );
 
