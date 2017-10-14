@@ -15,21 +15,14 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * This page prints a particular instance of mplayer
+ *
  * @package   mod_mplayer
  * @category  mod
  * @author    Matt Bury - matbury@gmail.com
  * @author    Valery Fremaux <valery.fremaux@gmail.com>
  * @copyright (C) 2009  Matt Bury
  * @licence   http://www.gnu.org/copyleft/gpl.html GNU Public Licence
- */
-
-/**
- * This page prints a particular instance of mplayer
- *
- * @author Matt Bury - matbury@gmail.com
- * @version $Id: view.php,v 1.1 2010/01/15 matbury Exp $
- * @licence http://www.gnu.org/copyleft/gpl.html GNU Public Licence
- * @package mplayer
  */
 
 require('../../config.php');
@@ -54,7 +47,6 @@ $PAGE->requires->jquery();
 if ($mplayer->technology == 'jw') {
     $PAGE->requires->js('/mod/mplayer/jw/6.11/jwplayer.html5.js');
 } else {
-    // $PAGE->requires->js('/mod/mplayer/flowplayer/flowplayer.js');
     $PAGE->requires->js('/mod/mplayer/flowplayer6/flowplayer.js');
 }
 
@@ -88,11 +80,11 @@ $PAGE->set_cacheable(true);
 $PAGE->set_button(update_module_button($cm->id, $course->id, $strmplayer));
 echo $OUTPUT->header();
 
-$mplayer->instance = $id;
+$mplayer->instance = $cm->instance;
 
 $renderer = $PAGE->get_renderer('mod_mplayer');
 
-echo $renderer->print_body($mplayer); // mod/mplayer/lib.php
+echo $renderer->print_body($mplayer); // See mod/mplayer/lib.php.
 
 echo $renderer->intro($mplayer);
 
@@ -100,10 +92,12 @@ if ($COURSE->format != 'singleactivity' && !($COURSE->format == 'page' && option
     echo '<center>';
     require_once($CFG->dirroot.'/course/format/page/xlib.php');
     page_print_page_format_navigation($cm, false);
-    echo $OUTPUT->single_button(new moodle_url('/course/view.php', array('id' => $course->id)), get_string('backtocourse', 'mplayer'));
+    $params = array('id' => $course->id);
+    $label = get_string('backtocourse', 'mplayer');
+    echo $OUTPUT->single_button(new moodle_url('/course/view.php', $params), $label);
     echo '</center>';
 }
 
-/// Finish the page
+// Finish the page.
 echo $OUTPUT->footer($course);
-// End of mod/mplayer/view.php
+// End of mod/mplayer/view.php.

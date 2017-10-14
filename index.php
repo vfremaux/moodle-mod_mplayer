@@ -82,14 +82,14 @@ $strweek  = get_string('week');
 $strtopic  = get_string('topic');
 
 if ($course->format == 'weeks') {
-    $table->head  = array ($strweek, $strname);
-    $table->align = array ('center', 'left');
+    $table->head  = array($strweek, $strname);
+    $table->align = array('center', 'left');
 } else if ($course->format == 'topics') {
-    $table->head  = array ($strtopic, $strname);
-    $table->align = array ('center', 'left', 'left', 'left');
+    $table->head  = array($strtopic, $strname);
+    $table->align = array('center', 'left', 'left', 'left');
 } else {
-    $table->head  = array ($strname);
-    $table->align = array ('left', 'left', 'left');
+    $table->head  = array($strname);
+    $table->align = array('left', 'left', 'left');
 }
 
 foreach ($mplayers as $mplayer) {
@@ -101,10 +101,10 @@ foreach ($mplayers as $mplayer) {
         // Show normal if the mod is visible.
         $link = '<a href="'.$url.'">'.$mplayer->name.'</a>';
     }
-    if ($course->format == 'weeks' or $course->format == 'topics') {
-        $table->data[] = array ($mplayer->section, $link);
+    if (($course->format == 'weeks') || ($course->format == 'topics')) {
+        $table->data[] = array($mplayer->section, $link);
     } else {
-        $table->data[] = array ($link);
+        $table->data[] = array($link);
     }
 }
 echo '<br />';

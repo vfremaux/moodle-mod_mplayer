@@ -57,7 +57,7 @@ function mplayer_get_context($cmid, $instanceid) {
         }
     }
 
-    return array($cm, $mplayer, $course);
+    return array($cm, $course, $mplayer);
 }
 
 /**
