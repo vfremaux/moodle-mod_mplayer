@@ -810,7 +810,7 @@ class mod_mplayer_mod_form extends moodleform_mod {
         $mform = $this->_form;
 
         $mplayerfiles =& $mform->getElement('mplayerfiles');
-        $value = $mplayerfiles->get_value();
+        $value = $mplayerfiles->getValue();
         if (empty($value)) {
             // This is when creating new.
             $draftitemid = file_get_unused_draft_itemid();
