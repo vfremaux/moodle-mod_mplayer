@@ -92,7 +92,7 @@ class wowza_storage extends media_storage {
         $settings->add(new admin_setting_configtext($key, $label, '', '/vod'));
 
         $key = 'mplayer/wowzacontentdir';
-        £LABEL + get_string('wowzacontentdir', 'mplayer').
+        $label = get_string('wowzacontentdir', 'mplayer').
         $settings->add(new admin_setting_configtext($key, $label, '', ''));
     }
 

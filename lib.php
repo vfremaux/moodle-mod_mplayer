@@ -16,8 +16,9 @@
 
 /**
  * Library of functions and constants for module mplayer
- * For more information on the parameters used by JW FLV Player see documentation: http://developer.longtailvideo.com/trac/wiki/FlashVars
- * 
+ * For more information on the parameters used by JW FLV Player see documentation:
+ * http://developer.longtailvideo.com/trac/wiki/FlashVars
+ *
  * @package     mod_mplayer
  * @category    mod
  * @author      Matt Bury - matbury@gmail.com
@@ -28,7 +29,7 @@ defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->dirroot.'/mod/mplayer/locallib.php');
 
-/**    Copyright (C) 2009  Matt Bury
+/*    Copyright (C) 2009  Matt Bury
  *
  *    This program is free software: you can redistribute it and/or modify
  *    it under the terms of the GNU General Public License as published by
@@ -135,7 +136,7 @@ function mplayer_add_instance($mplayer) {
         $mplayer->technology = $config->default_player;
     }
 
-    $notes = $mplayer->notes;
+    $notes = @$mplayer->notes_editor;
     $mplayer->notes = $notes['text'];
     $mplayer->notesformat = $notes['format'];
 
@@ -194,7 +195,7 @@ function mplayer_update_instance($mplayer) {
         mplayer_convert_storage_for_streamer($mplayer);
     }
 
-    $notes = $mplayer->notes;
+    $notes = $mplayer->notes_editor;
     $mplayer->notes = $notes['text'];
     $mplayer->notesformat = $notes['format'];
 
@@ -270,7 +271,8 @@ function mplayer_user_complete($course, $user, $mod, $mplayer) {
  * @todo Finish documenting this function
  */
 function mplayer_print_recent_activity($course, $isteacher, $timestart) {
-    return false;  //  True if anything was printed, otherwise false.
+    // True if anything was printed, otherwise false.
+    return false;
 }
 
 /**
@@ -296,7 +298,6 @@ function mplayer_get_post_actions() {
  * as sending out mail, toggling flags etc.
  *
  * @return boolean
- * @todo Finish documenting this function
  */
 function mplayer_cron() {
     return true;
@@ -321,7 +322,7 @@ function mplayer_pluginfile($course, $cm, $context, $filearea, $args, $forcedown
     $guests = false;
     if ($course->id > SITEID) {
         $enrols = enrol_get_instances($course->id, true);
-        foreach($enrols as $e) {
+        foreach ($enrols as $e) {
             if ($e->enrol == 'guest') {
                 $guests = true;
                 break;
@@ -354,7 +355,7 @@ function mplayer_pluginfile($course, $cm, $context, $filearea, $args, $forcedown
             send_stored_file($file, 0, 0, $forcedownload);
         }
     } else {
-        $sort = "sortorder, itemid, filepath, filename";
+        $sort = 'sortorder, itemid, filepath, filename';
         if ($files = $fs->get_area_files($context->id, 'mod_mplayer', $filearea, $itemid, $sort, false)) {
             $file = array_pop($files);
 
@@ -369,7 +370,7 @@ function mplayer_pluginfile($course, $cm, $context, $filearea, $args, $forcedown
 /**
  * Must return an array of grades for a given instance of this module,
  * indexed by user.  It also returns a maximum allowed grade.
- * 
+ *
  * Example:
  *    $return->grades = array of grades;
  *    $return->maxgrade = maximum allowed grade;
@@ -421,14 +422,8 @@ function mplayer_scale_used($mplayerid, $scaleid) {
  * @return boolean True if the scale is used by any mplayer
  */
 function mplayer_scale_used_anywhere($scaleid) {
-    global $DB;
-
     return false;
 }
-
-/**
- *-------------------------------------------------------------------- view.php --------------------------------------------------------------------
- */
 
 /**
  * Obtains the automatic completion state for this module based on any conditions

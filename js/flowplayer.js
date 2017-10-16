@@ -1,14 +1,20 @@
+/**
+ * Class encaps of the flowplayer configuration.
+ */
+// jshint unused:false, undef:false
 
 var ClassBuilder = function(methods) {
     var klass = function() {
         this.initialize.apply(this, arguments);
     };
 
-    for (var property in methods) { 
-       klass.prototype[property] = methods[property];
+    for (var property in methods) {
+        klass.prototype[property] = methods[property];
     }
 
-    if (!klass.prototype.initialize) klass.prototype.initialize = function(){};
+    if (!klass.prototype.initialize) {
+        klass.prototype.initialize = function(){};
+    }
 
     return klass;
 };
@@ -25,7 +31,7 @@ var FlowplayerConfig = ClassBuilder({
         this.fullscreen = false;
         this.splash = false;
         this.poster = false;
-        this.playlist = Array();
+        this.playlist = [];
         this.advance = true;
         this.loop = false;
         this.nativesubtitles = false;
@@ -77,19 +83,21 @@ var FlowplayerConfig = ClassBuilder({
         this.playlist[vix].addSubtitle(new Subtitle(kind, src, srclang, label, defaultvalue));
     },
 
-    // Renders a flow player that is : installs the player in container and register
-    // all what is bound to this instance.
+    /*
+     * Renders a flow player that is : installs the player in container and register
+     * all what is bound to this instance.
+     */
     render: function(id) {
-        // Select the above element as player container
-        var container = document.getElementById("flp"+id);
+        // Select the above element as player container.
+        var container = document.getElementById("flp" + id);
 
-        // install flowplayer into selected container
+        // Install flowplayer into selected container.
         flowplayer(container, this);
-        api = flowplayer("#flp"+id);
+        api = flowplayer("#flp" + id);
         this._is_renderer = true;
         this._fp = container;
         this._mplayerid = id;
-        api.conf._mplayerid = id; // Confirm in installed instance
+        api.conf._mplayerid = id; // Confirm in installed instance.
 
         if (this._completion) {
             api.on("progress", send_video_progress);

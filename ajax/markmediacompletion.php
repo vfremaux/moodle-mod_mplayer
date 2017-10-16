@@ -15,15 +15,12 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * This page prints a particular instance of mplayer without any standard Moodle navigation
- * It's useful for embedding video in Moodle web pages
- *
  * @package     mod_mplayer
  * @category    mod
- * @author      Matt Bury - matbury@gmail.com
  * @author      Valery Fremaux <valery.fremaux@gmail.com>
- * @licence     http://www.gnu.org/copyleft/gpl.html GNU Public Licence
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
 require('../../../config.php');
 require_once($CFG->dirroot.'/mod/mplayer/lib.php');
 require_once($CFG->dirroot.'/mod/mplayer/locallib.php');

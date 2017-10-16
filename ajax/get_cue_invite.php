@@ -58,9 +58,13 @@ if (!empty($type)) {
     $e->type = get_string('pluginname', $type);
 }
 
-$jshandler = 'cuewin = window.open(\''.$e->url.'\', \'cuepoint_mplayer'.$course->id.'_'.$mpid.'\', \'width=680,height=800,toolbar=0,scrollbars=1\');';
-$jshandler .= 'cuewin.onbeforeunload = function() {cuepoint_resume(api, \''.$cueout.'\')}';
-$e->link = '<a href="#" onclick="'.$jshandler.'"><input type="button" value="'.get_string('cuelaunch', 'mplayer', $e->type).'"></a>';
+$button = '<input type="button" value="'.get_string('cuelaunch', 'mplayer', $e->type).'">';
+$winname = 'cuepoint_mplayer'.$course->id.'_'.$mpid;
+$winoptions = 'width=680,height=800,toolbar=0,scrollbars=1';
+$jshandler = 'cuewin = window.open(\''.$e->url.'\', \''.$winname.'\', \''.$winoptions.'\');
+              cuewin.onbeforeunload = function() {cuepoint_resume(api, \''.$cueout.'\')}';
+$e->link = '<a href="#"
+               onclick="'.$jshandler.'">'.$button.'</a>';
 
 if ($mandatory == 'optional') {
     echo get_string('cueininviteoptional', 'mplayer', $e);
