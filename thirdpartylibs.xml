@@ -1,58 +1,65 @@
 <?xml version="1.0"?>
 <libraries>
   <library>
-    <location>extralib</location>
-    <name>External libs or scripts</name>
-    <license>GPL</license>
-    <version></version>
-    <licenseversion></licenseversion>
-  </library>
-  <library>
     <location>flowplayer_flash</location>
-    <name>flowplayer</name>
-    <license>GPL</license>
+    <name>Flowplayer technology</name>
+    <license></license>
     <version></version>
     <licenseversion></licenseversion>
   </library>
   <library>
     <location>flowplayer6</location>
-    <name>flowplayer</name>
-    <license>GPL</license>
-    <version></version>
-    <licenseversion></licenseversion>
-  </library>
-  <library>
-    <location>mp3player</location>
-    <name>flowplayer</name>
-    <license>GPL</license>
-    <version></version>
-    <licenseversion></licenseversion>
-  </library>
-  <library>
-    <location>swfobject</location>
-    <name>Flas object</name>
-    <license>GPL</license>
+    <name>Flowplayer technology</name>
+    <license></license>
     <version></version>
     <licenseversion></licenseversion>
   </library>
   <library>
     <location>jw</location>
-    <name>JWPlayer</name>
+    <name>Video Player technology</name>
     <license></license>
     <version></version>
     <licenseversion></licenseversion>
   </library>
   <library>
     <location>plugins</location>
-    <name>jwplayer plugins</name>
-    <license>GPL</license>
+    <name>Video Player technology</name>
+    <license></license>
+    <version></version>
+    <licenseversion></licenseversion>
+  </library>
+  <library>
+    <location>scripts</location>
+    <name>Video Player technology</name>
+    <license></license>
     <version></version>
     <licenseversion></licenseversion>
   </library>
   <library>
     <location>skins</location>
-    <name>jwplayer skins</name>
-    <license>GPL</license>
+    <name>Video Player technology</name>
+    <license></license>
+    <version></version>
+    <licenseversion></licenseversion>
+  </library>
+  <library>
+    <location>mp3player</location>
+    <name>Video Player tecnhology</name>
+    <license></license>
+    <version></version>
+    <licenseversion></licenseversion>
+  </library>
+  <library>
+    <location>swfobject</location>
+    <name>flash techology</name>
+    <license></license>
+    <version></version>
+    <licenseversion></licenseversion>
+  </library>
+  <library>
+    <location>extralib</location>
+    <name>Extra additional libraries</name>
+    <license></license>
     <version></version>
     <licenseversion></licenseversion>
   </library>

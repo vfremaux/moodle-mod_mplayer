@@ -28,7 +28,9 @@ require_once($CFG->dirroot.'/mod/mplayer/backup/moodle2/restore_mplayer_stepslib
 
 class restore_mplayer_activity_task extends restore_activity_task {
 
-    protected function define_my_settings() {}
+    protected function define_my_settings() {
+        assert(1);
+    }
 
     protected function define_my_steps() {
         $this->add_step(new restore_mplayer_activity_structure_step('mplayer_structure', 'mplayer.xml'));
@@ -43,12 +45,12 @@ class restore_mplayer_activity_task extends restore_activity_task {
     }
 
     static public function define_decode_rules() {
-        return array();
+
         $rules = array();
-        $rules[] = new restore_decode_rule('mplayerINDEX', '/mod/mplayer/index.php?id=$1', 'course');
-        $rules[] = new restore_decode_rule('mplayerVIEWBYID', '/mod/mplayer/view.php?id=$1', 'course_module');
-        $rules[] = new restore_decode_rule('mplayerREPORT', '/mod/mplayer/report.php?id=$1', 'course_module');
-        $rules[] = new restore_decode_rule('mplayerEDIT', '/mod/mplayer/edit.php?id=$1', 'course_module');
+        $rules[] = new restore_decode_rule('MPLAYERINDEX', '/mod/mplayer/index.php?id=$1', 'course');
+        $rules[] = new restore_decode_rule('MAPLAYERVIEWBYID', '/mod/mplayer/view.php?id=$1', 'course_module');
+        $rules[] = new restore_decode_rule('MPLAYERREPORT', '/mod/mplayer/report.php?id=$1', 'course_module');
+        $rules[] = new restore_decode_rule('MPLAYEREDIT', '/mod/mplayer/edit.php?id=$1', 'course_module');
 
         return $rules;
 

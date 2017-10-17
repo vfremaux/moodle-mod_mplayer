@@ -1,4 +1,4 @@
-Media Player Module for Moodle 1.9
+Media Player Module for Moodle 2 - 3.1
 
 Originally Designed and developed by Matt Bury
 
@@ -7,10 +7,17 @@ Website: http://matbury.com/
 
 Redrawn for Moodle 2 by Valery Fremaux (valery.fremaux@gmail.com)
 
-This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version. This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with this program. If not, see <http://www.gnu.org/licenses/>.
+This version is a preliminary publication after formal review.  This is yet a beta version where we tried to rearchitecture
+main features. Documentation writing and review is in progress. There are advanced features that are not yet fully tested
+such as simple dealing with streamers or pseudo-streaming. A further package may clean the "bad ideas" options when we can
+finish the complete qualification.
 
-Installation
+Our final goal is to provide an economic minimal viable way for small institutions to diffuse a reasonable set of videos with
+a very simple as possible, lightweight and costless solution. 
 
+Do not be to greedy anyway : video and live media are very complex and heavy technologies that fully justify the "cost of service"
+of major providers such as Kaltura, Livemedia or other professional providers. This plugin has limited goals and no service garantees
+as being free development initiative. It will probably be in "on progress" status driven by our internal needs and challenges.
 
 Design Notes
 ===============

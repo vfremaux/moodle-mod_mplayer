@@ -15,6 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * The mod_mplayer course module viewed event.
  *
  * @package     mod_mplayer
  * @category    mod
@@ -79,7 +80,7 @@ class mplayer_viewedall extends \core\event\base {
      * @return array|null
      */
     protected function get_legacy_logdata() {
-        return array($this->courseid, 'mplayer', 'view all', 'index.php?id=' . $this->objectid,
+        return array($this->courseid, 'mplayer', 'view all', 'index.php?id='.$this->objectid,
             $this->other['objectname'], $this->contextinstanceid);
     }
 

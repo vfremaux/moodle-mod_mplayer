@@ -19,10 +19,65 @@ var ClassBuilder = function(methods) {
     return klass;
 };
 
-var FlowplayerConfig = ClassBuilder({
+var Source = new ClassBuilder( {
+    initialize: function(type, src) {
+        this.type = type;
+        this.src = src;
+    }
+});
 
-    // Note extra members are called with _ prefix. those
-    // attributes are outside flowplayer structure needs.
+var Clip = new ClassBuilder( {
+    initialize: function() {
+        this.sources = [];
+        this.subtitles = [];
+        this.cuepoints = [];
+    },
+
+    set: function(prop, value) {
+        this[prop] = value;
+    },
+
+    addSource: function(source) {
+        this.sources[this.sources.length] = source;
+    },
+
+    addSubtitle: function(subtitle) {
+        this.subtitles[this.subtitles.length] = subtitle;
+    },
+
+    addCuepoint: function(cuepoint) {
+        this.cuepoints[this.cuepoints.length] = cuepoint;
+    },
+});
+
+var Cue = new ClassBuilder( {
+    initialize: function(time, url, cueout, cuetype, mandatory, playerid) {
+        this.time = time;
+        this.url = url;
+        this.cueout = cueout;
+        this.type = cuetype;
+        this.mandatory = mandatory;
+        this.playerid = playerid;
+    }
+});
+
+var Subtitle = new ClassBuilder( {
+    initialize: function(kind, src, srclang, label, defaultvalue) {
+        if (defaultvalue) {
+            this["default"] = true;
+        }
+        this.src = src;
+        this.kind = kind;
+        this.srclang = srclang;
+        this.label = label;
+    }
+});
+var FlowplayerConfig = new ClassBuilder( {
+
+    /*
+     * Note extra members are called with _ prefix. those
+     * attributes are outside flowplayer structure needs.
+     */
     initialize: function() {
         this._is_rendered = false;
         this.clip = new Clip();
@@ -118,59 +173,5 @@ var FlowplayerConfig = ClassBuilder({
             clip.bind("resume", resume_video_progress);
             */
         }
-    }
-});
-
-var Source = ClassBuilder( {
-    initialize: function(type, src) {
-        this.type = type;
-        this.src = src;
-    }
-});
-
-var Clip = ClassBuilder( {
-    initialize: function() {
-        this.sources = Array();
-        this.subtitles = Array();
-        this.cuepoints = Array();
-    },
-
-    set: function(prop, value) {
-        this[prop] = value;
-    },
-
-    addSource: function(source) {
-        this.sources[this.sources.length] = source;
-    },
-
-    addSubtitle: function(subtitle) {
-        this.subtitles[this.subtitles.length] = subtitle;
-    },
-
-    addCuepoint: function(cuepoint) {
-        this.cuepoints[this.cuepoints.length] = cuepoint;
-    },
-});
-
-var Cue = ClassBuilder( {
-    initialize: function(time, url, cueout, cuetype, mandatory, playerid) {
-        this.time = time;
-        this.url = url;
-        this.cueout = cueout;
-        this.type = cuetype;
-        this.mandatory = mandatory;
-        this.playerid = playerid;
-    }
-});
-
-var Subtitle = ClassBuilder( {
-    initialize: function(kind, src, srclang, label, defaultvalue) {
-        if (defaultvalue) {
-            this["default"] = true;
-        }
-        this.src = src;
-        this.kind = kind;
-        this.srclang = srclang;
-        this.label = label;
     }
 });

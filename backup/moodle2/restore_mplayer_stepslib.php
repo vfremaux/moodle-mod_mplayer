@@ -22,6 +22,8 @@
  * @author      Valery Fremaux <valery.fremaux@gmail.com>
  * @licence     http://www.gnu.org/copyleft/gpl.html GNU Public Licence
  */
+defined('MOODLE_INTERNAL') || die();
+
 class restore_mplayer_activity_structure_step extends restore_activity_structure_step {
 
     protected function define_structure() {
@@ -31,6 +33,7 @@ class restore_mplayer_activity_structure_step extends restore_activity_structure
 
         if ($this->get_setting_value('userinfo')) {
             assert(1);
+            // Deal with user scope information.
         }
 
         return $this->prepare_activity_structure($paths);
