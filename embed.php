@@ -27,10 +27,7 @@
 require('../../config.php');
 require_once($CFG->dirroot.'/mod/mplayer/lib.php');
 
-$id = optional_param('id', 0, PARAM_INT); // Course Module ID, or.
-$a  = optional_param('a', 0, PARAM_INT); // Mplayer ID.
-
-list($cm, $course, $mplayer) = mplayer_get_context($id, $a);
+list($cm, $course, $mplayer) = mplayer_get_context();
 
 // Security.
 

@@ -14,44 +14,45 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
- * @package   mod_mplayer
- * @category  mod
- * @author   Valery Fremaux <valery.fremaux@gmail.com>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package     mod_mplayer
+ * @category    mod
+ * @author      Valery Fremaux <valery.fremaux@gmail.com>
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
+defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->dirroot.'/mod/mplayer/storage/storage.class.php');
 
 class local_storage extends media_storage {
 
-    function __construct() {
+    public function __construct() {
         $this->name = 'local';
     }
 
-    function get_access_url(stored_file $storedfile) {
+    public function get_access_url(stored_file $storedfile) {
 
-        return moodle_url::make_plugin_url($storedfile->get_contextid(), 'mod_mplayer', 'mplayerfiles', 0, $storedfile->get_filepath(), $storedfile->get_filename());
+        return moodle_url::make_plugin_url($storedfile->get_contextid(), 'mod_mplayer', 'mplayerfiles', 0,
+                                           $storedfile->get_filepath(), $storedfile->get_filename());
     }
 
-    function get_manifest(stored_file $storedfile, $type) {
+    public function get_manifest(stored_file $storedfile, $type) {
         return null;
     }
 
     /**
      * stores media into remote storage location
      */
-    function store_media(stored_file $storedfile) {
+    public function store_media(stored_file $storedfile) {
         return null;
     }
 
-    function delete_media($medianame) {
+    public function delete_media($medianame) {
         return null;
     }
 
-    function get_settings(&$settings) {
+    public function get_settings(&$settings) {
         return false;
     }
 }

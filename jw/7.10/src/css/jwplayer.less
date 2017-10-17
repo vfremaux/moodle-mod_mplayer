@@ -1,0 +1,58 @@
+@import "imports/reset";
+
+@import "imports/mixins";
+
+@accent-color: #FFF;
+@inactive-color: #cecece;
+
+@controlbar-background: rgba(33, 33, 33, 0.8);
+@display-bkgd-color: @controlbar-background;
+@display-bkgd-hover-color: rgba(33, 33, 33, 1);
+
+@controlbar-height: 2.5em;
+
+#namespace > .basic-skin-styles();
+#namespace > .set-global-color-classes();
+
+@import "imports/jwplayerelement";
+@import "imports/video";
+@import "imports/display";
+@import "imports/controlbar";
+@import "imports/dock";
+@import "imports/title";
+@import "imports/slider";
+
+@import "imports/captions";
+@import "imports/rightclick";
+@import "imports/logo";
+@import "imports/tooltip";
+@import "imports/skipad";
+@import "imports/cast";
+@import "imports/nextup";
+@import "imports/autostartmute";
+
+// State specific
+@import "states/states";
+
+@import "flags/time-slider-above";
+@import "flags/cast";
+@import "flags/cast-available";
+@import "flags/skinloading";
+@import "flags/fullscreen";
+@import "flags/live";
+@import "flags/controls-hidden";
+@import "flags/user-inactive";
+@import "flags/media-audio";
+@import "flags/ads";
+@import "flags/overlay";
+@import "flags/rightclick-open";
+@import "flags/controls-disabled";
+@import "flags/flash-blocked";
+@import "flags/touch";
+@import "flags/audioplayer";
+
+// modifiers
+@import "imports/utilities";
+
+// Skins
+@import "skins/seven";

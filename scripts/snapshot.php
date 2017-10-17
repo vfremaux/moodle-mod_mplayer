@@ -27,9 +27,11 @@
 *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 require_once('../../../config.php');
-global $CFG;
-global $USER;
+
+global $CFG, $USER;
+
 $id = optional_param('id', 0, PARAM_INT); // Course Module ID.
+
 // Get the course and module.
 if ($id) {
     if (! $cm = $DB->get_record('course_modules', array('id' => $id))) {
@@ -47,12 +49,12 @@ require_login($course->id);
 if (isset ($GLOBALS['HTTP_RAW_POST_DATA'])) {
     // Get the image from POST data.
     $mplayer_image =  $GLOBALS['HTTP_RAW_POST_DATA'];
-    // Create an easy to find unique file name, i.e. "firstname_year_month_date_hours-mins-secs.jpg".
+    // Create an easy to find unique file name, i.e. "firstname_year_month_date_hours-mins-secs.jpg"
     $mplayer_filename = $USER->firstname.'_'.date('Y\_M\_dS\_h\-i\-s').'.jpg';
     // Set file path to moodledata snapshots directory for current user.
     $mplayer_snapshots_path = '/'.$course->id.'/snapshots/'.$USER->id.'/';
     $mplayer_moodledata = $CFG->wwwroot.'/file.php/'.$mplayer_snapshots_path;
-    // Try to write the image as a JPG in moodledata/snapshots/[user ID]/.
+    // Try to write the image as a JPG in moodledata/snapshots/[user ID].
     try {
         $mplayer_filepath = fopen($CFG->dataroot.$mplayer_snapshots_path.$mplayer_filename, 'wb');
         fwrite($mplayer_filepath, $mplayer_image);
