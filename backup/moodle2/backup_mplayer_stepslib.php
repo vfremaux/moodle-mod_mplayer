@@ -17,7 +17,9 @@
 /**
  * @package     mod_mplayer
  * @category    mod
- * @author  Valery Fremaux (valery.fremaux@gmail.com)
+ * @author      Matt Bury - matbury@gmail.com
+ * @author      Valery Fremaux <valery.fremaux@gmail.com>
+ * @licence     http://www.gnu.org/copyleft/gpl.html GNU Public Licence
  */
 defined('MOODLE_INTERNAL') || die();
 
