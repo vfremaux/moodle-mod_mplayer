@@ -22,6 +22,10 @@ div.mod-mplayer.progressbar{
     max-width:700px;
 }
 
+div.mplayer-jw-completion-container {
+    padding-top: 40px;
+}
+
 div.mplayer-completion {
     height:24px;
     border:solid 1px #e0e0e0;
@@ -29,15 +33,16 @@ div.mplayer-completion {
     display:inline-block;
 }
 
-div.mod-mplayer.progressbar-outer{
+div.mod-mplayer-progressbar-outer{
     height:22px;
     border:2px solid #606060;
     border-radius:4px;
     text-align:left;
 }
 
-div.mod-mplayer.progressbar-inner{
+div.mod-mplayer-progressbar-inner{
     height:20px;
+    min-height:20px;
     border:1px solid #606060;
     border-radius:4px;
     background-image:url();
@@ -45,8 +50,9 @@ div.mod-mplayer.progressbar-inner{
     background-position:0% 50%; 
 }
 
-div.mod-mplayer.progressbar-inner2{
+div.mod-mplayer-progressbar-inner2{
     height:20px;
+    min-height:20px;
     border:1px solid #606060;
     border-radius:4px;
     background-image:url();
@@ -76,4 +82,8 @@ div.mod-mplayer.progressbar-inner2{
 
 .jwplayer {
     top:20px;
+}
+
+#page-mod-mplayer-mod .fitemtitle label {
+    white-space: normal !important;
 }

@@ -27,7 +27,7 @@
 require('../../config.php');
 require_once($CFG->dirroot.'/mod/mplayer/lib.php');
 
-list($cm, $mplayer, $course) = get_mplayer_context();
+list($cm, $course, $mplayer) = mplayer_get_context();
 
 // Security.
 

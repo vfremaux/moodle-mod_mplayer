@@ -119,6 +119,7 @@
         </KEYS>
         <INDEXES>
             <INDEX NAME="ix_instanceid" UNIQUE="false" FIELDS="mplayerid"/>
+            <INDEX NAME="ix_userid" UNIQUE="false" FIELDS="userid"/>
         </INDEXES>
     </TABLE>
   </TABLES>

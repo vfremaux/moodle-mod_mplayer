@@ -73,6 +73,7 @@ $string['controlbar'] = 'Barre de commandes';
 $string['cueininvite'] = 'Avant de continuer la projection de cette vidéo, vous êtes invité à participer à un {$a->type}.<br/><br/>{$a->link}';
 $string['cueininviteoptional'] = 'Avant de continuer la projection de cette vidéo, vous êtes invité à participer à un {$a->type}.<br/><br/>{$a->link}<br/><a href="javascript:cuepoint_resume_from_id(\'{$a->playerid}\')">Reprendre la lecture</a>';
 $string['cuelaunch'] = 'Lancer le {$a}';
+$string['deployinmplayer'] = 'Publier dans un Media Player';
 $string['description'] = 'Description du média';
 $string['displayclick'] = 'Click audio';
 $string['duration'] = 'Durée (secondes)';

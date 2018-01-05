@@ -1,0 +1,79 @@
+/* line 1, src/css/controls/imports/transitions.less */
+.jw-controls-right,
+.jw-plugin-sharing,
+.jw-display,
+.jw-overlay,
+.jw-dock {
+  -webkit-transition: opacity 0.3s ease, visibility 0.3s ease;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+/* line 9, src/css/controls/imports/transitions.less */
+.jw-background-color {
+  -webkit-transition: background-color 0.3s ease, opacity 0.3s ease, visibility 0.3s ease;
+  transition: background-color 0.3s ease, opacity 0.3s ease, visibility 0.3s ease;
+}
+/* line 13, src/css/controls/imports/transitions.less */
+.jw-button-color {
+  -webkit-transition: color 0.3s ease, fill 0.3s ease;
+  transition: color 0.3s ease, fill 0.3s ease;
+}
+/* line 17, src/css/controls/imports/transitions.less */
+.jw-knob {
+  -webkit-transition: opacity 0.15s ease;
+  transition: opacity 0.15s ease;
+}
+/* line 7, src/css/skins/seven.less */
+.jw-skin-seven .jw-display-icon-container {
+  border-radius: 3.5em;
+}
+/* line 10, src/css/skins/seven.less */
+.jw-skin-seven .jw-display-icon-container > .jw-icon {
+  color: rgba(255, 255, 255, 0.9);
+}
+/* line 16, src/css/skins/seven.less */
+.jw-skin-seven.jw-breakpoint-2 .jw-display .jw-icon {
+  width: 66px;
+  height: 66px;
+  line-height: 66px;
+}
+/* line 23, src/css/skins/seven.less */
+.jw-skin-seven .jw-dock-button {
+  border-radius: 2.5em;
+}
+/* line 25, src/css/skins/seven.less */
+.jw-skin-seven .jw-dock-button:hover {
+  background: rgba(33, 33, 33, 0.8);
+}
+/* line 32, src/css/skins/seven.less */
+.jw-skin-seven .jw-menu {
+  padding: 0;
+}
+/* line 37, src/css/skins/seven.less */
+.jw-skin-seven .jw-dock .jw-overlay {
+  border-radius: 0.5em;
+}
+/* line 42, src/css/skins/seven.less */
+.jw-skin-seven .jw-skip {
+  border-radius: 0.5em;
+}
+/* line 46, src/css/skins/seven.less */
+.jw-skin-seven .jw-text {
+  text-rendering: optimizeLegibility;
+  /* font-smoothing is a private setting not transformed by PostCSS */
+  -webkit-font-smoothing: antialiased;
+  /* OSX Firefox specific style for improving legibility */
+  -moz-osx-font-smoothing: grayscale;
+}
+/* line 55, src/css/skins/seven.less */
+.jw-skin-seven .jw-slider-container .jw-knob {
+  opacity: 0;
+}
+/* line 60, src/css/skins/seven.less */
+.jw-skin-seven .jw-slider-container:hover .jw-knob {
+  opacity: 1;
+}
+/* line 67, src/css/skins/seven.less */
+.jw-skin-seven.jw-flag-touch .jw-knob {
+  opacity: 1;
+}
+/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNldmVuLmNzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQSx1REFBdUQ7QUFDdkQ7Ozs7O0VBS0UsNERBQW9EO0VBQXBELG9EQUFvRDtDQUNyRDtBQUNELHVEQUF1RDtBQUN2RDtFQUNFLHdGQUFnRjtFQUFoRixnRkFBZ0Y7Q0FDakY7QUFDRCx3REFBd0Q7QUFDeEQ7RUFDRSxvREFBNEM7RUFBNUMsNENBQTRDO0NBQzdDO0FBQ0Qsd0RBQXdEO0FBQ3hEO0VBQ0UsdUNBQStCO0VBQS9CLCtCQUErQjtDQUNoQztBQUNELHNDQUFzQztBQUN0QztFQUNFLHFCQUFxQjtDQUN0QjtBQUNELHVDQUF1QztBQUN2QztFQUNFLGdDQUFnQztDQUNqQztBQUNELHVDQUF1QztBQUN2QztFQUNFLFlBQVk7RUFDWixhQUFhO0VBQ2Isa0JBQWtCO0NBQ25CO0FBQ0QsdUNBQXVDO0FBQ3ZDO0VBQ0UscUJBQXFCO0NBQ3RCO0FBQ0QsdUNBQXVDO0FBQ3ZDO0VBQ0Usa0NBQWtDO0NBQ25DO0FBQ0QsdUNBQXVDO0FBQ3ZDO0VBQ0UsV0FBVztDQUNaO0FBQ0QsdUNBQXVDO0FBQ3ZDO0VBQ0UscUJBQXFCO0NBQ3RCO0FBQ0QsdUNBQXVDO0FBQ3ZDO0VBQ0UscUJBQXFCO0NBQ3RCO0FBQ0QsdUNBQXVDO0FBQ3ZDO0VBQ0UsbUNBQW1DO0VBQ25DLG9FQUFvRTtFQUNwRSxvQ0FBb0M7RUFDcEMseURBQXlEO0VBQ3pELG1DQUFtQztDQUNwQztBQUNELHVDQUF1QztBQUN2QztFQUNFLFdBQVc7Q0FDWjtBQUNELHVDQUF1QztBQUN2QztFQUNFLFdBQVc7Q0FDWjtBQUNELHVDQUF1QztBQUN2QztFQUNFLFdBQVc7Q0FDWiIsImZpbGUiOiJzZXZlbi5jc3MiLCJzb3VyY2VzQ29udGVudCI6WyIvKiBsaW5lIDEsIHNyYy9jc3MvY29udHJvbHMvaW1wb3J0cy90cmFuc2l0aW9ucy5sZXNzICovXG4uanctY29udHJvbHMtcmlnaHQsXG4uanctcGx1Z2luLXNoYXJpbmcsXG4uanctZGlzcGxheSxcbi5qdy1vdmVybGF5LFxuLmp3LWRvY2sge1xuICB0cmFuc2l0aW9uOiBvcGFjaXR5IDAuM3MgZWFzZSwgdmlzaWJpbGl0eSAwLjNzIGVhc2U7XG59XG4vKiBsaW5lIDksIHNyYy9jc3MvY29udHJvbHMvaW1wb3J0cy90cmFuc2l0aW9ucy5sZXNzICovXG4uanctYmFja2dyb3VuZC1jb2xvciB7XG4gIHRyYW5zaXRpb246IGJhY2tncm91bmQtY29sb3IgMC4zcyBlYXNlLCBvcGFjaXR5IDAuM3MgZWFzZSwgdmlzaWJpbGl0eSAwLjNzIGVhc2U7XG59XG4vKiBsaW5lIDEzLCBzcmMvY3NzL2NvbnRyb2xzL2ltcG9ydHMvdHJhbnNpdGlvbnMubGVzcyAqL1xuLmp3LWJ1dHRvbi1jb2xvciB7XG4gIHRyYW5zaXRpb246IGNvbG9yIDAuM3MgZWFzZSwgZmlsbCAwLjNzIGVhc2U7XG59XG4vKiBsaW5lIDE3LCBzcmMvY3NzL2NvbnRyb2xzL2ltcG9ydHMvdHJhbnNpdGlvbnMubGVzcyAqL1xuLmp3LWtub2Ige1xuICB0cmFuc2l0aW9uOiBvcGFjaXR5IDAuMTVzIGVhc2U7XG59XG4vKiBsaW5lIDcsIHNyYy9jc3Mvc2tpbnMvc2V2ZW4ubGVzcyAqL1xuLmp3LXNraW4tc2V2ZW4gLmp3LWRpc3BsYXktaWNvbi1jb250YWluZXIge1xuICBib3JkZXItcmFkaXVzOiAzLjVlbTtcbn1cbi8qIGxpbmUgMTAsIHNyYy9jc3Mvc2tpbnMvc2V2ZW4ubGVzcyAqL1xuLmp3LXNraW4tc2V2ZW4gLmp3LWRpc3BsYXktaWNvbi1jb250YWluZXIgPiAuanctaWNvbiB7XG4gIGNvbG9yOiByZ2JhKDI1NSwgMjU1LCAyNTUsIDAuOSk7XG59XG4vKiBsaW5lIDE2LCBzcmMvY3NzL3NraW5zL3NldmVuLmxlc3MgKi9cbi5qdy1za2luLXNldmVuLmp3LWJyZWFrcG9pbnQtMiAuanctZGlzcGxheSAuanctaWNvbiB7XG4gIHdpZHRoOiA2NnB4O1xuICBoZWlnaHQ6IDY2cHg7XG4gIGxpbmUtaGVpZ2h0OiA2NnB4O1xufVxuLyogbGluZSAyMywgc3JjL2Nzcy9za2lucy9zZXZlbi5sZXNzICovXG4uanctc2tpbi1zZXZlbiAuanctZG9jay1idXR0b24ge1xuICBib3JkZXItcmFkaXVzOiAyLjVlbTtcbn1cbi8qIGxpbmUgMjUsIHNyYy9jc3Mvc2tpbnMvc2V2ZW4ubGVzcyAqL1xuLmp3LXNraW4tc2V2ZW4gLmp3LWRvY2stYnV0dG9uOmhvdmVyIHtcbiAgYmFja2dyb3VuZDogcmdiYSgzMywgMzMsIDMzLCAwLjgpO1xufVxuLyogbGluZSAzMiwgc3JjL2Nzcy9za2lucy9zZXZlbi5sZXNzICovXG4uanctc2tpbi1zZXZlbiAuanctbWVudSB7XG4gIHBhZGRpbmc6IDA7XG59XG4vKiBsaW5lIDM3LCBzcmMvY3NzL3NraW5zL3NldmVuLmxlc3MgKi9cbi5qdy1za2luLXNldmVuIC5qdy1kb2NrIC5qdy1vdmVybGF5IHtcbiAgYm9yZGVyLXJhZGl1czogMC41ZW07XG59XG4vKiBsaW5lIDQyLCBzcmMvY3NzL3NraW5zL3NldmVuLmxlc3MgKi9cbi5qdy1za2luLXNldmVuIC5qdy1za2lwIHtcbiAgYm9yZGVyLXJhZGl1czogMC41ZW07XG59XG4vKiBsaW5lIDQ2LCBzcmMvY3NzL3NraW5zL3NldmVuLmxlc3MgKi9cbi5qdy1za2luLXNldmVuIC5qdy10ZXh0IHtcbiAgdGV4dC1yZW5kZXJpbmc6IG9wdGltaXplTGVnaWJpbGl0eTtcbiAgLyogZm9udC1zbW9vdGhpbmcgaXMgYSBwcml2YXRlIHNldHRpbmcgbm90IHRyYW5zZm9ybWVkIGJ5IFBvc3RDU1MgKi9cbiAgLXdlYmtpdC1mb250LXNtb290aGluZzogYW50aWFsaWFzZWQ7XG4gIC8qIE9TWCBGaXJlZm94IHNwZWNpZmljIHN0eWxlIGZvciBpbXByb3ZpbmcgbGVnaWJpbGl0eSAqL1xuICAtbW96LW9zeC1mb250LXNtb290aGluZzogZ3JheXNjYWxlO1xufVxuLyogbGluZSA1NSwgc3JjL2Nzcy9za2lucy9zZXZlbi5sZXNzICovXG4uanctc2tpbi1zZXZlbiAuanctc2xpZGVyLWNvbnRhaW5lciAuancta25vYiB7XG4gIG9wYWNpdHk6IDA7XG59XG4vKiBsaW5lIDYwLCBzcmMvY3NzL3NraW5zL3NldmVuLmxlc3MgKi9cbi5qdy1za2luLXNldmVuIC5qdy1zbGlkZXItY29udGFpbmVyOmhvdmVyIC5qdy1rbm9iIHtcbiAgb3BhY2l0eTogMTtcbn1cbi8qIGxpbmUgNjcsIHNyYy9jc3Mvc2tpbnMvc2V2ZW4ubGVzcyAqL1xuLmp3LXNraW4tc2V2ZW4uanctZmxhZy10b3VjaCAuancta25vYiB7XG4gIG9wYWNpdHk6IDE7XG59XG4iXX0= */
