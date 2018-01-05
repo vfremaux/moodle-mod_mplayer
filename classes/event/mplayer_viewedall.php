@@ -18,14 +18,21 @@
  * The mod_mplayer course module viewed event.
  *
  * @package     mod_mplayer
- * @category   mod
+ * @category    mod
+ * @author      Matt Bury - matbury@gmail.com
+ * @author      Valery Fremaux <valery.fremaux@gmail.com>
+ * @licence     http://www.gnu.org/copyleft/gpl.html GNU Public Licence
  */
-
 namespace mod_mplayer\event;
+
 defined('MOODLE_INTERNAL') || die();
 
 /**
  * The mod_mplayer module viewed event class.
+ *
+ * @package    mod_mplayer
+ * @since      Moodle 2.7
+ * @copyright  2014 IGA Tunisie
  */
 class mplayer_viewedall extends \core\event\base {
 
@@ -97,6 +104,5 @@ class mplayer_viewedall extends \core\event\base {
             throw new \coding_exception('Context level must be CONTEXT_MODULE.');
         }
     }
-
 }
 

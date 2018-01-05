@@ -64,8 +64,6 @@ function setup_video_progress(e, api) {
     clockdividers[mpid] = 0;
 }
 
-var clockdividers = [];
-
 function setup_video_start(e, api) {
     api.loadSubtitles(0);
 }
