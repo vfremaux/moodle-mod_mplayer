@@ -29,7 +29,7 @@ defined('MOODLE_INTERNAL') || die();
 /**
  *
  */
-function get_mplayer_context() {
+function mplayer_get_context() {
     global $DB;
 
     $id = optional_param('id', 0, PARAM_INT); // Course Module ID, or.
@@ -56,7 +56,8 @@ function get_mplayer_context() {
             print_error('invalidcoursemodule');
         }
     }
-    return array($cm, $mplayer, $course);
+
+    return array($cm, $course, $mplayer);
 }
 
 /**
@@ -417,11 +418,62 @@ function mplayer_clear_area(&$mplayer, $filearea, $context = null) {
     $fs->delete_area_files($context->id, 'mod_mplayer', $filearea);
 }
 
-function mplayer_require_js() {
-    global $CFG, $PAGE;
+/**
+ * Get suitable javascript.
+ * @param string $mode 'require' or 'script'.
+ * @return void if require, script tag
+ */
+function mplayer_require_js($mplayer, $mode) {
+    global $PAGE, $CFG;
+    static $jsloaded = false;
 
-    if ($CFG->mplayer_default_player == 'jw') {
-        $PAGE->requires->js('/mod/mplayer/jw/6.9/jwplayer.js');
+    $PAGE->requires->jquery();
+    if ($mplayer->technology == 'jw') {
+        if (debugging()) {
+            $jsplayerfile = '/mod/mplayer/jw/8.0/bin-debug/jwplayer.js';
+        } else {
+            $jsplayerfile = '/mod/mplayer/jw/8.0/bin-release/jwplayer.js';
+        }
+        $completionfile = '/mod/mplayer/js/completion_jw.js';
+    } else if ($mplayer->technology == 'jw712') {
+        if (debugging()) {
+            $jsplayerfile = '/mod/mplayer/jw/7.12/bin-debug/jwplayer.js';
+        } else {
+            $jsplayerfile = '/mod/mplayer/jw/7.12/bin-release/jwplayer.js';
+        }
+        $completionfile = '/mod/mplayer/js/completion_jw.js';
+    } else if ($mplayer->technology == 'jw611') {
+        $jsplayerfile = '/mod/mplayer/jw/6.11/jwplayer.js';
+        $completionfile = '/mod/mplayer/js/completion_jw.js';
+    } else {
+        $flowplayercuejscode = '/mod/mplayer/js/cuepoints.js';
+        $flowplayerjswrapper = '/mod/mplayer/js/flowplayer.js';
+        $flowplayercss = '/mod/mplayer/flowplayer6/skin/functional.css';
+        if (debugging()) {
+            $jsplayerfile = '/mod/mplayer/flowplayer6/flowplayer.js';
+        } else {
+            $jsplayerfile = '/mod/mplayer/flowplayer6/flowplayer.min.js';
+        }
+        $completionfile = '/mod/mplayer/js/completion.js';
+    }
+
+    if ($mode == 'require') {
+        $PAGE->requires->js($jsplayerfile, true);
+        $PAGE->requires->js($completionfile, true);
+        $jsloaded = true;
+    } else {
+        if (!$jsloaded) {
+            $jsloaded = true;
+            $jsfragment = '<script src="'.$CFG->wwwroot.$jsplayerfile.'" type="text/javascript"></script>';
+            $jsfragment .= '<script src="'.$CFG->wwwroot.$completionfile.'" type="text/javascript"></script>';
+            $cssfragment = '';
+            if ($mplayer->technology == 'flowplayer') {
+                $jsfragment .= '<script src="'.$CFG->wwwroot.$flowplayercuejscode.'" type="text/javascript"></script>';
+                $jsfragment .= '<script src="'.$CFG->wwwroot.$flowplayerjswrapper.'" type="text/javascript"></script>';
+                $cssfragment .= '<link rel="stylesheet" type="text/css" href="'.$CFG->wwwroot.$flowplayercss.'">';
+            }
+            return $jsfragment.$cssfragment;
+        }
     }
 }
 
@@ -496,7 +548,7 @@ function mplayer_list_linktarget() {
  */
 function mplayer_list_type($technology) {
 
-    if ($technology == 'jw') {
+    if (in_array($technology, array('jw712', 'jw611'))) {
         return array('video' => get_string('video', 'mplayer'),
                      'youtube' => get_string('youtube', 'mplayer'),
                      'url' => get_string('fullurl', 'mplayer'),
@@ -506,6 +558,15 @@ function mplayer_list_type($technology) {
                      'http' => get_string('httppseudostreaming', 'mplayer'),
                      'lighttpd' => get_string('lighthttpdstreaming', 'mplayer'),
                      'rtmp' => get_string('rtmpstreaming', 'mplayer'));
+    } else if ($technology == 'jw') {
+        // No more support for youtube nor RTMP.
+        return array('video' => get_string('video', 'mplayer'),
+                     'url' => get_string('fullurl', 'mplayer'),
+                     'xml' => get_string('xmlplaylist', 'mplayer'),
+                     'sound' => get_string('sound', 'mplayer'),
+                     'image' => get_string('stillimage', 'mplayer'),
+                     'http' => get_string('httppseudostreaming', 'mplayer'),
+                     'lighttpd' => get_string('lighthttpdstreaming', 'mplayer'));
     } else {
         return array('video' => get_string('video', 'mplayer'),
                      'url' => get_string('fullurl', 'mplayer'),
@@ -518,13 +579,15 @@ function mplayer_list_type($technology) {
 }
 
 /**
- * Define available technologies
+ * Define available technologies. We keep 6.11 for reference.
  * @return array
  */
 function mplayer_list_technologies() {
 
     return array('flowplayer' => 'Flowplayer',
-                 'jw' => 'JW Player'
+                 'jw' => 'JW Player 8.0',
+                 'jw712' => 'JW Player 7.12 (Youtube compatible)',
+                 /* 'jw611' => 'JW Player 6.11 (Youtube compatible)' */
     );
 }
 
@@ -537,7 +600,8 @@ function mplayer_list_langchoiceoptions() {
     return array(0 => get_string('langcourse', 'mplayer'),
         1 => get_string('languser', 'mplayer'),
         2 => get_string('langfreechoice', 'mplayer'),
-        3 => get_string('langteacherchoice', 'mplayer'));
+        3 => get_string('langteacherchoice', 'mplayer'),
+    );
 }
 
 /**

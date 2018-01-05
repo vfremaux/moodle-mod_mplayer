@@ -28,10 +28,11 @@
 defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->dirroot.'/mod/mplayer/lib.php');
+require_once($CFG->dirroot.'/mod/mplayer/locallib.php');
 
 // Player technology.
 
-$playeroptions = array('jw' => 'JW Player', 'flowplayer' => 'Flowplayer');
+$playeroptions = mplayer_list_technologies();
 $key = 'mplayer/default_player';
 $label = get_string('player', 'mplayer');
 $desc = '';
