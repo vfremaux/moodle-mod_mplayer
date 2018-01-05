@@ -838,6 +838,7 @@ class mod_mplayer_renderer extends plugin_renderer_base {
 
     /**
      * this is to include once the complementary JS we need.
+     * NOTE : most of the js/css are now loaded via mplayer_require_js
      * @param string $playlistsheet
      */
     public function flowplayer_init_scripts($playlistsheet) {
@@ -846,27 +847,18 @@ class mod_mplayer_renderer extends plugin_renderer_base {
 
         $scriptloadfragment = '';
         if (!$loaded) {
-            $flowplayercompletionjscodeurl = new moodle_url('/mod/mplayer/js/completion.js');
-            $flowplayercuejscodeurl = new moodle_url('/mod/mplayer/js/cuepoints.js');
-            if (!debugging()) {
-                $flowplayerjscodeurl = new moodle_url('/mod/mplayer/flowplayer6/flowplayer.min.js');
-            } else {
-                $flowplayerjscodeurl = new moodle_url('/mod/mplayer/flowplayer6/flowplayer.js');
-            }
-            $flowplayerjswrapperurl = new moodle_url('/mod/mplayer/js/flowplayer.js');
-            $flowplayercssurl = new moodle_url('/mod/mplayer/flowplayer6/skin/functional.css');
+            $flowplayerbasecssurl = new moodle_url('/mod/mplayer/flowplayer6/skin/minimalist.css');
             $flowplayerplaylistcssurl = new moodle_url('/mod/mplayer/flowplayer6/'.$playlistsheet.'.css');
+            $flowplayercompletionjscodeurl = new moodle_url('/mod/mplayer/js/completion.js');
+            $flowplayerconfigjscodeurl = new moodle_url('/mod/mplayer/js/flowplayer.js');
 
             if (isloggedin() && !is_guest($PAGE->context)) {
-                $scriptloadfragment .= '
-                    <script type="text/javascript" src="'.$flowplayercompletionjscodeurl.'"></script>';
+                $scriptloadfragment .= '<script type="text/javascript" src="'.$flowplayerconfigjscodeurl.'"></script>';
+                $scriptloadfragment .= '<script type="text/javascript" src="'.$flowplayercompletionjscodeurl.'"></script>';
             }
             $scriptloadfragment .= '
-                <script type="text/javascript" src="'.$flowplayercuejscodeurl.'"></script>
-                <script type="text/javascript" src="'.$flowplayerjswrapperurl.'"></script>
-                <script type="text/javascript" src="'.$flowplayerjscodeurl.'"></script>
-                <link rel="stylesheet" type="text/css" href="'.$flowplayercssurl.'">
                 <link rel="stylesheet" type="text/css" href="'.$flowplayerplaylistcssurl.'">
+                <link rel="stylesheet" type="text/css" href="'.$flowplayerbasecssurl.'">
             ';
 
             $loaded = true;
@@ -947,7 +939,9 @@ class mod_mplayer_renderer extends plugin_renderer_base {
      * @return string
      */
     public function jwplayer_body(&$mplayer, $cm, $context) {
-        global $CFG;
+        global $CFG, $COURSE;
+
+        $completioninfo = new completion_info($COURSE);
 
         $listbar = $mplayer->playlist ? $mplayer->playlist : 'none';
         $mute = $mplayer->mute ? 'true' : 'false';
@@ -990,11 +984,11 @@ class mod_mplayer_renderer extends plugin_renderer_base {
             }
         }
 
-        $jwbody = '<script type="text/javascript" src="'.$CFG->wwwroot.'/mod/mplayer/jw/6.11/jwplayer.js"></script>';
-        $jwbody .= '<script type="text/javascript">jwplayer.key="pZDZgizUElLVj2BEBWMBql9bbp9Bnckbg7qQxw==";</script>';
-        $jwbody .= '<div id="jwplayer_'.$mplayer->id.'">'.get_string('loadingplayer', 'mplayer').'</div>';
+        $jwbody = '<div id="jwplayer_'.$mplayer->id.'">'.get_string('loadingplayer', 'mplayer').'</div>';
 
-        $jwbody = '<script type="text/javascript">
+        $jwbody .= '<script type="text/javascript">
+        window.onload = function() {
+            jwplayer.key = "pZDZgizUElLVj2BEBWMBql9bbp9Bnckbg7qQxw==";
             jwplayer("jwplayer_'.$mplayer->id.'").setup({
                 "file": "'.$urlarray[0].'",
                 "image": "'.mplayer_get_file_url($mplayer, 'mplayerfiles', $context, '/posters/').'",
@@ -1010,6 +1004,7 @@ class mod_mplayer_renderer extends plugin_renderer_base {
                     "size": "'.$mplayer->playlistsize.'"
                 }
             });
+<<<<<<< HEAD
 >>>>>>> MOODLE_32_STABLE
         </script>';
 
@@ -1030,18 +1025,21 @@ class mod_mplayer_renderer extends plugin_renderer_base {
         if (!$loaded) {
             $jwplayercompletionjscodeurl = new moodle_url('/mod/mplayer/js/completion.jw.js');
             $jwplayerjscodeurl = new moodle_url('/mod/mplayer/jw/7.10/src/js/jwplayer.js');
+=======
+            setup_player_completion("jwplayer_'.$mplayer->id.'", "'.$mplayer->id.'");
+        };
+>>>>>>> MOODLE_33_STABLE
 
-            if (isloggedin() && !is_guest($PAGE->context)) {
-                $scriptloadfragment .= '
-                    <script type="text/javascript" src="'.$flowplayercompletionjscodeurl.'"></script>';
-            }
-            $scriptloadfragment .= '
-                <script type="text/javascript" src="'.$flowplayerjscodeurl.'"></script>
-            ';
+        </script>';
 
-            $loaded = true;
+        echo "Technology : $mplayer->technology ";
+        if ($completioninfo->is_enabled($cm) && in_array($mplayer->technology, array('jw712', 'jw'))) {
+            $jwbody .= '<div class="mplayer-jw-completion-container">';
+            $jwbody .= $this->flowplayer_completion($mplayer, $this->playlist);
+            $jwbody .= '</div>';
         }
-        return $scriptloadfragment;
+
+        return $jwbody;
     }
 
     /**
@@ -1056,12 +1054,12 @@ class mod_mplayer_renderer extends plugin_renderer_base {
     public function progressbar($progress, $progress2 = null) {
         $str = '';
 
-        $str .= '<div class="mod-mplayer progressbar">';
-        $str .= '<div class="mod-mplayer progressbar-outer">';
-        $str .= '<div class="mod-mplayer progressbar-inner" style="width:'.$progress.'%">';
+        $str .= '<div class="mod-mplayer-progressbar">';
+        $str .= '<div class="mod-mplayer-progressbar-outer">';
+        $str .= '<div class="mod-mplayer-progressbar-inner" style="width:'.$progress.'%">';
         $str .= '</div>';
         if (!is_null($progress2)) {
-            $str .= '<div class="mod-mplayer progressbar-inner2" style="width:'.$progress2.'%">';
+            $str .= '<div class="mod-mplayer-progressbar-inner2" style="width:'.$progress2.'%">';
             $str .= '</div>';
         }
         $str .= '</div>';

@@ -6,49 +6,48 @@
 
 // This API relies on an available global wwwroot var setup before int the page.
 
+var clockdividers = [];
+
 function fire_video_finished(e, api) {
 
     var mpid = this.id.replace('jwplayer_', '');
     var url = M.cfg.wwwroot + '/mod/mplayer/ajax/markmediacompletion.php';
-    url += 'mpid=' + mpid + '&what=finished';
+    url += '?mpid=' + mpid + '&clipid=0&what=finished';
 
     $.get(url, function(data, status) {
-        $('#mplayer-progress-' + mpid).html(data);
-    });
-}
-
-/*
- * Send video read progress and gets back html for a 'last reached progress point'
- */
-function send_video_progress(jwplayer, mpid) {
-
-        var progress = jwplayer.getPosition() * 100 / jwplayer.getDuration();
-
-        var url = M.cfg.wwwroot + '/mod/mplayer/ajax/markmediacompletion.php';
-        url += 'mpid=' + mpid + '&what=progress&progress=' + progress;
-
-        $.get(url, function(data, status) {
-            $('#mplayer-progress-' + mpid).html(data);
-        });
-    }
+        $('#mplayer-progress-' + mpid + '_0').html(data);
+    }, 'html');
 }
 
 var jwVideoTracked = [];
 var refreshTimeOutHandler = null;
+var jws = 0;
 
-function setup_player_completion(playerid, mpid) {
-    static jws = 0;
+/**
+ * Registers a player in the completion stack.
+ */
+function setup_player_completion() {
 
-    jwVideoTracked[mpid] = player;
-    jws++;
+    jwplayer().on('time', function (e) {
 
-    if (jws && !refreshTimeOutHandler) {
-        refreshTimeOutHandler = setTimeout('triggerPositionUpdate', 300);
-    }
-}
+        var mpid = this.id.replace('jwplayer_', '');
 
-function triggerPositionUpdate() {
-    for playerid in jwVideoTracked {
-        send_video_progress(jwVideoTracked[playerid], playerid);
-    }
+        if (isNaN(clockdividers[mpid])) {
+            clockdividers[mpid] = 0;
+        }
+        if ((clockdividers[mpid] % 16) !== 0) {
+            clockdividers[mpid]++;
+            return;
+        }
+
+        var progress = jwplayer(this.id).getPosition() * 100 / jwplayer(this.id).getDuration();
+
+        var url = M.cfg.wwwroot + '/mod/mplayer/ajax/markmediacompletion.php';
+        url += '?mpid=' + mpid + '&clipid=0&what=progress&progress=' + progress;
+
+        $.get(url, function(data, status) {
+            $('#mplayer-progress-' + mpid + '_0').html(data);
+            clockdividers[mpid]++;
+        }, 'html');
+    });
 }

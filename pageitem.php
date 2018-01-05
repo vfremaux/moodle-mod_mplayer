@@ -33,12 +33,13 @@ require_once($CFG->dirroot.'/mod/mplayer/locallib.php');
  */
 function mplayer_set_instance(&$block) {
     global $DB, $PAGE;
+    global $jsloaded;
 
-    $str = '';
 
     $context = context_module::instance($block->cm->id);
 
     $mplayer = $DB->get_record('mplayer', array('id' => $block->cm->instance));
+    $str = mplayer_require_js($mplayer, 'script');
 
     // Transfer content from title to content.
     $block->title = format_string($mplayer->name);

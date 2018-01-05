@@ -29,12 +29,18 @@
 =======
  * @package     mod_mplayer
  * @category    mod
+<<<<<<< HEAD
  * @author  Valery Fremaux (valery.fremaux@gmail.com)
 >>>>>>> MOODLE_32_STABLE
 =======
  * @package     mod_mplayer
  * @category    mod
  * @author  Valery Fremaux (valery.fremaux@gmail.com)
+>>>>>>> MOODLE_33_STABLE
+=======
+ * @author      Matt Bury - matbury@gmail.com
+ * @author      Valery Fremaux <valery.fremaux@gmail.com>
+ * @licence     http://www.gnu.org/copyleft/gpl.html GNU Public Licence
 >>>>>>> MOODLE_33_STABLE
  */
 defined('MOODLE_INTERNAL') || die();

@@ -820,6 +820,8 @@ $string['mplayer:view'] = 'View';
 
 $string['above'] = 'Above';
 $string['advanced'] = 'Advanced';
+$string['fullurl'] = 'Full URL';
+$string['xmlplaylist'] = 'XML Playlist';
 $string['allowtechnologychoice'] = 'Authors can choose';
 $string['allowtechnologychoicedesc'] = 'If enabled, authors can override the site level technology choice per instance.';
 $string['apacheh264'] = 'H264 streaming over apache HTTP';
@@ -861,6 +863,7 @@ $string['controlbar'] = 'Control Bar';
 $string['cueininvite'] = 'Before continuing watching this video, you are proposed to execute a {$a->type} activity.<br/><br/>{$a->link}';
 $string['cueininviteoptional'] = 'Before continuing watching this video, you are proposed to execute a {$a->type} activity.<br/><br/>{$a->link}<br/><a href="javascript:cuepoint_resume_from_id(\'{$a->playerid}\')">Resume now</a>';
 $string['cuelaunch'] = 'Launch the {$a}';
+$string['deployinmplayer'] = 'Deploy in Media Player';
 $string['description'] = 'Media Description';
 $string['displayclick'] = 'Display Click';
 $string['dots'] = 'Dots';

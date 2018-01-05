@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<report>
+  <swf size="151618" compressedSize="68852">
+
+    <!-- Header data (SWF attributes, product info, markers, etc.) -->
+    <headerData totalSize="566">
+      <data type="metaData" size="464"/>
+      <data type="productInfo" size="28"/>
+      <data type="swfHeader" size="21"/>
+      <data type="debugID" size="18"/>
+      <data type="enableDebugger" size="16"/>
+      <data type="fileAttributes" size="6"/>
+      <data type="scriptLimits" size="6"/>
+      <data type="backgroundColor" size="5"/>
+      <data type="endMarker" size="2"/>
+    </headerData>
+
+    <!-- Cumulative frame size summary. -->
+    <frames totalSize="151052">
+      <frame name="com_longtailvideo_jwplayer_player_Player" size="151052" frame="1"/>
+    </frames>
+
+    <!-- Actionscript code and constant data. -->
+    <actionScript totalSize="150960">
+      <abc name="com/longtailvideo/jwplayer/media/RTMPMediaProvider" size="13900" frame="1"/>
+      <abc name="com/longtailvideo/jwplayer/player/Player" size="10404" frame="1"/>
+      <abc name="com/longtailvideo/jwplayer/media/MediaProvider" size="8984" frame="1"/>
+      <abc name="com/longtailvideo/jwplayer/media/VideoMediaProvider" size="8737" frame="1"/>
+      <abc name="com/longtailvideo/jwplayer/controller/Controller" size="7898" frame="1"/>
+      <abc name="com/longtailvideo/jwplayer/model/PlayerConfig" size="7784" frame="1"/>
+      <abc name="com/longtailvideo/jwplayer/model/PlaylistItem" size="7404" frame="1"/>
+      <abc name="com/longtailvideo/jwplayer/model/Model" size="6955" frame="1"/>
+      <abc name="com/longtailvideo/jwplayer/player/InstreamPlayer" size="6949" frame="1"/>
+      <abc name="com/longtailvideo/jwplayer/events/MediaEvent" size="5162" frame="1"/>
+      <abc name="com/longtailvideo/jwplayer/utils/Strings" size="4973" frame="1"/>
+      <abc name="com/longtailvideo/jwplayer/utils/AssetLoader" size="4602" frame="1"/>
+      <abc name="com/longtailvideo/jwplayer/view/View" size="4351" frame="1"/>
+      <abc name="com/longtailvideo/jwplayer/media/SoundMediaProvider" size="4159" frame="1"/>
+      <abc name="com/longtailvideo/jwplayer/media/IMediaProvider" size="4080" frame="1"/>
+      <abc name="com/longtailvideo/jwplayer/player/IPlayer" size="3909" frame="1"/>
+      <abc name="com/longtailvideo/jwplayer/controller/PlayerSetup" size="3845" frame="1"/>
+      <abc name="com/longtailvideo/jwplayer/player/SwfEventRouter" size="3399" frame="1"/>
+      <abc name="com/wowza/encryptionAS3/TEA" size="3036" frame="1"/>
+      <abc name="com/longtailvideo/jwplayer/controller/TaskQueue" size="2912" frame="1"/>
+      <abc name="com/longtailvideo/jwplayer/controller/PluginLoader" size="2467" frame="1"/>
+      <abc name="com/longtailvideo/jwplayer/utils/NetClient" size="1973" frame="1"/>
+      <abc name="com/longtailvideo/jwplayer/utils/Logger" size="1794" frame="1"/>
+      <abc name="com/longtailvideo/jwplayer/parsers/SMILParser" size="1651" frame="1"/>
+      <abc name="com/longtailvideo/jwplayer/utils/SimpleEvents" size="1633" frame="1"/>
+      <abc name="com/longtailvideo/jwplayer/utils/Stretcher" size="1506" frame="1"/>
+      <abc name="com/longtailvideo/jwplayer/events/PlayerEvent" size="1449" frame="1"/>
+      <abc name="com/longtailvideo/jwplayer/controller/LockManager" size="1380" frame="1"/>
+      <abc name="com/longtailvideo/jwplayer/events/GlobalEventDispatcher" size="1351" frame="1"/>
+      <abc name="com/longtailvideo/jwplayer/events/PlayerStateEvent" size="1230" frame="1"/>
+      <abc name="com/longtailvideo/jwplayer/parsers/JWParser" size="1221" frame="1"/>
+      <abc name="com/longtailvideo/jwplayer/plugins/AbstractPlugin" size="1218" frame="1"/>
+      <abc name="com/longtailvideo/jwplayer/player/PlayerVersion" size="1147" frame="1"/>
+      <abc name="com/longtailvideo/jwplayer/utils/Utils" size="949" frame="1"/>
+      <abc name="com/longtailvideo/jwplayer/utils/RootReference" size="919" frame="1"/>
+      <abc name="com/longtailvideo/jwplayer/player/PlayerState" size="913" frame="1"/>
+      <abc name="com/longtailvideo/jwplayer/events/IGlobalEventDispatcher" size="907" frame="1"/>
+      <abc name="com/longtailvideo/jwplayer/plugins/IPlugin" size="894" frame="1"/>
+      <abc name="com/longtailvideo/jwplayer/plugins/PluginConfig" size="804" frame="1"/>
+      <abc name="com/longtailvideo/jwplayer/model/PlaylistItemLevel" size="779" frame="1"/>
+      <abc name="com/longtailvideo/jwplayer/model/PlaylistItemTrack" size="776" frame="1"/>
+      <abc name="com/longtailvideo/jwplayer/plugins/IPlugin6" size="556" frame="1"/>
+    </actionScript>
+
+    <!-- Additional frame tags (symbolClass, exportAssets, showFrame, etc). -->
+    <frameData totalSize="92">
+      <tag type="symbolClass" size="47" frame="1"/>
+      <tag type="frameLabel" size="43" frame="1"/>
+      <tag type="showFrame" size="2" frame="1"/>
+    </frameData>
+  </swf>
+</report>

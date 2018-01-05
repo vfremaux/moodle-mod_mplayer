@@ -49,7 +49,7 @@ class backup_mplayer_activity_task extends backup_activity_task {
 
         return $content;
 
-        $base = preg_quote($CFG->wwwroot . '/mod/mplayer', '#');
+        $base = preg_quote($CFG->wwwroot.'/mod/mplayer', '#');
 
         $pattern = "#(" . $base . "\/index.php\?id\=)([0-9]+)#";
         $content = preg_replace($pattern, '$@MPLAYERINDEX*$2@$', $content);

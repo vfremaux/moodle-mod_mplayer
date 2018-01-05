@@ -84,4 +84,12 @@ module, after a media upload. the manifest file is an XML file with a simple int
         <location>mp4:streamedfile.mp4</location>
     </Source>
 </Video>
+<<<<<<< HEAD
 >>>>>>> MOODLE_32_STABLE
+=======
+
+#####
+2017121100
+
+Adds the mod_mplayer/event/mplayer_viewing class to track progression updates in logs.
+>>>>>>> MOODLE_33_STABLE

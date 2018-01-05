@@ -125,22 +125,22 @@ $PAGE->set_heading('');
 /**
  * This page prints a particular instance of mplayer
  *
- * @package     mod_mplayer
- * @category    mod
- * @author      Matt Bury - matbury@gmail.com  < 2.x
- * @author      Valery Fremaux <valery.fremaux@gmail.com> > 2.x
- * @copyright   (C) 2009  Matt Bury
- * @copyright   (C) 2015  Valery Fremaux (http://www.mylearningfactory.com)
- * @licence     http://www.gnu.org/copyleft/gpl.html GNU Public Licence
+ * @package   mod_mplayer
+ * @category  mod
+ * @author    Matt Bury - matbury@gmail.com
+ * @author    Valery Fremaux <valery.fremaux@gmail.com>
+ * @copyright (C) 2009  Matt Bury
+ * @licence   http://www.gnu.org/copyleft/gpl.html GNU Public Licence
  */
 
 require('../../config.php');
 require_once($CFG->dirroot.'/mod/mplayer/lib.php');
 
-list($cm, $mplayer, $course) = get_mplayer_context();
+list($cm, $course, $mplayer) = mplayer_get_context();
 
 // Check and init storage if empty.
 mplayer_init_storage($cm, 0);
+mplayer_require_js($mplayer, 'require');
 
 $url = new moodle_url('/mod/mplayer/view.php', array('id' => $cm->id));
 $PAGE->set_url($url);
@@ -150,13 +150,6 @@ require_login($course->id);
 
 if (!isset($CFG->mplayer_default_player)) {
     set_config('mplayer_default_player', 'flowplayer');
-}
-
-$PAGE->requires->jquery();
-if ($mplayer->technology == 'jw') {
-    $PAGE->requires->js('/mod/mplayer/jw/7.10/src/js/jwplayer.js');
-} else {
-    $PAGE->requires->js('/mod/mplayer/flowplayer6/flowplayer.js');
 }
 
 // Trigger module viewed event.
