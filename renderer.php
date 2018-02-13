@@ -846,8 +846,7 @@ class mod_mplayer_renderer extends plugin_renderer_base {
         $soundfiles = $fs->get_directory_files($context->id, 'mod_mplayer', $filearea, 0, '/media/');
 
         if (empty($soundfiles)) {
-            $soundfileurl = $this->output->pix_url('notfound', 'mod_mplayer');
-            $soundhtml = "<img src=\"{$soundfileurl}\" />";
+            $soundhtml = $this->output->pix_icon('notfound', '', 'mod_mplayer');
             return $soundhtml;
         }
 
