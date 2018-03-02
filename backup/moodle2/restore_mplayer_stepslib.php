@@ -54,8 +54,6 @@ class restore_mplayer_activity_structure_step extends restore_activity_structure
         $this->apply_activity_instance($newid);
         $this->set_mapping('mplayer', $oldid, $newid, true);
     }
-<<<<<<< HEAD
-=======
 
     protected function after_execute() {
 
@@ -74,5 +72,4 @@ class restore_mplayer_activity_structure_step extends restore_activity_structure
         $this->add_related_files('mod_mplayer', 'logoboxfile', null);
         $this->add_related_files('mod_mplayer', 'logofile', null);
     }
->>>>>>> MOODLE_32_STABLE
 }

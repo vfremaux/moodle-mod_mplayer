@@ -1,56 +1,12 @@
 Media Player Module for Moodle 2 - 3.1
 
-<<<<<<< HEAD
-Designed and developed by Matt Bury
-
-© Matt Bury 2009 onwards
-
-Website: http://matbury.com/
-
-About Matt: http://blog.matbury.com/about-matt-bury/
-=======
 Originally Designed and developed by Matt Bury
 
 © Matt Bury 2009 onwards
 Website: http://matbury.com/
 
 Redrawn for Moodle 2 by Valery Fremaux (valery.fremaux@gmail.com)
->>>>>>> MOODLE_32_STABLE
 
-This version is a preliminary publication after formal review.  This is yet a beta version where we tried to rearchitecture
-main features. Documentation writing and review is in progress. There are advanced features that are not yet fully tested
-such as simple dealing with streamers or pseudo-streaming. A further package may clean the "bad ideas" options when we can
-finish the complete qualification.
-
-Our final goal is to provide an economic minimal viable way for small institutions to diffuse a reasonable set of videos with
-a very simple as possible, lightweight and costless solution. 
-
-<<<<<<< HEAD
-<<<<<<< HEAD
-How to install the Media Player
-
-PLEASE NOTE: THIS MAY NOT BE THE LATEST VERSION OF THE MODULE. PLEASE FIND THE LATEST VERSION AT:
-http://code.google.com/p/moodle-mplayer/downloads/list
-
-<<<<<<< HEAD
-The SWF Activity Module is the most flexible, functional, robust and powerful way to deploy Flash animations and applications in Moodle 1.9. It supports any version of Flash and Actionscript.
-
-    Upload the /mplayer/ directory and all its contents to ***YOUR MOODLE***/mod/
-    Make sure that the directory structure isn't ***YOUR MOODLE***/mod/mplayer/mplayer/... It should be ***YOUR MOODLE***/mod/mplayer/...
-    In Moodle, login as an administrator
-    Go to Site Administration > Notifications
-    The Media Player will install/update itself
-    If any settings have been changed, you'll be asked to save the settings on the Site Administration > Modules > Activities > Media Player page
-    That's it!
-
-Project site and bug tracker are at: http://code.google.com/p/moodle-mplayer/
-=======
-=======
-Do not be to greedy anyway : video and live media are very complex and heavy technologies that fully justify the "cost of service"
-of major providers such as Kaltura, Livemedia or other professional providers. This plugin has limited goals and no service garantees
-as being free development initiative. It will probably be in "on progress" status driven by our internal needs and challenges.
->>>>>>> MOODLE_32_STABLE
-=======
 This version is a preliminary publication after formal review.  This is yet a beta version where we tried to rearchitecture
 main features. Documentation writing and review is in progress. There are advanced features that are not yet fully tested
 such as simple dealing with streamers or pseudo-streaming. A further package may clean the "bad ideas" options when we can
@@ -62,7 +18,6 @@ a very simple as possible, lightweight and costless solution.
 Do not be to greedy anyway : video and live media are very complex and heavy technologies that fully justify the "cost of service"
 of major providers such as Kaltura, Livemedia or other professional providers. This plugin has limited goals and no service garantees
 as being free development initiative. It will probably be in "on progress" status driven by our internal needs and challenges.
->>>>>>> MOODLE_33_STABLE
 
 Design Notes
 ===============
@@ -85,11 +40,18 @@ module, after a media upload. the manifest file is an XML file with a simple int
     </Source>
 </Video>
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> MOODLE_32_STABLE
 =======
+=======
+>>>>>>> MOODLE_34_STABLE
 
 #####
 2017121100
 
+<<<<<<< HEAD
 Adds the mod_mplayer/event/mplayer_viewing class to track progression updates in logs.
 >>>>>>> MOODLE_33_STABLE
+=======
+Adds the mod_mplayer/event/mplayer_viewing class to track progression updates in logs.
+>>>>>>> MOODLE_34_STABLE
