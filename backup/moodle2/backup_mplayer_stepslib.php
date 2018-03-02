@@ -15,36 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
- * @package mod_mplayer
->>>>>>> MOODLE_32_STABLE
- * @category mod
- * @author Valery Fremaux (valery.fremaux@gmail.com)
-=======
- * @package     mod_mplayer
- * @category    mod
-<<<<<<< HEAD
- * @author  Valery Fremaux (valery.fremaux@gmail.com)
->>>>>>> MOODLE_32_STABLE
-=======
- * @package     mod_mplayer
- * @category    mod
- * @author  Valery Fremaux (valery.fremaux@gmail.com)
->>>>>>> MOODLE_33_STABLE
-=======
- * @author      Matt Bury - matbury@gmail.com
- * @author      Valery Fremaux <valery.fremaux@gmail.com>
- * @licence     http://www.gnu.org/copyleft/gpl.html GNU Public Licence
->>>>>>> MOODLE_33_STABLE
-=======
  * @package     mod_mplayer
  * @category    mod
  * @author      Matt Bury - matbury@gmail.com
  * @author      Valery Fremaux <valery.fremaux@gmail.com>
  * @licence     http://www.gnu.org/copyleft/gpl.html GNU Public Licence
->>>>>>> MOODLE_34_STABLE
  */
 defined('MOODLE_INTERNAL') || die();
 

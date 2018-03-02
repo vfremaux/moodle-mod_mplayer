@@ -781,38 +781,9 @@ class mod_mplayer_renderer extends plugin_renderer_base {
                     "size": "'.$mplayer->playlistsize.'"
                 }
             });
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> MOODLE_32_STABLE
-        </script>';
-
-        return $jwbody;
-    }
-<<<<<<< HEAD
-=======
-
-    /**
-     * this is to include once the complementary JS we need.
-     * @param string $playlistsheet
-     */
-    public function jwplayer_init_scripts() {
-        global $CFG, $PAGE;
-        static $loaded = false;
-
-        $scriptloadfragment = '';
-        if (!$loaded) {
-            $jwplayercompletionjscodeurl = new moodle_url('/mod/mplayer/js/completion.jw.js');
-            $jwplayerjscodeurl = new moodle_url('/mod/mplayer/jw/7.10/src/js/jwplayer.js');
-=======
-            setup_player_completion("jwplayer_'.$mplayer->id.'", "'.$mplayer->id.'");
-        };
->>>>>>> MOODLE_33_STABLE
-
-=======
             setup_player_completion("jwplayer_'.$mplayer->id.'", "'.$mplayer->id.'");
         };
 
->>>>>>> MOODLE_34_STABLE
         </script>';
 
         echo "Technology : $mplayer->technology ";

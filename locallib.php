@@ -29,17 +29,7 @@ defined('MOODLE_INTERNAL') || die();
 /**
  *
  */
-<<<<<<< HEAD
-<<<<<<< HEAD
-function get_mplayer_context() {
-<<<<<<< HEAD
-=======
-=======
 function mplayer_get_context() {
->>>>>>> MOODLE_33_STABLE
-=======
-function mplayer_get_context() {
->>>>>>> MOODLE_34_STABLE
     global $DB;
 
     $id = optional_param('id', 0, PARAM_INT); // Course Module ID, or.
@@ -467,14 +457,6 @@ function mplayer_require_js($mplayer, $mode) {
         $completionfile = '/mod/mplayer/js/completion.js';
     }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-    if ($CFG->mplayer_default_player == 'jw') {
-        $PAGE->requires->js('/mod/mplayer/jw/6.9/jwplayer.js');
->>>>>>> MOODLE_32_STABLE
-=======
-=======
->>>>>>> MOODLE_34_STABLE
     if ($mode == 'require') {
         $PAGE->requires->js($jsplayerfile, true);
         $PAGE->requires->js($completionfile, true);
@@ -492,10 +474,6 @@ function mplayer_require_js($mplayer, $mode) {
             }
             return $jsfragment.$cssfragment;
         }
-<<<<<<< HEAD
->>>>>>> MOODLE_33_STABLE
-=======
->>>>>>> MOODLE_34_STABLE
     }
 }
 
@@ -1210,10 +1188,3 @@ function mplayer_get_media_storage($storage) {
     $storageobj = new $storageclass();
     return $storageobj;
 }
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> MOODLE_32_STABLE
-=======
->>>>>>> MOODLE_33_STABLE
-=======
->>>>>>> MOODLE_34_STABLE
