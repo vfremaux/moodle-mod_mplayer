@@ -27,11 +27,11 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version  = 2017083100;  // The current module version (Date: YYYYMMDDXX).
+$plugin->version  = 2017121100;  // The current module version (Date: YYYYMMDDXX).
 $plugin->requires = 2017110800;
 $plugin->component = 'mod_mplayer';
-$plugin->release = 'Moodle 3.4.0 (Build 2017083100)';
+$plugin->release = 'Moodle 3.4.0 (Build 2017121100)';
 $plugin->maturity = MATURITY_RC;
 
 // Non Moodle attributes.
-$plugin->codeincrement = '3.4.0002';
+$plugin->codeincrement = '3.4.0004';
