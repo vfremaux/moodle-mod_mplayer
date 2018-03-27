@@ -19,10 +19,12 @@
  *
  * @package     mod_mplayer
  * @category    mod
- * @copyright   2014 IGA SE
+ * @author      Matt Bury - matbury@gmail.com
+ * @author      Valery Fremaux <valery.fremaux@gmail.com>
+ * @licence     http://www.gnu.org/copyleft/gpl.html GNU Public Licence
  */
-
 namespace mod_mplayer\event;
+
 defined('MOODLE_INTERNAL') || die();
 
 /**

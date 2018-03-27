@@ -20,24 +20,23 @@
  * @author      Valery Fremaux <valery.fremaux@gmail.com>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-defined('MOODLE_INTERNAL') || die();
 
 require('../../../config.php');
 require_once($CFG->dirroot.'/mod/mplayer/lib.php');
 require_once($CFG->dirroot.'/mod/mplayer/locallib.php');
 
 $mpid = required_param('mpid', PARAM_INT); // Player instance id.
-$clipid = required_param('clipid', PARAM_INT); // Player instance id.
+$clipid = required_param('clipid', PARAM_INT); // Player clip id in playlist.
 $action = required_param('what', PARAM_TEXT);
 
 if (!$mplayer = $DB->get_record('mplayer', array('id' => $mpid))) {
-    die;
+    die("Bad Mplayer id");
 }
 if (!$cm = get_coursemodule_from_instance('mplayer', $mpid)) {
-    die;
+    die("Bad course module");
 }
 if (!$course = $DB->get_record('course', array('id' => $cm->course))) {
-    die;
+    die("Bad course");
 }
 
 $context = context_module::instance($cm->id);
@@ -49,8 +48,7 @@ require_login($course, true, $cm);
 $renderer = $PAGE->get_renderer('mplayer');
 
 // Make a record for user anyhow.
-$params = array('userid' => $USER->id, 'mplayerid' => $mpid, 'clipid' => $clipid);
-if (!$mpuserdata = $DB->get_record('mplayer_userdata', $params)) {
+if (!$mpuserdata = $DB->get_record('mplayer_userdata', array('userid' => $USER->id, 'mplayerid' => $mpid, 'clipid' => $clipid))) {
     $mpuserdata = new StdClass();
     $mpuserdata->userid = $USER->id;
     $mpuserdata->mplayerid = $mpid;
@@ -66,7 +64,7 @@ if ($action == 'finished') {
     $mpuserdata->finished = true;
 
     $DB->update_record('mplayer_userdata', $mpuserdata);
-    // Mark completed on mediaviewed criteria.
+    // mark completed on mediaviewed criteria.
     $completion = new completion_info($course);
     if ($completion->is_enabled($cm) && $mplayer->completionmediaviewed) {
         $completion->update_state($cm, COMPLETION_COMPLETE);
@@ -80,6 +78,15 @@ if ($action == 'finished') {
         $DB->update_record('mplayer_userdata', $mpuserdata);
     }
     echo $renderer->progressbar($mpuserdata->maxprogress, $progress);
+
+    $event = \mod_mplayer\event\mplayer_viewing::create(array(
+        'objectid' => $cm->id,
+        'context' => $context,
+        'other' => array(
+            'objectname' => $mplayer->name
+        )
+    ));
+    $event->trigger();
 } else {
     die('Invalid action');
 }

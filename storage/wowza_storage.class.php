@@ -84,13 +84,16 @@ class wowza_storage extends media_storage {
 
     public function get_settings(&$settings) {
         $key = 'mplayer/wowzaserver';
-        $settings->add(new admin_setting_configtext($key, get_string('wowzaserver', 'mplayer'), '', ''));
+        $label = get_string('wowzaserver', 'mplayer');
+        $settings->add(new admin_setting_configtext($key, $label, '', ''));
 
         $key = 'mplayer/wowzaapplication';
-        $settings->add(new admin_setting_configtext($key, get_string('wowzaapplication', 'mplayer'), '', '/vod'));
+        $label = get_string('wowzaapplication', 'mplayer');
+        $settings->add(new admin_setting_configtext($key, $label, '', '/vod'));
 
         $key = 'mplayer/wowzacontentdir';
-        $settings->add(new admin_setting_configtext($key, get_string('wowzacontentdir', 'mplayer'), '', ''));
+        $label = get_string('wowzacontentdir', 'mplayer').
+        $settings->add(new admin_setting_configtext($key, $label, '', ''));
     }
 
 
