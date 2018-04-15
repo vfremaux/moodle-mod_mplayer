@@ -80,6 +80,15 @@ if ($action == 'finished') {
         $DB->update_record('mplayer_userdata', $mpuserdata);
     }
     echo $renderer->progressbar($mpuserdata->maxprogress, $progress);
+
+    $event = \mod_mplayer\event\mplayer_viewing::create(array(
+        'objectid' => $cm->id,
+        'context' => $context,
+        'other' => array(
+            'objectname' => $mplayer->name
+        )
+    ));
+    $event->trigger();
 } else {
     die('Invalid action');
 }
