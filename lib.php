@@ -29,6 +29,14 @@ defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->dirroot.'/mod/mplayer/locallib.php');
 
+/**
+ * This function is not implemented in this plugin, but is needed to mark
+ * the vf documentation custom volume availability.
+ */
+function mod_mplayer_supports_feature() {
+    assert(1);
+}
+
 /*    Copyright (C) 2009  Matt Bury
  *
  *    This program is free software: you can redistribute it and/or modify
