@@ -168,5 +168,16 @@ function xmldb_mplayer_upgrade($oldversion = 0) {
         upgrade_mod_savepoint(true, 2015110602, 'mplayer');
     }
 
+    if ($oldversion < 2018052901) {
+        // Rename tag field to avoid collision with standard tags.
+        $table = new xmldb_table('mplayer');
+        $field = new xmldb_field('tags', XMLDB_TYPE_TEXT, 'medium', null, null, null, null);
+        if ($dbman->field_exists($table, $field)) {
+            $dbman->rename_field($table, $field, 'videotags');
+        }
+
+        upgrade_mod_savepoint(true, 2018052901, 'mplayer');
+    }
+
     return $result;
 }

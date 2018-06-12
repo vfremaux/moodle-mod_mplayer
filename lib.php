@@ -136,9 +136,12 @@ function mplayer_add_instance($mplayer) {
         $mplayer->technology = $config->default_player;
     }
 
-    $notes = @$mplayer->notes_editor;
-    $mplayer->notes = $notes['text'];
-    $mplayer->notesformat = $notes['format'];
+    if (isset($mplayer->notes_editor)) {
+        $notes = $mplayer->notes_editor;
+        $mplayer->notes = $notes['text'];
+        $mplayer->notesformat = $notes['format'];
+        unset($mplayer->notes_editor);
+    }
 
     return $DB->insert_record('mplayer', $mplayer);
 }

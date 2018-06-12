@@ -15,36 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
- * @package mod_mplayer
->>>>>>> MOODLE_32_STABLE
- * @category mod
- * @author Valery Fremaux (valery.fremaux@gmail.com)
-=======
- * @package     mod_mplayer
- * @category    mod
-<<<<<<< HEAD
- * @author  Valery Fremaux (valery.fremaux@gmail.com)
->>>>>>> MOODLE_32_STABLE
-=======
- * @package     mod_mplayer
- * @category    mod
- * @author  Valery Fremaux (valery.fremaux@gmail.com)
->>>>>>> MOODLE_33_STABLE
-=======
- * @author      Matt Bury - matbury@gmail.com
- * @author      Valery Fremaux <valery.fremaux@gmail.com>
- * @licence     http://www.gnu.org/copyleft/gpl.html GNU Public Licence
->>>>>>> MOODLE_33_STABLE
-=======
  * @package     mod_mplayer
  * @category    mod
  * @author      Matt Bury - matbury@gmail.com
  * @author      Valery Fremaux <valery.fremaux@gmail.com>
  * @licence     http://www.gnu.org/copyleft/gpl.html GNU Public Licence
->>>>>>> MOODLE_34_STABLE
  */
 defined('MOODLE_INTERNAL') || die();
 
@@ -57,7 +32,7 @@ class backup_mplayer_activity_structure_step extends backup_activity_structure_s
             'description', 'infoboxcolor', 'infoboxposition', 'infoboxsize', 'duration', 'mplayerfile', 'external', 'cuelists',
             'hdbitrate', 'hdfile', 'hdfullscreen', 'hdstate', 'livestreamfile', 'livestreamimage', 'livestreaminterval',
             'livestreammessage', 'livestreamstreamer', 'livestreamtags', 'image', 'audiodescriptionfile', 'audiodescriptionstate',
-            'audiodescriptionvolume', 'mplayerstart', 'tags', 'title', 'type', 'backcolor', 'frontcolor', 'lightcolor',
+            'audiodescriptionvolume', 'mplayerstart', 'videotags', 'title', 'type', 'backcolor', 'frontcolor', 'lightcolor',
             'screencolor', 'controlbar', 'smoothing', 'height', 'playlist', 'playlistsize', 'skin', 'width', 'autostart',
             'bufferlength', 'fullscreen', 'icons', 'item', 'logoboxalign', 'logoboxfile', 'logoboxlink', 'logoboxmargin',
             'logoboxposition', 'logofile', 'logolink', 'logohide', 'logoposition', 'mute', 'quality', 'mplayerrepeat',

@@ -71,7 +71,6 @@ $PAGE->set_heading('');
 $PAGE->navbar->add(get_string('mplayer', 'mplayer').': '.$mplayer->name);
 $PAGE->set_focuscontrol('');
 $PAGE->set_cacheable(true);
-$PAGE->set_button(update_module_button($cm->id, $course->id, $strmplayer));
 echo $OUTPUT->header();
 
 $mplayer->instance = $cm->instance;
