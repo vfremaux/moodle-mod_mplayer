@@ -3666,8 +3666,8 @@ flowplayer(function(e,o){function a(e){var o=document.createElement("a");return 
                 { // key events
                     reg: /key/i
                   , fix: function (event, newEvent) {
-                      newEvent.keyCode = event.keyCode || event.which
-                      return keyProps
+                      newEvent.keyCode = event.keyCode || event.which;
+                      return keyProps;
                     }
                 }
               , { // mouse events
