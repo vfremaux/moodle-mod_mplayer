@@ -33,8 +33,6 @@ require_once($CFG->dirroot.'/mod/mplayer/locallib.php');
  */
 function mplayer_set_instance(&$block) {
     global $DB, $PAGE;
-    global $jsloaded;
-
 
     $context = context_module::instance($block->cm->id);
 

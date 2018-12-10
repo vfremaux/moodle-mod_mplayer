@@ -14,7 +14,7 @@ function fire_video_finished(e, api) {
     var url = M.cfg.wwwroot + '/mod/mplayer/ajax/markmediacompletion.php';
     url += '?mpid=' + mpid + '&clipid=0&what=finished';
 
-    $.get(url, function(data, status) {
+    $.get(url, function(data) {
         $('#mplayer-progress-' + mpid + '_0').html(data);
     }, 'html');
 }
@@ -45,7 +45,7 @@ function setup_player_completion() {
         var url = M.cfg.wwwroot + '/mod/mplayer/ajax/markmediacompletion.php';
         url += '?mpid=' + mpid + '&clipid=0&what=progress&progress=' + progress;
 
-        $.get(url, function(data, status) {
+        $.get(url, function(data) {
             $('#mplayer-progress-' + mpid + '_0').html(data);
             clockdividers[mpid]++;
         }, 'html');
