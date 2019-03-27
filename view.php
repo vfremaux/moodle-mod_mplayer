@@ -82,10 +82,12 @@ echo $renderer->print_body($mplayer); // See mod/mplayer/lib.php.
 
 echo $renderer->intro($mplayer);
 
-if ($COURSE->format != 'singleactivity' && !($COURSE->format == 'page' && optional_param('aspage', false, PARAM_INT))) {
+if (($COURSE->format != 'singleactivity') || ($COURSE->format == 'page' && optional_param('aspage', false, PARAM_INT))) {
     echo '<center>';
-    require_once($CFG->dirroot.'/course/format/page/xlib.php');
-    page_print_page_format_navigation($cm, false);
+    if ($COURSE->format == 'page') {
+        include_once($CFG->dirroot.'/course/format/page/xlib.php');
+        page_print_page_format_navigation($cm, false);
+    }
     $params = array('id' => $course->id);
     $label = get_string('backtocourse', 'mplayer');
     echo $OUTPUT->single_button(new moodle_url('/course/view.php', $params), $label);
