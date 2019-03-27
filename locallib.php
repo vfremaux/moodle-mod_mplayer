@@ -69,6 +69,10 @@ function mplayer_save_draft_file(&$mplayer, $filearea) {
     global $USER;
     static $fs;
 
+    if (empty($mplayer->coursemodule)) {
+        return;
+    }
+
     $usercontext = context_user::instance($USER->id);
     $context = context_module::instance($mplayer->coursemodule);
 
@@ -460,10 +464,10 @@ function mplayer_require_js($mplayer, $mode) {
     if ($mode == 'require') {
         $PAGE->requires->js($jsplayerfile, true);
         $PAGE->requires->js($completionfile, true);
-        $jsloaded = true;
+        $jsloaded[$mplayer->technology] = true;
     } else {
-        if (!$jsloaded) {
-            $jsloaded = true;
+        if (empty($jsloaded[$mplayer->technology])) {
+            $jsloaded[$mplayer->technology] = true;
             $jsfragment = '<script src="'.$CFG->wwwroot.$jsplayerfile.'" type="text/javascript"></script>';
             $jsfragment .= '<script src="'.$CFG->wwwroot.$completionfile.'" type="text/javascript"></script>';
             $cssfragment = '';

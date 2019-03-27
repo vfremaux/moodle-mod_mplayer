@@ -3559,26 +3559,26 @@ flowplayer(function(e,o){function a(e){var o=document.createElement("a");return 
   name    = name    || 'bean'
   context = context || this
 
-  var win            = window
-    , old            = context[name]
-    , namespaceRegex = /[^\.]*(?=\..*)\.|.*/
-    , nameRegex      = /\..*/
-    , addEvent       = 'addEventListener'
-    , removeEvent    = 'removeEventListener'
-    , doc            = document || {}
-    , root           = doc.documentElement || {}
-    , W3C_MODEL      = root[addEvent]
-    , eventSupport   = W3C_MODEL ? addEvent : 'attachEvent'
-    , ONE            = {} // singleton for quick matching making add() do one()
+  var win            = window;
+  var old            = context[name];
+  var namespaceRegex = /[^\.]*(?=\..*)\.|.*/;
+  var nameRegex      = /\..*/;
+  var addEvent       = 'addEventListener';
+  var removeEvent    = 'removeEventListener';
+  var doc            = document || {};
+  var root           = doc.documentElement || {};
+  var W3C_MODEL      = root[addEvent];
+  var eventSupport   = W3C_MODEL ? addEvent : 'attachEvent';
+  var ONE            = {}; // singleton for quick matching making add() do one()
 
-    , slice          = Array.prototype.slice
-    , str2arr        = function (s, d) { return s.split(d || ' ') }
-    , isString       = function (o) { return typeof o == 'string' }
-    , isFunction     = function (o) { return typeof o == 'function' }
+  var slice          = Array.prototype.slice;
+  var str2arr        = function (s, d) { return s.split(d || ' ') };
+  var isString       = function (o) { return typeof o == 'string' };
+  var isFunction     = function (o) { return typeof o == 'function' };
 
-      // events that we consider to be 'native', anything not in this list will
-      // be treated as a custom event
-    , standardNativeEvents =
+  // events that we consider to be 'native', anything not in this list will
+  // be treated as a custom event
+  var standardNativeEvents =
         'click dblclick mouseup mousedown contextmenu '                  + // mouse buttons
         'mousewheel mousemultiwheel DOMMouseScroll '                     + // mouse wheel
         'mouseover mouseout mousemove selectstart selectend '            + // mouse movement
@@ -3587,10 +3587,11 @@ flowplayer(function(e,o){function a(e){var o=document.createElement("a");return 
         'focus blur change reset select submit '                         + // form elements
         'load unload beforeunload resize move DOMContentLoaded '         + // window
         'readystatechange message '                                      + // window
-        'error abort scroll '                                              // misc
-      // element.fireEvent('onXYZ'... is not forgiving if we try to fire an event
-      // that doesn't actually exist, so make sure we only do these on newer browsers
-    , w3cNativeEvents =
+        'error abort scroll ';                                              // misc
+
+  // element.fireEvent('onXYZ'... is not forgiving if we try to fire an event
+  // that doesn't actually exist, so make sure we only do these on newer browsers
+  var w3cNativeEvents =
         'show '                                                          + // mouse buttons
         'input invalid '                                                 + // form elements
         'touchstart touchmove touchend touchcancel '                     + // touch
@@ -3604,17 +3605,20 @@ flowplayer(function(e,o){function a(e){var o=document.createElement("a");return 
         'loadeddata canplay canplaythrough playing waiting seeking '     + // media
         'seeked ended durationchange timeupdate play pause ratechange '  + // media
         'volumechange cuechange '                                        + // media
-        'checking noupdate downloading cached updateready obsolete '       // appcache
+        'checking noupdate downloading cached updateready obsolete ';       // appcache
 
       // convert to a hash for quick lookups
-    , nativeEvents = (function (hash, events, i) {
-        for (i = 0; i < events.length; i++) events[i] && (hash[events[i]] = 1)
-        return hash
-      }({}, str2arr(standardNativeEvents + (W3C_MODEL ? w3cNativeEvents : ''))))
+  var nativeEvents = (function (hash, events, i) {
+        for (i = 0; i < events.length; i++) {
+            events[i] && (hash[events[i]] = 1);
+        }
+        return hash;
+      },
+      ({}, str2arr(standardNativeEvents + (W3C_MODEL ? w3cNativeEvents : ''))));
 
-      // custom events are events that we *fake*, they are not provided natively but
-      // we can use native events to generate them
-    , customEvents = (function () {
+  // custom events are events that we *fake*, they are not provided natively but
+  // we can use native events to generate them
+  var customEvents = (function () {
         var isAncestor = 'compareDocumentPosition' in root
               ? function (element, container) {
                   return container.compareDocumentPosition && (container.compareDocumentPosition(element) & 16) === 16
@@ -3625,8 +3629,12 @@ flowplayer(function(e,o){function a(e){var o=document.createElement("a");return 
                     return container !== element && container.contains(element)
                   }
                 : function (element, container) {
-                    while (element = element.parentNode) if (element === container) return 1
-                    return 0
+                    while (element = element.parentNode) {
+                        if (element === container) {
+                            return 1;
+                        }
+                    }
+                    return 0;
                   }
           , check = function (event) {
               var related = event.relatedTarget
@@ -3637,117 +3645,123 @@ flowplayer(function(e,o){function a(e){var o=document.createElement("a");return 
             }
 
         return {
-            mouseenter: { base: 'mouseover', condition: check }
-          , mouseleave: { base: 'mouseout', condition: check }
-          , mousewheel: { base: /Firefox/.test(navigator.userAgent) ? 'DOMMouseScroll' : 'mousewheel' }
+            mouseenter: { base: 'mouseover', condition: check },
+            mouseleave: { base: 'mouseout', condition: check },
+            mousewheel: { base: /Firefox/.test(navigator.userAgent) ? 'DOMMouseScroll' : 'mousewheel' }
         }
-      }())
+      }());
 
-      // we provide a consistent Event object across browsers by taking the actual DOM
-      // event object and generating a new one from its properties.
-    , Event = (function () {
+  // we provide a consistent Event object across browsers by taking the actual DOM
+  // event object and generating a new one from its properties.
+   var Event = (function () {
             // a whitelist of properties (for different event types) tells us what to check for and copy
         var commonProps  = str2arr('altKey attrChange attrName bubbles cancelable ctrlKey currentTarget ' +
               'detail eventPhase getModifierState isTrusted metaKey relatedNode relatedTarget shiftKey '  +
-              'srcElement target timeStamp type view which propertyName')
-          , mouseProps   = commonProps.concat(str2arr('button buttons clientX clientY dataTransfer '      +
-              'fromElement offsetX offsetY pageX pageY screenX screenY toElement'))
-          , mouseWheelProps = mouseProps.concat(str2arr('wheelDelta wheelDeltaX wheelDeltaY wheelDeltaZ ' +
-              'axis')) // 'axis' is FF specific
-          , keyProps     = commonProps.concat(str2arr('char charCode key keyCode keyIdentifier '          +
-              'keyLocation location'))
-          , textProps    = commonProps.concat(str2arr('data'))
-          , touchProps   = commonProps.concat(str2arr('touches targetTouches changedTouches scale rotation'))
-          , messageProps = commonProps.concat(str2arr('data origin source'))
-          , stateProps   = commonProps.concat(str2arr('state'))
-          , overOutRegex = /over|out/
+              'srcElement target timeStamp type view which propertyName');
+        var mouseProps   = commonProps.concat(str2arr('button buttons clientX clientY dataTransfer '      +
+              'fromElement offsetX offsetY pageX pageY screenX screenY toElement'));
+        var mouseWheelProps = mouseProps.concat(str2arr('wheelDelta wheelDeltaX wheelDeltaY wheelDeltaZ ' +
+              'axis')); // 'axis' is FF specific
+        var keyProps = commonProps.concat(str2arr('char charCode key keyCode keyIdentifier '          +
+              'keyLocation location'));
+        var textProps    = commonProps.concat(str2arr('data'));
+        var touchProps   = commonProps.concat(str2arr('touches targetTouches changedTouches scale rotation'));
+        var messageProps = commonProps.concat(str2arr('data origin source'));
+        var stateProps   = commonProps.concat(str2arr('state'));
+        var overOutRegex = /over|out/;
             // some event types need special handling and some need special properties, do that all here
-          , typeFixers   = [
+        var typeFixers   = [
                 { // key events
-                    reg: /key/i
-                  , fix: function (event, newEvent) {
+                    reg: /key/i,
+                    fix: function (event, newEvent) {
                       newEvent.keyCode = event.keyCode || event.which;
                       return keyProps;
                     }
-                }
-              , { // mouse events
-                    reg: /click|mouse(?!(.*wheel|scroll))|menu|drag|drop/i
-                  , fix: function (event, newEvent, type) {
-                      newEvent.rightClick = event.which === 3 || event.button === 2
-                      newEvent.pos = { x: 0, y: 0 }
-                      if (event.pageX || event.pageY) {
-                        newEvent.clientX = event.pageX
-                        newEvent.clientY = event.pageY
-                      } else if (event.clientX || event.clientY) {
-                        newEvent.clientX = event.clientX + doc.body.scrollLeft + root.scrollLeft
-                        newEvent.clientY = event.clientY + doc.body.scrollTop + root.scrollTop
-                      }
-                      if (overOutRegex.test(type)) {
-                        newEvent.relatedTarget = event.relatedTarget
-                          || event[(type == 'mouseover' ? 'from' : 'to') + 'Element']
-                      }
-                      return mouseProps
+                },
+                { // mouse events
+                    reg: /click|mouse(?!(.*wheel|scroll))|menu|drag|drop/i,
+                    fix: function (event, newEvent, type) {
+                        newEvent.rightClick = event.which === 3 || event.button === 2;
+                        newEvent.pos = { x: 0, y: 0 };
+                        if (event.pageX || event.pageY) {
+                            newEvent.clientX = event.pageX;
+                            newEvent.clientY = event.pageY;
+                        } else if (event.clientX || event.clientY) {
+                            newEvent.clientX = event.clientX + doc.body.scrollLeft + root.scrollLeft;
+                            newEvent.clientY = event.clientY + doc.body.scrollTop + root.scrollTop;
+                        }
+                        if (overOutRegex.test(type)) {
+                            newEvent.relatedTarget = event.relatedTarget || event[(type == 'mouseover' ? 'from' : 'to') + 'Element'];
+                        }
+                        return mouseProps;
                     }
+                },
+                { // mouse wheel events
+                    reg: /mouse.*(wheel|scroll)/i,
+                    fix: function () { return mouseWheelProps; }
+                },
+                { // TextEvent
+                    reg: /^text/i,
+                    fix: function () { return textProps; }
+                },
+                { // touch and gesture events
+                    reg: /^touch|^gesture/i,
+                    fix: function () { return touchProps; }
+                },
+                { // message events
+                    reg: /^message$/i,
+                    fix: function () { return messageProps; }
+                },
+                { // popstate events
+                    reg: /^popstate$/i,
+                    fix: function () { return stateProps; }
+                },
+                { // everything else
+                    reg: /.*/,
+                    fix: function () { return commonProps; }
                 }
-              , { // mouse wheel events
-                    reg: /mouse.*(wheel|scroll)/i
-                  , fix: function () { return mouseWheelProps }
-                }
-              , { // TextEvent
-                    reg: /^text/i
-                  , fix: function () { return textProps }
-                }
-              , { // touch and gesture events
-                    reg: /^touch|^gesture/i
-                  , fix: function () { return touchProps }
-                }
-              , { // message events
-                    reg: /^message$/i
-                  , fix: function () { return messageProps }
-                }
-              , { // popstate events
-                    reg: /^popstate$/i
-                  , fix: function () { return stateProps }
-                }
-              , { // everything else
-                    reg: /.*/
-                  , fix: function () { return commonProps }
-                }
-            ]
-          , typeFixerMap = {} // used to map event types to fixer functions (above), a basic cache mechanism
+            ];
 
-          , Event = function (event, element, isNative) {
-              if (!arguments.length) return
-              event = event || ((element.ownerDocument || element.document || element).parentWindow || win).event
-              this.originalEvent = event
-              this.isNative       = isNative
-              this.isBean         = true
+            var typeFixerMap = {}; // used to map event types to fixer functions (above), a basic cache mechanism
 
-              if (!event) return
+            var Event = function (event, element, isNative) {
+                if (!arguments.length) {
+                    return;
+                }
+                event = event || ((element.ownerDocument || element.document || element).parentWindow || win).event;
+                this.originalEvent = event;
+                this.isNative       = isNative;
+                this.isBean         = true;
 
-              var type   = event.type
-                , target = event.target || event.srcElement
-                , i, l, p, props, fixer
+                if (!event) {
+                    return;
+                }
 
-              this.target = target && target.nodeType === 3 ? target.parentNode : target
+                var type   = event.type;
+                var target = event.target || event.srcElement;
+                var i, l, p, props, fixer;
 
-              if (isNative) { // we only need basic augmentation on custom events, the rest expensive & pointless
-                fixer = typeFixerMap[type]
+                this.target = target && target.nodeType === 3 ? target.parentNode : target;
+
+                if (isNative) { // we only need basic augmentation on custom events, the rest expensive & pointless
+                    fixer = typeFixerMap[type];
                 if (!fixer) { // haven't encountered this event type before, map a fixer function for it
-                  for (i = 0, l = typeFixers.length; i < l; i++) {
-                    if (typeFixers[i].reg.test(type)) { // guaranteed to match at least one, last is .*
-                      typeFixerMap[type] = fixer = typeFixers[i].fix
-                      break
+                    for (i = 0, l = typeFixers.length; i < l; i++) {
+                        if (typeFixers[i].reg.test(type)) { // guaranteed to match at least one, last is .*
+                            typeFixerMap[type] = fixer = typeFixers[i].fix;
+                            break;
+                        }
                     }
-                  }
                 }
 
-                props = fixer(event, this, type)
+                props = fixer(event, this, type);
                 for (i = props.length; i--;) {
-                  if (!((p = props[i]) in this) && p in event) this[p] = event[p]
+                    if (!((p = props[i]) in this) && p in event) {
+                        this[p] = event[p];
+                    }
                 }
-              }
-            }
+          }
+    }
 
         // preventDefault() and stopPropagation() are a consistent interface to those functions
         // on the DOM, stop() is an alias for both of them together

@@ -733,7 +733,8 @@ class mod_mplayer_renderer extends plugin_renderer_base {
                 }
 
                 case 'url': {
-                    $urlarray = explode(';', ' ;' . $mplayer->external);
+                    # $urlarray = explode(';', ' ;' . $mplayer->external);
+                    $urlarray = explode(';', $mplayer->external);
                     break;
                 }
 
@@ -786,7 +787,6 @@ class mod_mplayer_renderer extends plugin_renderer_base {
 
         </script>';
 
-        echo "Technology : $mplayer->technology ";
         if ($completioninfo->is_enabled($cm) && in_array($mplayer->technology, array('jw712', 'jw'))) {
             $jwbody .= '<div class="mplayer-jw-completion-container">';
             $jwbody .= $this->flowplayer_completion($mplayer, $this->playlist);

@@ -11,10 +11,11 @@ function cuepoint_process(e, api, cue) {
         api.pause();
 
         // Feed cue-in-panel with message and show it progresively.
-        url = M.cfg.wwwroot + '/mod/mplayer/ajax/get_cue_invite.php';
+        var url = M.cfg.wwwroot + '/mod/mplayer/ajax/get_cue_invite.php';
         url += 'mpid=' + api.conf._mplayerid + '&cueurl=' + cue.url + '&type=' + cue.type + '&mandatory=' + cue.mandatory;
         url += '&cueout=' + cue.cueout;
-        $.get(url, function(data, status) {
+
+        $.get(url, function(data) {
             $('#fp-cue-in-' + api.conf._mplayerid).html(data);
         });
 
@@ -43,9 +44,9 @@ function cuepoint_resume_from_id(playerid) {
     api.resume();
 }
 
-function disabledEventPropagation(event) {
-    if (event.stopPropagation) {
-        event.stopPropagation();
+function disabledEventPropagation(e) {
+    if (e.stopPropagation) {
+        e.stopPropagation();
     } else if (window.event) {
         window.event.cancelBubble = true;
     }
