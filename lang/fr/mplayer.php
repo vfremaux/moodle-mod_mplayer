@@ -32,6 +32,7 @@
 
 $string['mplayer:addinstance'] = 'Ajoute une instance';
 $string['mplayer:view'] = 'Voir le média';
+$string['mplayer:assessor'] = 'Peut contrôler les activités pédagogiques';
 
 $string['above'] = 'Au dessus';
 $string['advanced'] = 'Configuration Avancée';
@@ -69,6 +70,8 @@ $string['configwowzaapplication'] = '/vod';
 $string['configwowzacontentdir'] = 'Ce répertoire est un montage système d\'un répertoire distant du serveur de flux.';
 $string['configwowzaserver'] = 'rtmp://your.server.name';
 $string['configxml'] = 'Fichier';
+$string['configextracss'] = 'CSS Additionelle';
+$string['configextracss_desc'] = 'Css supplémentaire (s\'applique à tous les players)';
 $string['controlbar'] = 'Barre de commandes';
 $string['cueininvite'] = 'Avant de continuer la projection de cette vidéo, vous êtes invité à participer à un {$a->type}.<br/><br/>{$a->link}';
 $string['cueininviteoptional'] = 'Avant de continuer la projection de cette vidéo, vous êtes invité à participer à un {$a->type}.<br/><br/>{$a->link}<br/><a href="javascript:cuepoint_resume_from_id(\'{$a->playerid}\')">Reprendre la lecture</a>';
@@ -79,10 +82,13 @@ $string['displayclick'] = 'Click audio';
 $string['duration'] = 'Durée (secondes)';
 $string['embederror1'] = '<h3>Oups ! Il y a un problème.</h3> <h4>Un Player Flash de version ';
 $string['embederror2'] = ' ou plus récente est demandé.</h4>';
+$string['emulatecommunity'] = 'Emuler la version communautaire';
+$string['emulatecommunity_desc'] = 'Bascule le code sur la version communautaire. Le résultat est plus compatible avec d\'autres installations, mais certaines fonctionnalités avancées ne seront plus disponibles.';
 $string['external'] = 'Url Externe';
 $string['fpversion'] = 'Version de player flash';
 $string['frontcolor'] = 'Couleur de premier plan';
 $string['fullscreen'] = 'Plein écran';
+$string['forcefullscreen'] = 'Forcer le plein écran';
 $string['fullurl'] = 'Vidéo(s) externes (via URLs)';
 $string['hd'] = 'Video HD';
 $string['hdbitrate'] = 'Débit';
@@ -109,6 +115,10 @@ $string['langselection'] = 'Langue des sous-titres';
 $string['langteacherchoice'] = 'Langue au choix de l\'enseignant';
 $string['languser'] = 'Langue du profil utilisateur';
 $string['left'] = 'A gauche';
+$string['licenseprovider'] = 'Fournisseur version Pro';
+$string['licenseprovider_desc'] = 'Entrez la clef de votre distributeur.';
+$string['licensekey'] = 'Clef de license pro';
+$string['licensekey_desc'] = 'Entrez ici la clef de produit que vous avez reçu de votre distributeur.';
 $string['lightcolor'] = 'Couleur claire';
 $string['livestream'] = 'Lecture continue de flux';
 $string['livestreamfile'] = 'Flux RTMP';
@@ -145,13 +155,24 @@ $string['mplayerrepeat'] = 'Répétition';
 $string['mplayerresources'] = 'Resources Media';
 $string['mplayerstart'] = 'Début (position en secondes)';
 $string['mute'] = 'Mute';
+$string['managehighlightzonesonupdate'] = 'Vous devez d\'abord créer l\'instance de player avant d\'éditer les zones remarquables.';
 $string['nativefullscreen'] = 'Contrôles natifs de plein écran (flowplayer)';
 $string['nohtml5'] = '<h2>La vidéeo HTML5 n\'est pas supportée par votre navigateur.</h2>';
 $string['nomplayers'] = 'Aucun player vidéo dans ce cours';
 $string['none'] = 'Aucun';
+$string['assessmode'] = 'Activté pédagogique';
+$string['noassess'] = 'Pas d\'activité pédagogique';
+$string['findzones'] = 'Trouver les zones remarquables';
+$string['matchzones'] = 'Délimiter les zones remarquables';
 $string['nosplash'] = 'Inactif';
 $string['notes'] = 'Notes';
 $string['over'] = 'En surimpression';
+$string['numpasspoints'] = 'Nombre de balises de visionnage';
+$string['passrule'] = 'Règle pour compléter';
+$string['passrulenone'] = 'Pas de surveillance du visionnage';
+$string['passrulefromstart'] = 'Depuis le début';
+$string['passrulefreeloc'] = 'Position aléatoire';
+$string['passpercent'] = 'Pourcentage pour passer';
 $string['player'] = 'Player';
 $string['playlist'] = 'Position';
 $string['playlistfile'] = 'Fichier de playlist';
@@ -165,6 +186,7 @@ $string['pluginname'] = 'Media Player';
 $string['plugins'] = 'Plugins';
 $string['quality'] = 'Qualité';
 $string['resizing'] = 'Redimensionnement';
+$string['resetmplayerstates'] = 'Réinitialisation des lecteurs.';
 $string['resumefromcue'] = 'Vous pouvez maintenant reprendre la lecture.';
 $string['right'] = 'A droite';
 $string['screencolor'] = 'Couleur d\'écran';
@@ -174,6 +196,7 @@ $string['searchbarlabel'] = 'Label';
 $string['searchbarposition'] = 'Position';
 $string['searchbarscript'] = 'Script';
 $string['showdebugcode'] = 'Afficher le code de deboggage';
+$string['showpasspoints'] = 'Afficher les balises de visionnage';
 $string['shuffle'] = 'Lecture aléatoire';
 $string['skin'] = 'Skin';
 $string['smoothing'] = 'Attenuation';
@@ -195,6 +218,7 @@ $string['trackfile'] = 'Fichier';
 $string['trackfilegroup'] = 'Fichier de sous-titres';
 $string['type'] = 'Type';
 $string['top'] = 'Au dessus';
+$string['tracking'] = 'Tracking de lecture';
 $string['updatetechnology'] = 'Changer de technologie';
 $string['video'] = 'Vidéo(s) interne(s)';
 $string['videomplayer'] = 'Video';
@@ -204,6 +228,24 @@ $string['wowzaapplication'] = 'Application de flux';
 $string['wowzacontentdir'] = 'Répertoire partagé des contenus vidéo';
 $string['wowzaserver'] = 'Hôte RTMP/HTTP/HLS';
 $string['xmlplaylist'] = 'Playlist XML';
+$string['configffmpegpath'] = 'Chemin vers ffmpeg';
+$string['configffmpegpath_desc'] = 'Chemin vers l\'exécutable ffmpeg local';
+
+$string['emptyzones'] = 'Aucune zone définie';
+$string['addzone'] = 'Ajouter une zone';
+$string['managehighlightzones'] = 'Gérer les zones remarquables';
+$string['assessableextensions'] = 'Extensions pédagogiques';
+$string['highlightzones'] = 'Zones remarquables';
+$string['zonename'] = 'Nom de la zone';
+$string['startpoint'] = 'Début';
+$string['endpoint'] = 'Fin';
+$string['updatezone'] = 'Modifier une zone';
+$string['newzone'] = 'Nouvelle zone';
+$string['badtimeformat'] = 'Format de temps non reconnu';
+$string['maxcliptime'] = 'Temps max de la piste vidéo : {$a}';
+$string['endpointafterstart'] = 'La fin de zone ne peut se situer avant le début';
+$string['startpointtoofar'] = 'Le début de zone ne peut dépasser la durée du clip';
+$string['endpointtoofar'] = 'La fin de zone ne peut dépasser la durée du clip';
 
 global $CFG;
 
@@ -510,3 +552,20 @@ des URLs ou des serveurs de flux déportés.
 Vous pouvez gérer des listes de chapitrage, des sous-titres en plusieurs langues ainsi que des points d\'arrêts pédagogiques qui peuvent
 intercaler des actvitiés pédagogiques au milieu du visionnage.
 ';
+
+$string['numpasspoints_help'] = 'Le nombre de points intermédiaires de tracking pour la lecture du média. Ajustez cette valeur en fonction
+de la longueur de la video.';
+
+$string['passrule_help'] = 'La règle pour valider la lecture : en mode "fromstart", la lecture doit avoir valider les checkpoints
+à partir du début. En mode "freeloc", la lecture a pu être alétoire jusqu\'à couvrir la portion espérée du média.';
+
+$string['passpercent_help'] = 'Le pourcentage de visionnage, compté sur les checkpoints validés.';
+
+$string['showpasspoints_help'] = 'Si désactivés, alors les balises de viosionnage seront invisibles pour les étudiants.';
+
+$string['plugindist_desc'] = '
+<p>Ce plugin est distribué dans la communauté Moodle pour l\'évaluation de ses fonctions centrales
+correspondant à une utilisation courante du plugin. Une version "professionnelle" de ce plugin existe et est distribuée
+sous certaines conditions, afin de soutenir l\'effort de développement, amélioration; documentation et suivi des versions.</p>
+<p>Contactez un distributeur pour obtenir la version "Pro" et son support.</p>
+<p><a href="http://www.mylearningfactory.com/index.php/documentation/Distributeurs?lang=fr_utf8">Distributeurs MyLF</a></p>';

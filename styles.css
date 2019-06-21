@@ -13,6 +13,9 @@ div.flowplayer {
     width:100%;
 }
 
+/* PROGRESS BARS */
+
+/*
 div.mod-mplayer.progressbar{
     height:24px;
     margin-bottom:10px;
@@ -61,6 +64,83 @@ div.mod-mplayer-progressbar-inner2{
     position:relative;
     top:-22px;
 }
+*/
+
+.mplayer-clip-progresstrack {
+    width: 100%;
+    background-color: #eee;
+    margin-top: 30px;
+}
+
+div.mplayer-completion {
+    position: relative;
+    height:24px;
+    border:solid 1px #e0e0e0;
+    border-radius:3px;
+    padding: 0;
+}
+
+div.progressbar-segment {
+    position: absolute;
+    height:20px;
+    min-height:20px;
+    border-top:1px solid #606060;
+    border-bottom:1px solid #606060;
+    z-index: 110;
+}
+
+div.progressbar-segment.passedpoint {
+    background-color: #0f0;
+}
+
+div.progressbar-segment.unpassedpoint {
+    background-color: #f00;
+}
+
+div.progressbar-segment.highlight {
+    background-color: #f8e011;
+    opacity: 0.5;
+    -moz-opacity: 0.5;
+}
+
+div.progressbar-segment.newzone {
+    background-color: #52ABFC;
+    opacity: 0.7;
+    -moz-opacity: 0.7;
+}
+
+div.progressbar-segment.studentzone {
+    background-color: #0476DD;
+    opacity: 0.5;
+    -moz-opacity: 0.5;
+}
+
+div.maxread{
+    height:20px;
+    min-height:20px;
+    border-top:1px solid #606060;
+    border-bottom:1px solid #606060;
+    border-radius:4px;
+    background-image:url();
+    background-color:#00A000;
+    background-position:0% 50%;
+    position:absolute;
+    z-index: 100;
+}
+
+div.currentread{
+    height:20px;
+    min-height:20px;
+    border:1px solid #606060;
+    border-radius:4px;
+    background-image:url();
+    background-color:#00E000;
+    background-position:0% 50%;
+    position:absolute;
+    z-index: 101;
+}
+
+/* CUES */
 
 .fp-cue-in-panel,
 .fp-cue-resume-panel {
@@ -86,4 +166,70 @@ div.mod-mplayer-progressbar-inner2{
 
 #page-mod-mplayer-mod .fitemtitle label {
     white-space: normal !important;
+}
+
+/* in format page */
+.block_page_module .mplayer-external-container {
+    background-color: #000;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.mplayer-external-container {
+    background-color: #222;
+    text-align:center;
+}
+
+.fp-player {
+    text-align:center;
+}
+
+.fp-playlist {
+    margin-left: auto;
+    margin-right: auto;
+    padding-bottom: 1em;
+    padding-left: 1em;
+    padding-right: 1em;
+    display: flex;
+    grid-template-columns: 11% 11% 11% 11% 11% 11% 11% 11%;
+    grid-column-gap: 1em;
+}
+
+.mplayer-thumb-link img {
+    width: 125px;
+    height: 125px;
+}
+
+
+@media all and (max-width: 480px) {
+    div.flowplayer {
+        height: 180px;
+        max-height: 180px;
+    }
+
+    .mplayer-cont {
+        padding: 0 !important;
+    }
+
+    .dots .fp-playlist{
+        /* small dots on bottom right, under the player video */
+        bottom:-13% !important;
+    }
+
+    .fp-playlist {
+        display: grid;
+        grid-template-columns: 32% 32% 32%;
+        grid-column-gap: 1em;
+    }
+
+    .mplayer-thumb-link img {
+        width: 90px;
+        height: 90px;
+        margin-top: 5px;
+        margin-right: 0;
+    }
+}
+
+.mplayer-assess-controls{
+    text-align: center;
 }

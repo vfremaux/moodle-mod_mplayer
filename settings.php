@@ -114,7 +114,13 @@ $settings->add(new admin_setting_configselect($key, $label, $desc, 'false', mpla
 // Full screen.
 $key = 'mplayer/default_fullscreen';
 $label = get_string('fullscreen', 'mplayer');
-$desc = $desc;
+$desc = '';
+$settings->add(new admin_setting_configselect($key, $label, $desc, 'true', mplayer_list_truefalse()));
+
+// force Full screen.
+$key = 'mplayer/default_forcefullscreen';
+$label = get_string('forcefullscreen', 'mplayer');
+$desc = '';
 $settings->add(new admin_setting_configselect($key, $label, $desc, 'true', mplayer_list_truefalse()));
 
 // Stretching.
@@ -134,6 +140,18 @@ $key = 'mplayer/default_native_fullscreen';
 $label = get_string('nativefullscreen', 'mplayer');
 $desc = '';
 $settings->add(new admin_setting_configselect($key, $label, $desc, 'false', mplayer_list_truefalse()));
+
+// Extra CSS to add to all players.
+$key = 'mplayer/extracss';
+$label = get_string('configextracss', 'mplayer');
+$desc = get_string('configextracss_desc', 'mplayer');
+$settings->add(new admin_setting_configtextarea($key, $label, $desc, '', PARAM_TEXT, 120, 10));
+
+// Extra CSS to add to all players.
+$key = 'mplayer/ffmpegpath';
+$label = get_string('configffmpegpath', 'mplayer');
+$desc = get_string('configffmpegpath_desc', 'mplayer');
+$settings->add(new admin_setting_configexecutable($key, $label, $desc, ''));
 
 $storages = glob($CFG->dirroot.'/mod/mplayer/storage/*_storage.class.php');
 foreach ($storages as $st) {

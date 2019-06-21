@@ -33,8 +33,47 @@ require_once($CFG->dirroot.'/mod/mplayer/locallib.php');
  * This function is not implemented in this plugin, but is needed to mark
  * the vf documentation custom volume availability.
  */
-function mod_mplayer_supports_feature() {
-    assert(1);
+function mod_mplayer_supports_feature($feature) {
+    global $CFG;
+    static $supports;
+
+    $config = get_config('mplayer');
+
+    if (!isset($supports)) {
+        $supports = array(
+            'pro' => array(
+                'assessables' => array('highlightzones'),
+            ),
+            'community' => array(
+            ),
+        );
+    }
+
+    // Check existance of the 'pro' dir in plugin.
+    if (is_dir(__DIR__.'/pro')) {
+        if ($feature == 'emulate/community') {
+            return 'pro';
+        }
+        if (empty($config->emulatecommunity)) {
+            $versionkey = 'pro';
+        } else {
+            $versionkey = 'community';
+        }
+    } else {
+        $versionkey = 'community';
+    }
+
+    list($feat, $subfeat) = explode('/', $feature);
+
+    if (!array_key_exists($feat, $supports[$versionkey])) {
+        return false;
+    }
+
+    if (!in_array($subfeat, $supports[$versionkey][$feat])) {
+        return false;
+    }
+
+    return $versionkey;
 }
 
 /*    Copyright (C) 2009  Matt Bury
@@ -121,6 +160,11 @@ function mplayer_add_instance($mplayer) {
 
     $mplayer->timecreated = time();
 
+    /*
+    $cm = get_coursemodule_from_instance('mplayer', $mplayer->id);
+    $context = context_module::instance($cm);
+    */
+
     // Saves draft customization image files into definitive filearea.
     $instancefiles = mplayer_get_fileareas();
 
@@ -151,6 +195,11 @@ function mplayer_add_instance($mplayer) {
         unset($mplayer->notes_editor);
     }
 
+
+    mplayer_pack_attributes($mplayer);
+
+    // mplayer_get_clips($mplayer, $context);
+
     return $DB->insert_record('mplayer', $mplayer);
 }
 
@@ -169,6 +218,7 @@ function mplayer_update_instance($mplayer) {
 
     $mplayer->timemodified = time();
     $mplayer->id = $mplayer->instance;
+    $oldrecord = $DB->get_record('mplayer', ['id' => $mplayer->id]);
 
     if (empty($config->default_player)) {
         set_config('default_player', 'flowplayer', 'mplayer');
@@ -181,6 +231,10 @@ function mplayer_update_instance($mplayer) {
 
     if (empty($mplayer->autostart)) {
         $mplayer->autostart = 0;
+    }
+
+    if (empty($mplayer->completionmediaviewed)) {
+        $mplayer->completionmediaviewed = 0;
     }
 
     if (empty($mplayer->fullscreen)) {
@@ -209,6 +263,16 @@ function mplayer_update_instance($mplayer) {
     $notes = $mplayer->notes_editor;
     $mplayer->notes = $notes['text'];
     $mplayer->notesformat = $notes['format'];
+
+    // Clean up consequences of changes.
+    if ($oldrecord->numpasspoints != $mplayer->numpasspoints) {
+        // Delete all unfinished tracks to update clip tracks to new contraints.
+        $DB->delete_records('mplayer_userdata', ['mplayerid' => $mplayer->id, 'finished' => 0]);
+    }
+
+    mplayer_pack_attributes($mplayer);
+    $context = context_module::instance($mplayer->coursemodule);
+    mplayer_get_clips($mplayer, $context);
 
     return $DB->update_record('mplayer', $mplayer);
 }
@@ -437,6 +501,61 @@ function mplayer_scale_used_anywhere($scaleid) {
 }
 
 /**
+ * Course reset form defaults.
+ * @return array
+ */
+function mplayer_reset_course_form_defaults($course) {
+    return array('reset_mplayer_all' => 1);
+}
+
+/**
+ * Called by course/reset.php
+ *
+ * @param $mform form passed by reference
+ */
+function mplayer_reset_course_form_definition(&$mform) {
+    $mform->addElement('header', 'mplayerheader', get_string('modulenameplural', 'mplayer'));
+    $mform->addElement('checkbox', 'reset_mplayer_all', get_string('resetmplayerstates', 'mplayer'));
+}
+
+/**
+ * This function is used by the reset_course_userdata function in moodlelib.
+ * This function will remove all posts from the specified forum
+ * and clean up any related data.
+ *
+ * @global object
+ * @global object
+ * @param $data the data submitted from the reset course.
+ * @return array status array
+ */
+function mplayer_reset_userdata($data) {
+    global $DB;
+
+    $componentstr = get_string('modulenameplural', 'mplayer');
+    $status = array();
+
+    $allmplayersql = "
+        SELECT
+            mp.id
+        FROM
+            {mplayer} mp
+        WHERE
+            mp.course = ?
+    ";
+
+    // Remove all states even for users still enrolled in course.
+    if (!empty($data->reset_mplayer_all)) {
+        $params = array($data->courseid);
+        $DB->delete_records_select('mplayer_userdata', " mplayerid IN ($allmplayersql) ", $params);
+        $status[] = array('component' => $componentstr,
+                          'item' => get_string('resetmplayerstates', 'mplayer'),
+                          'error' => false);
+    }
+
+    return $status;
+}
+
+/**
  * Obtains the automatic completion state for this module based on any conditions
  * in mplayer settings.
  *
@@ -454,7 +573,7 @@ function mplayer_get_completion_state($course, $cm, $userid, $type) {
     $result = $type; // Default return value.
 
     // If completion option is enabled, evaluate it and return true/false.
-    if (@$mplayerinstance->completionmediaviewed) {
+    if ($mplayerinstance->completionmediaviewed) {
         $params = array('userid' => $userid, 'mplayerid' => $cm->instance, 'finished' => 1);
         $finished = $DB->count_records('mplayer_userdata', $params);
         if ($type == COMPLETION_AND) {

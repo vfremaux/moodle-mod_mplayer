@@ -173,5 +173,5 @@ var FlowplayerConfig = new ClassBuilder( {
             clip.bind("resume", resume_video_progress);
             */
         }
-    }
+    },
 });

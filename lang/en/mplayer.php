@@ -16,6 +16,7 @@
 
 $string['mplayer:addinstance'] = 'Add an instance';
 $string['mplayer:view'] = 'View';
+$string['mplayer:assessor'] = 'Can assess assessable activities';
 
 $string['above'] = 'Above';
 $string['advanced'] = 'Advanced';
@@ -58,6 +59,12 @@ $string['configwowzaapplication'] = 'Usually /vod for playing videos';
 $string['configwowzacontentdir'] = 'This content dir should be a remote mounted network storage volume on the streaming server';
 $string['configwowzaserver'] = 'rtmp://your.server.name';
 $string['configxml'] = 'File';
+$string['confignumpasspoints'] = 'Number of tracking pass points (default)';
+$string['configpassrule'] = 'Rule to complete (default)';
+$string['configpasspercent'] = 'Percent to complete (default)';
+$string['configextracss'] = 'Extra css';
+$string['configextracss_desc'] = 'Extra css (applies to all players)';
+$string['configffmpegpath'] = 'Path to ffmpeg';
 $string['controlbar'] = 'Control Bar';
 $string['cueininvite'] = 'Before continuing watching this video, you are proposed to execute a {$a->type} activity.<br/><br/>{$a->link}';
 $string['cueininviteoptional'] = 'Before continuing watching this video, you are proposed to execute a {$a->type} activity.<br/><br/>{$a->link}<br/><a href="javascript:cuepoint_resume_from_id(\'{$a->playerid}\')">Resume now</a>';
@@ -67,10 +74,16 @@ $string['description'] = 'Media Description';
 $string['displayclick'] = 'Display Click';
 $string['dots'] = 'Dots';
 $string['duration'] = 'Duration (seconds)';
+$string['emulatecommunity'] = 'Emulate the community version.';
+$string['emulatecommunity_desc'] = 'Switches the code to the community version. The result will be more compatible, but some features will not be available anymore.';
 $string['external'] = 'External Url';
+$string['findzones'] = 'Find zones';
+$string['startmarkzone'] = 'Start marking zone';
+$string['endmarkzone'] = 'End marking zone';
 $string['fpversion'] = 'Flash Player Version';
 $string['frontcolor'] = 'Front Color';
 $string['fullscreen'] = 'Full Screen';
+$string['forcefullscreen'] = 'Force Full Screen';
 $string['fullurl'] = 'Full URL';
 $string['hd'] = 'HD Video';
 $string['hdbitrate'] = 'Bitrate';
@@ -100,6 +113,10 @@ $string['langselection'] = 'Subtitle language';
 $string['langteacherchoice'] = 'Teacher choice';
 $string['languser'] = 'User profile language';
 $string['left'] = 'At left';
+$string['licenseprovider'] = 'Pro License provider';
+$string['licenseprovider_desc'] = 'Input here your provider key';
+$string['licensekey'] = 'Pro license key';
+$string['licensekey_desc'] = 'Input here the product license key you got from your provider';
 $string['lightcolor'] = 'Light Color';
 $string['lighthttpdstreaming'] = 'Lighthttps Streaming';
 $string['livestream'] = 'Live Stream';
@@ -138,14 +155,26 @@ $string['mplayername'] = 'Name';
 $string['mplayerrepeat'] = 'Repeat';
 $string['mplayerresources'] = 'Media Resources';
 $string['mplayerstart'] = 'Start (position in seconds)';
+$string['managehighlightzonesonupdate'] = 'You must create the mediaplayer instance before editing highlight zones.';
 $string['mute'] = 'Mute';
 $string['nativefullscreen'] = 'Native fullscreen controls (flowplayer)';
 $string['newwindow'] = 'New window';
 $string['nomplayers'] = 'There are no mplayers in this course';
 $string['none'] = 'None';
 $string['nosplash'] = 'Disabled';
+$string['assessmode'] = 'Assessable activity';
+$string['noassess'] = 'No assessable activity';
+$string['findzones'] = 'Find highlights locations';
+$string['matchzones'] = 'Match highlights ranges';
 $string['notes'] = 'Notes';
 $string['over'] = 'Over';
+$string['numpasspoints'] = 'Number of tracking points';
+$string['passrule'] = 'Rule for passing completion';
+$string['passrulenone'] = 'No subtracking';
+$string['passrulefromstart'] = 'From start';
+$string['passrulefreeloc'] = 'Free location';
+$string['passpercent'] = 'Percent of media viewed';
+$string['numpasspoints'] = 'Number of tracking points';
 $string['player'] = 'Player';
 $string['playlist'] = 'Position';
 $string['playlistfile'] = 'Play list files';
@@ -154,10 +183,12 @@ $string['playlists'] = 'Playlist';
 $string['playlistsize'] = 'Size (pixels)';
 $string['playliststyle'] = 'Layout';
 $string['pluginadministration'] = 'Media Player Administration';
+$string['plugindist'] = 'Plugin distribution';
 $string['pluginname'] = 'Media Player';
 $string['plugins'] = 'Plugins';
 $string['quality'] = 'Quality';
 $string['resizing'] = 'Resizing';
+$string['resetmplayerstates'] = 'Reset all mplayer states';
 $string['resumefromcue'] = 'You can now resume your video.';
 $string['right'] = 'At right';
 $string['rtmpstreaming'] = 'RTMP Stream';
@@ -171,6 +202,7 @@ $string['searchbarlabel'] = 'Label';
 $string['searchbarposition'] = 'Position';
 $string['searchbarscript'] = 'Script';
 $string['showdebugcode'] = 'Show debug code';
+$string['showpasspoints'] = 'Show pass points';
 $string['shuffle'] = 'Shuffle';
 $string['skin'] = 'Skin';
 $string['smoothing'] = 'Smoothing';
@@ -191,6 +223,7 @@ $string['title'] = 'Title';
 $string['tracecall'] = 'Trace Call (debugging)';
 $string['type'] = 'Type';
 $string['top'] = 'Top';
+$string['tracking'] = 'Media tracking';
 $string['updatetechnology'] = 'Change the player technology';
 $string['uploadtomediapool'] = 'Upload to media pool';
 $string['video'] = 'Internal video(s)';
@@ -207,7 +240,7 @@ $string['xmlplaylist'] = 'XML Playlist';
 $string['youtube'] = 'YouTube proprietary';
 $string['youtube'] = 'Youtube';
 $string['youtubesearch'] = 'YouTube.com Search';
-
+$string['youtubemplayer'] = 'YouTube.com Player';
 
 $string['uniform'] = 'Uniform';
 $string['exactfit'] = 'Exact fit';
@@ -226,6 +259,24 @@ $string['embederror1'] = '<h3>Oops! There\'s a problem.</h3>
 <h4>Flash Player ';
 $string['embederror2'] = ' or later is required.</h4>';
 $string['nohtml5'] = '<h2>HTML5 video is not supported by your browser.</h2>';
+
+$string['emptyzones'] = 'No zone registered';
+$string['addzone'] = 'Add a zone';
+$string['managehighlightzones'] = 'Manage highlight zones';
+$string['assessableextensions'] = 'Assessable extensions';
+$string['configffmpegpath_desc'] = 'Path to your local ffmpeg executable';
+$string['highlightzones'] = 'Highlight zones';
+$string['zonename'] = 'Zone name';
+$string['startpoint'] = 'Start point';
+$string['endpoint'] = 'End point';
+$string['updatezone'] = 'Update a zone';
+$string['newzone'] = 'New zone';
+$string['badtimeformat'] = 'Bad time format';
+$string['maxcliptime'] = 'Max clip track time: {$a}';
+$string['endpointafterstart'] = 'End point cannot be after start';
+$string['startpointtoofar'] = 'Start point cannot overcome duration';
+$string['endpointtoofar'] = 'End point cannot overcome duration';
+
 /*
  * ---------------------------------------------------------------------------------------------
  */
@@ -579,3 +630,21 @@ into a Moodle course with strong pedagogic interaction.
 You may publish video as local files, remote URLs, make playlists, display subtitles and break the video flow
 with pedagogic cuepoints.
 ';
+
+$string['numpasspoints_help'] = 'The number of intermediary checkpoints when using media read completion. Adjust this number 
+to the video length. 10 is the default value, but larger videos may need more. Do not extend over 30';
+
+$string['passrule_help'] = 'The rule to complete will track a certain amount of check points passed. The rule tells how they will be 
+calculated. In "from start" mode, all the checkpoints must be validated from the start of the media. In "freeloc" mode, the student
+may have read randomly any part of the media until reaching the percent coverage.';
+
+$string['passpercent_help'] = 'The amount of check points passed.';
+
+$string['showpasspoints_help'] = 'If disabled, passpoints marks will keep being hidden for students.';
+
+$string['plugindist_desc'] = '
+<p>This plugin is the community version and is published for anyone to use as is and check the plugin\'s
+core application. A "pro" version of this plugin exists and is distributed under conditions to feed the life cycle, upgrade, documentation
+and improvement effort.</p>
+<p>Please contact one of our distributors to get "Pro" version support.</p>
+<p><a href="http://www.mylearningfactory.com/index.php/documentation/Distributeurs?lang=en_utf8">MyLF Distributors</a></p>';

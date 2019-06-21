@@ -24,6 +24,7 @@
 require('../../../config.php');
 require_once($CFG->dirroot.'/mod/mplayer/lib.php');
 require_once($CFG->dirroot.'/mod/mplayer/locallib.php');
+require_once($CFG->dirroot.'/mod/mplayer/classes/passpoint.class.php');
 
 $mpid = required_param('mpid', PARAM_INT); // Player instance id.
 $clipid = required_param('clipid', PARAM_INT); // Player clip id in playlist.
@@ -32,6 +33,7 @@ $action = required_param('what', PARAM_TEXT);
 if (!$mplayer = $DB->get_record('mplayer', array('id' => $mpid))) {
     die("Bad Mplayer id");
 }
+mplayer_unpack_attributes($mplayer);
 if (!$cm = get_coursemodule_from_instance('mplayer', $mpid)) {
     die("Bad course module");
 }
@@ -41,44 +43,33 @@ if (!$course = $DB->get_record('course', array('id' => $cm->course))) {
 
 $context = context_module::instance($cm->id);
 
-$url = new moodle_url('/mod/mplayer/ajax/markmediacompletion.php');
+$params = array('mpid' => $mpid, 'clipid' => $clipid, 'what' => $action);
+$url = new moodle_url('/mod/mplayer/ajax/markmediacompletion.php', $params);
 $PAGE->set_url($url);
 require_login($course, true, $cm);
 
 $renderer = $PAGE->get_renderer('mplayer');
+$renderer->set_mplayer($mplayer);
 
-// Make a record for user anyhow.
-if (!$mpuserdata = $DB->get_record('mplayer_userdata', array('userid' => $USER->id, 'mplayerid' => $mpid, 'clipid' => $clipid))) {
-    $mpuserdata = new StdClass();
-    $mpuserdata->userid = $USER->id;
-    $mpuserdata->mplayerid = $mpid;
-    $mpuserdata->clipid = $clipid;
-    $mpuserdata->maxprogress = 0;
-    $mpuserdata->finished = 0;
-    $mpuserdata->id = $DB->insert_record('mplayer_userdata', $mpuserdata);
+if (!in_array($action, array('progress', 'finished'))) {
+    die('Invalid action');
 }
 
-if ($action == 'finished') {
+$passpoints = new \mod_mplayer\tracking\Passpoint($mplayer, $cm);
+$passpoints->load_track($USER->id, $clipid);
+$highlights = mplayer_get_highlighted_zones($mplayer, $clipid, $seeall = false);
 
-    $mpuserdata->maxprogress = 100;
-    $mpuserdata->finished = true;
-
-    $DB->update_record('mplayer_userdata', $mpuserdata);
-    // mark completed on mediaviewed criteria.
-    $completion = new completion_info($course);
-    if ($completion->is_enabled($cm) && $mplayer->completionmediaviewed) {
-        $completion->update_state($cm, COMPLETION_COMPLETE);
-    }
-    return $renderer->progressbar($mpuserdata->maxprogress);
-} else if ($action == 'progress') {
+if ($action == 'progress') {
 
     $progress = required_param('progress', PARAM_INT);
-    if ($mpuserdata->maxprogress < $progress) {
-        $mpuserdata->maxprogress = $progress;
-        $DB->update_record('mplayer_userdata', $mpuserdata);
-    }
-    echo $renderer->progressbar($mpuserdata->maxprogress, $progress);
 
+    // Record the passed points (control points).
+    $updatedtrack = $passpoints->update($USER->id, $clipid, $progress);
+    $maxprogress = $passpoints->get_maxprogress($USER->id, $clipid);
+
+    $output = $renderer->progressbar($mplayer, $maxprogress, $progress, $updatedtrack, $highlights, $clipid);
+
+    // Add view to Moodle log.
     $event = \mod_mplayer\event\mplayer_viewing::create(array(
         'objectid' => $cm->id,
         'context' => $context,
@@ -87,6 +78,45 @@ if ($action == 'finished') {
         )
     ));
     $event->trigger();
-} else {
-    die('Invalid action');
+
+    if ($passpoints->is_passed($USER->id, $clipid)) {
+        /*
+         * Bounce to finish if progress has reached the sufficiant level, and the passpoint rules are completed.
+         */
+        $action = 'finished';
+    }
+    $passpoints->commit_track($USER->id, $clipid);
 }
+
+$cliptrack = $passpoints->get_cliptrack($USER->id, $clipid);
+$clippasspoints = $cliptrack->passpoints;
+
+if ($action == 'finished') {
+
+    if ($passpoints->is_passed($USER->id, $clipid)) {
+        $passpoints->finish($USER->id, $clipid);
+        $passpoints->commit_track($USER->id, $clipid);
+    }
+    $maxprogress = $passpoints->get_maxprogress($USER->id, $clipid);
+
+    // mark completed on mediaviewed criteria.
+    $completion = new completion_info($course);
+    if ($completion->is_enabled($cm) && $mplayer->completionmediaviewed) {
+        $completion->update_state($cm, COMPLETION_COMPLETE);
+    }
+    if (empty($progress)) {
+        $progress = 100;
+    }
+    $output = $renderer->progressbar($mplayer, 100, $progress, $clippasspoints, $highlights, $clipid);
+
+    $event = \mod_mplayer\event\mplayer_viewedall::create(array(
+        'objectid' => $cm->id,
+        'context' => $context,
+        'other' => array(
+            'objectname' => $mplayer->name
+        )
+    ));
+    $event->trigger();
+}
+
+echo $output;

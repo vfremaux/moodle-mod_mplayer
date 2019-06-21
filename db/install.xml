@@ -14,89 +14,24 @@
             <FIELD NAME="timecreated" TYPE="int" LENGTH="11" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" COMMENT="timecreated"/>
             <FIELD NAME="timemodified" TYPE="int" LENGTH="11" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" COMMENT="timemodified"/>
             <FIELD NAME="technology" TYPE="char" LENGTH="15" NOTNULL="false" SEQUENCE="false" COMMENT="technology"/>
-            <FIELD NAME="configxml" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="configxml"/>
-            <FIELD NAME="author" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="author"/>
-            <FIELD NAME="mplayerdate" TYPE="char" LENGTH="50" NOTNULL="false" SEQUENCE="false" COMMENT="mplayerdate"/>
             <FIELD NAME="description" TYPE="text" LENGTH="medium" NOTNULL="false" SEQUENCE="false" COMMENT="description"/>
-            <FIELD NAME="infoboxcolor" TYPE="char" LENGTH="7" NOTNULL="false" SEQUENCE="false" COMMENT="infoboxcolor"/>
-            <FIELD NAME="infoboxposition" TYPE="char" LENGTH="30" NOTNULL="false" SEQUENCE="false" COMMENT="infoboxposition"/>
-            <FIELD NAME="infoboxsize" TYPE="int" LENGTH="4" NOTNULL="false" UNSIGNED="true" SEQUENCE="false" COMMENT="infoboxsize"/>
-            <FIELD NAME="duration" TYPE="int" LENGTH="11" NOTNULL="false" UNSIGNED="true" SEQUENCE="false" COMMENT="duration"/>
             <FIELD NAME="mplayerfile" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="deprecated"/>
             <FIELD NAME="external" TYPE="text" LENGTH="medium" NOTNULL="false" SEQUENCE="false" COMMENT="external"/>
             <FIELD NAME="cuelists" TYPE="text" LENGTH="medium" NOTNULL="false" SEQUENCE="false" COMMENT="deprecated"/>
-            <FIELD NAME="hdbitrate" TYPE="int" LENGTH="7" NOTNULL="false" SEQUENCE="false" UNSIGNED="true" COMMENT="hdbitrate"/>
-            <FIELD NAME="hdfile" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="hdfile"/>
-            <FIELD NAME="hdfullscreen" TYPE="char" LENGTH="20" NOTNULL="false" SEQUENCE="false" COMMENT="hdfullscreen"/>
-            <FIELD NAME="hdstate" TYPE="char" LENGTH="20" NOTNULL="false" SEQUENCE="false" COMMENT="hdstate"/>
-            <FIELD NAME="livestreamfile" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="livestreamfile"/>
-            <FIELD NAME="livestreamimage" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="livestreamimage"/>
-            <FIELD NAME="livestreaminterval" TYPE="int" LENGTH="4" NOTNULL="false" SEQUENCE="false" UNSIGNED="true" COMMENT="livestreaminterval"/>
-            <FIELD NAME="livestreammessage" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="livestreammessage"/>
-            <FIELD NAME="livestreamstreamer" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="livestreamstreamer"/>
-            <FIELD NAME="livestreamtags" TYPE="text" LENGTH="medium" NOTNULL="false" SEQUENCE="false" COMMENT="livestreamtags"/>
+            <FIELD NAME="clipscache" TYPE="text" LENGTH="medium" NOTNULL="false" SEQUENCE="false" COMMENT="caches clips definition"/>
             <FIELD NAME="image" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="image"/>
-            <FIELD NAME="audiodescriptionfile" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="audiodescriptionfile"/>
-            <FIELD NAME="audiodescriptionstate" TYPE="char" LENGTH="20" NOTNULL="false" SEQUENCE="false" COMMENT="audiodescriptionstate"/>
-            <FIELD NAME="audiodescriptionvolume" TYPE="int" LENGTH="3" NOTNULL="false" UNSIGNED="true" SEQUENCE="false" COMMENT="audiodescriptionvolume"/>
-            <FIELD NAME="mplayerstart" TYPE="int" LENGTH="11" NOTNULL="false" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" COMMENT="mplayerstart" />
-            <FIELD NAME="videotags" TYPE="text" LENGTH="medium" NOTNULL="false" SEQUENCE="false" COMMENT="tags"/>
+            <FIELD NAME="mplayerstart" TYPE="int" LENGTH="1" NOTNULL="false" SEQUENCE="false" COMMENT="start"/>
             <FIELD NAME="title" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="title" />
             <FIELD NAME="type" TYPE="char" LENGTH="50" NOTNULL="false" SEQUENCE="false" DEFAULT="undefined" COMMENT="type"/>
-            <FIELD NAME="backcolor" TYPE="char" LENGTH="7" NOTNULL="false" SEQUENCE="false" COMMENT="backcolor"/>
-            <FIELD NAME="frontcolor" TYPE="char" LENGTH="7" NOTNULL="false" SEQUENCE="false" COMMENT="frontcolor"/>
-            <FIELD NAME="lightcolor" TYPE="char" LENGTH="7" NOTNULL="false" SEQUENCE="false" COMMENT="lightcolor"/>
-            <FIELD NAME="screencolor" TYPE="char" LENGTH="7" NOTNULL="false" SEQUENCE="false" COMMENT="screencolor"/>
-            <FIELD NAME="controlbar" TYPE="char" LENGTH="7" NOTNULL="false" SEQUENCE="false" COMMENT="controlbar"/>
-            <FIELD NAME="smoothing" TYPE="char" LENGTH="20" NOTNULL="false" SEQUENCE="false" COMMENT="smoothing"/>
-            <FIELD NAME="height" TYPE="char" LENGTH="4" NOTNULL="false" SEQUENCE="false" COMMENT="height"/>
-            <FIELD NAME="playlist" TYPE="char" LENGTH="20" NOTNULL="false" SEQUENCE="false" COMMENT="playlist"/>
-            <FIELD NAME="playlistsize" TYPE="int" LENGTH="4" NOTNULL="false" UNSIGNED="true" SEQUENCE="false" COMMENT="playlistsize"/>
-            <FIELD NAME="skin" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="skin"/>
-            <FIELD NAME="width" TYPE="char" LENGTH="4" NOTNULL="false" SEQUENCE="false" COMMENT="width"/>
-            <FIELD NAME="autostart" TYPE="char" LENGTH="20" NOTNULL="false" SEQUENCE="false" COMMENT="autostart"/>
-            <FIELD NAME="bufferlength" TYPE="int" LENGTH="4" NOTNULL="false" UNSIGNED="true" SEQUENCE="false" COMMENT="bufferlength"/>
-            <FIELD NAME="fullscreen" TYPE="char" LENGTH="20" NOTNULL="false" SEQUENCE="false" COMMENT="fullscreen"/>
-            <FIELD NAME="icons" TYPE="char" LENGTH="20" NOTNULL="false" SEQUENCE="false" COMMENT="icons"/>
-            <FIELD NAME="item" TYPE="int" LENGTH="3" NOTNULL="false" UNSIGNED="true" SEQUENCE="false" COMMENT="item"/>
-            <FIELD NAME="logoboxalign" TYPE="char" LENGTH="30" NOTNULL="false" SEQUENCE="false" COMMENT="logoboxalign"/>
-            <FIELD NAME="logoboxfile" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="logoboxfile"/>
-            <FIELD NAME="logoboxlink" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="logoboxlink"/>
-            <FIELD NAME="logoboxmargin" TYPE="int" LENGTH="3" NOTNULL="false" UNSIGNED="true" SEQUENCE="false" COMMENT="logoboxmargin"/>
-            <FIELD NAME="logoboxposition" TYPE="char" LENGTH="30" NOTNULL="false" SEQUENCE="false" COMMENT="logoboxposition"/>
-            <FIELD NAME="logofile" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="logofile"/>
-            <FIELD NAME="logolink" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="logolink"/>
-            <FIELD NAME="logohide" TYPE="char" LENGTH="20" NOTNULL="false" SEQUENCE="false" COMMENT="logohide"/>
-            <FIELD NAME="logoposition" TYPE="char" LENGTH="30" NOTNULL="false" SEQUENCE="false" COMMENT="logoposition"/>
-            <FIELD NAME="mute" TYPE="char" LENGTH="20" NOTNULL="false" SEQUENCE="false" COMMENT="mute"/>
-            <FIELD NAME="quality" TYPE="char" LENGTH="20" NOTNULL="false" SEQUENCE="false" COMMENT="quality"/>
-            <FIELD NAME="mplayerrepeat" TYPE="char" LENGTH="20" NOTNULL="false" SEQUENCE="false" COMMENT="mplayerrepeat"/>
-            <FIELD NAME="resizing" TYPE="char" LENGTH="20" NOTNULL="false" SEQUENCE="false" COMMENT="resizing"/>
-            <FIELD NAME="shuffle" TYPE="char" LENGTH="20" NOTNULL="false" SEQUENCE="false" COMMENT="shuffle"/>
-            <FIELD NAME="state" TYPE="char" LENGTH="20" NOTNULL="false" SEQUENCE="false" COMMENT="state"/>
-            <FIELD NAME="stretching" TYPE="char" LENGTH="30" NOTNULL="false" SEQUENCE="false" COMMENT="stretching"/>
-            <FIELD NAME="volume" TYPE="char" LENGTH="3" NOTNULL="false" SEQUENCE="false" COMMENT="volume"/>
-            <FIELD NAME="plugins" TYPE="text" LENGTH="medium" NOTNULL="false" SEQUENCE="false" COMMENT="plugins"/>
-            <FIELD NAME="streamer" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="streamer"/>
-            <FIELD NAME="tracecall" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="tracecall"/>
-            <FIELD NAME="captionsback" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="captionsback"/>
-            <FIELD NAME="captionsfile" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="captionsfile"/>
-            <FIELD NAME="captionsfontsize" TYPE="int" LENGTH="3" NOTNULL="false" UNSIGNED="true" SEQUENCE="false" COMMENT="captionsfontsize"/>
-            <FIELD NAME="captionsstate" TYPE="char" LENGTH="12" NOTNULL="false" SEQUENCE="false" COMMENT="captionsstate"/>
-            <FIELD NAME="fpversion" TYPE="char" LENGTH="20" NOTNULL="false" SEQUENCE="false" COMMENT="fpversion"/>
             <FIELD NAME="notes" TYPE="text" LENGTH="medium" NOTNULL="false" SEQUENCE="false" COMMENT="notes"/>
             <FIELD NAME="notesformat" TYPE="text" LENGTH="medium" NOTNULL="false" SEQUENCE="false" COMMENT="notes"/>
-            <FIELD NAME="metaviewerposition" TYPE="char" LENGTH="30" NOTNULL="false" SEQUENCE="false" COMMENT="metaviewerposition"/>
-            <FIELD NAME="metaviewersize" TYPE="int" LENGTH="4" NOTNULL="false" UNSIGNED="true" SEQUENCE="false" COMMENT="metaviewersize"/>
-            <FIELD NAME="searchbarcolor" TYPE="char" LENGTH="7" NOTNULL="false" SEQUENCE="false" COMMENT="searchbarcolor"/>
-            <FIELD NAME="searchbarlabel" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="searchbarlabel"/>
-            <FIELD NAME="searchbarposition" TYPE="char" LENGTH="30" NOTNULL="false" SEQUENCE="false" COMMENT="searchbarposition"/>
-            <FIELD NAME="searchbarscript" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="searchbarscript"/>
-            <FIELD NAME="snapshotbitmap" TYPE="char" LENGTH="6" NOTNULL="false" SEQUENCE="false" COMMENT="snapshotbitmap"/>
-            <FIELD NAME="snapshotscript" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="snapshotscript"/>
-            <FIELD NAME="splashmode" TYPE="char" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="snapshotscript"/>
-            <FIELD NAME="langselection" TYPE="char" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="snapshotscript"/>
             <FIELD NAME="completionmediaviewed" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="If this field is set to 1, then the activity will be marked as 'complete' once the user has watched the full media." />
+            <FIELD NAME="numpasspoints" TYPE="int" LENGTH="3" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Number of tracking points" />
+            <FIELD NAME="passrule" TYPE="char" LENGTH="16" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Name of the rule to check full media was seen, 'fromstart', or 'freeloc'" />
+            <FIELD NAME="passpercent" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="100" SEQUENCE="false" COMMENT="Percent of the media to view to pass completion" />
+            <FIELD NAME="showpasspoints" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" SEQUENCE="false" COMMENT="If passpoints must show or not" />
+            <FIELD NAME="assessmode" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="1" SEQUENCE="false" COMMENT="If assessables, what assess activity is activated" />
+            <FIELD NAME="grade" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="1" SEQUENCE="false" COMMENT="Max Grade for assessables" />
         </FIELDS>
         <KEYS>
             <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
@@ -112,6 +47,7 @@
             <FIELD NAME="userid" TYPE="int" LENGTH="11" NOTNULL="true" SEQUENCE="false" COMMENT="name"/>
             <FIELD NAME="clipid" TYPE="int" LENGTH="11" NOTNULL="true" SEQUENCE="false" COMMENT="name"/>
             <FIELD NAME="maxprogress" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="name"/>
+            <FIELD NAME="passpoints" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="Serialized pass checkpoints track"/>
             <FIELD NAME="finished" TYPE="int" LENGTH="1" NOTNULL="true" SEQUENCE="false" COMMENT="name"/>
         </FIELDS>
         <KEYS>
@@ -120,6 +56,41 @@
         <INDEXES>
             <INDEX NAME="ix_instanceid" UNIQUE="false" FIELDS="mplayerid"/>
             <INDEX NAME="ix_userid" UNIQUE="false" FIELDS="userid"/>
+        </INDEXES>
+    </TABLE>
+    <TABLE NAME="mplayer_highlighted_zones" COMMENT="An highlight zone is remarkable">
+        <FIELDS>
+            <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" COMMENT="id"/>
+            <FIELD NAME="mplayerid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" COMMENT="Mplayer ID"/>
+            <FIELD NAME="clipid" TYPE="int" LENGTH="11" NOTNULL="true" SEQUENCE="false" COMMENT="clip ID"/>
+            <FIELD NAME="userid" TYPE="int" LENGTH="11" DEFAULT="0" NOTNULL="true" SEQUENCE="false" COMMENT="User ID"/>
+            <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="zone name"/>
+            <FIELD NAME="startpoint" TYPE="int" LENGTH="11" NOTNULL="true" SEQUENCE="false" COMMENT="Highlight zone start"/>
+            <FIELD NAME="endpoint" TYPE="int" LENGTH="11" NOTNULL="true" SEQUENCE="false" COMMENT="Highlight zone end"/>
+        </FIELDS>
+        <KEYS>
+            <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        </KEYS>
+        <INDEXES>
+            <INDEX NAME="ix_instanceid" UNIQUE="false" FIELDS="mplayerid, clipid"/>
+        </INDEXES>
+    </TABLE>
+    <TABLE NAME="mplayer_user_results" COMMENT="Per user results over highlight zones">
+        <FIELDS>
+            <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" COMMENT="id"/>
+            <FIELD NAME="mplayerid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" COMMENT="Mplayer ID"/>
+            <FIELD NAME="clipid" TYPE="int" LENGTH="11" NOTNULL="true" SEQUENCE="false" COMMENT="clip ID"/>
+            <FIELD NAME="zoneid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Highlight zone id"/>
+            <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="User id"/>
+            <FIELD NAME="intresultdata" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Direct integer result"/>
+            <FIELD NAME="floatresultdata" TYPE="number" LENGTH="10" DECIMALS="2" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Direct number result"/>
+            <FIELD NAME="textresultdata" TYPE="text" LENGTH="small" NOTNULL="false" SEQUENCE="false" COMMENT="Textual or serialized data"/>
+        </FIELDS>
+        <KEYS>
+            <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        </KEYS>
+        <INDEXES>
+            <INDEX NAME="ix_unique_ix" UNIQUE="true" FIELDS="mplayerid, clipid, zoneid, userid"/>
         </INDEXES>
     </TABLE>
   </TABLES>
