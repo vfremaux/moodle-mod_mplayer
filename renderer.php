@@ -243,8 +243,11 @@ class mod_mplayer_renderer extends plugin_renderer_base {
         $mplayerbody = $scriptloadfragment."\n";
         $mplayerbody .= '<div class="mplayer-external-container">';
         $mplayerbody .= '<div class="mplayer-cont embed-responsive '.$mplayer->playlist.'"
-                              style="width:'.$mplayer->width.';height:'.$mplayer->height.'"
+                                style="width: '.$mplayer->width.'; height: '.$mplayer->height.'"
                               id="flp'.$mplayer->id.'">';
+
+        $params = ['id' => $mplayer->id, 'width' => $mplayer->width, 'height' => $mplayer->height];
+        $PAGE->requires->js_call_amd('mod_mplayer/mplayer', 'init', [$params]);
         $mplayerbody .= $this->flowplayer_cue_panels($mplayer);
         if ($mplayer->playlist) {
             $mplayerbody .= $this->flowplayer_playlist_html($mplayer, $clips);
@@ -252,14 +255,14 @@ class mod_mplayer_renderer extends plugin_renderer_base {
         $mplayerbody .= '</div>'; // Master flowplayer container.
 
         // Fake playlist takes the vertical room but does not show.
-        $mplayerbody .= '<div class="shadow-playlist" style="visibility: hidden">';
+        $mplayerbody .= '<div class="shadow-playlist-cont" style="visibility: hidden">';
         if ($mplayer->playlist == 'thumbs') {
             $mplayerbody .= $this->flowplayer_playlist_shadow_html($mplayer, $clips);
         }
         $mplayerbody .= '</div>';
 
         $mplayerbody .= '</div>'; // External container.
-        $mplayerbody .= $this->flowplayer_completion($mplayer, $clips); // Completion container.
+        $mplayerbody .= $this->mplayer_completion($mplayer, $clips); // Completion container.
         $mplayerbody .= '<script type="text/javascript">'."\n";
         $mplayerbody .= 'flp'.$mplayer->id." = new FlowplayerConfig();\n";
         $mplayerbody .= $js;
@@ -298,6 +301,8 @@ class mod_mplayer_renderer extends plugin_renderer_base {
         if (empty($clips)) {
             return $js;
         }
+
+        $clips = (array)$clips;
 
         if (count($clips) == 1) {
             foreach ($clips[0]->sources as $source) {
@@ -364,6 +369,7 @@ class mod_mplayer_renderer extends plugin_renderer_base {
             if (!empty($clip->thumb)) {
                 $listitemcontent = '<img src="'.$clip->thumb.'" />';
             }
+
             $cliplink = '<a href="'.$clip->sources[0].'"
                             alt="'.@$clip->title.'"
                             title="'.@$clip->title.'"
@@ -402,16 +408,18 @@ class mod_mplayer_renderer extends plugin_renderer_base {
         }
 
         $hgroups = '';
-        $str .= '<div class="shadow-playlist">';
+        $str .= '<div id="shadow-playlist-'.$mplayer->id.'" class="shadow-playlist '.$mplayer->playlist.'">';
 
         $i = 0;
         foreach ($clips as $clip) {
 
+            $hasthumb = '';
             $listitemcontent = '';
             if (!empty($clip->thumb)) {
-                $listitemcontent = '<img src="'.$clip->thumb.'" />';
+                $listitemcontent = '<img src="'.$clip->thumb.'" data-clipid="'.$i.'" />';
+                $hasthumb = 'hasthumb';
             }
-            $cliplink = '<a href="" class="mplayer-thumb-link">'.$listitemcontent.'</a>';
+            $cliplink = '<a href="" class="mplayer-thumb-link '.$hasthumb.'">'.$listitemcontent.'</a>';
             $str .= $cliplink;
 
             $i++;
@@ -427,8 +435,16 @@ class mod_mplayer_renderer extends plugin_renderer_base {
      * @param object $mplayer the MPlayer instance
      * @return string the completion HTML sequence and HTML representation.
      */
-    public function flowplayer_completion(&$mplayer, $clips) {
+    public function mplayer_completion(&$mplayer, $clips, $user = null) {
         global $CFG, $USER, $DB;
+
+        if (is_null($user)) {
+            $user = $USER;
+        }
+
+        if ($mplayer->showpasspoints == 0) {
+            return '';
+        }
 
         $cm = get_coursemodule_from_instance('mplayer', $mplayer->id);
         $context = context_module::instance($cm->id);
@@ -442,15 +458,17 @@ class mod_mplayer_renderer extends plugin_renderer_base {
         $template = new StdClass;
         $template->mpid = $mplayer->id;
 
+        $clips = (array)$clips;
         if ($clipsnum = count($clips)) {
-            $barpctwidth = 100 / $clipsnum - 1;
+            // $barpctwidth = 100 / $clipsnum - 1; // No ! each bar has 100% width
+            $barpctwidth = 100;
             foreach (array_keys($clips) as $clipix) {
                 $progressbartpl = new StdClass;
                 $progressbartpl->clipid = $clipix;
                 $progressbartpl->title = @$clips[$clipix]->cliptitle;
                 $progressbartpl->barwidth = $barpctwidth;
-                $passpoints->load_track($USER->id, $clipix);
-                $maxprogress = $passpoints->get_maxprogress($USER->id, $clipix);
+                $passpoints->load_track($user->id, $clipix);
+                $maxprogress = $passpoints->get_maxprogress($user->id, $clipix);
 
                 $segmenttpl = new StdClass;
                 $segmenttpl->id = 0;
@@ -466,7 +484,7 @@ class mod_mplayer_renderer extends plugin_renderer_base {
 
                 $j = 2;
                 if ($mplayer->showpasspoints || has_capability('mod/mplayer:assessor', $context)) {
-                    $cliptrack = $passpoints->get_cliptrack($USER->id, $clipix);
+                    $cliptrack = $passpoints->get_cliptrack($user->id, $clipix);
 
                     foreach ($cliptrack->passpoints as $ppc => $st) {
                         $segmenttpl = new StdClass;
@@ -484,7 +502,9 @@ class mod_mplayer_renderer extends plugin_renderer_base {
                 }
 
                 // Now process highlighters.
-                if (!empty($clips[$clipix]->duration) && ($clips[$clipix]->duration >= 0) && $highlightzones = mplayer_get_highlighted_zones($mplayer, $clipix)) {
+                if (!empty($clips[$clipix]->duration) &&
+                        ($clips[$clipix]->duration >= 0) &&
+                                $highlightzones = mplayer_get_highlighted_zones($mplayer, $clipix)) {
                     foreach ($highlightzones as $hlz) {
                         list($startpc, $endpc) = mplayer_compute_segment_points($hlz->startpoint, $hlz->endpoint, $clips[$clipix]);
                         $segmenttpl = new StdClass;
@@ -791,47 +811,9 @@ class mod_mplayer_renderer extends plugin_renderer_base {
         $listbar = $mplayer->playlist ? $mplayer->playlist : 'none';
         $mute = $mplayer->mute ? 'true' : 'false';
 
-        if (1) {
-            switch ($mplayer->type) {
+        $this->build_jw_playlist($mplayer, $context, $urlarray);
 
-                case 'video':
-                case 'sound': {
-                    $urlarray = mplayer_get_file_url($mplayer, 'mplayerfiles', $context, '/medias/0/', true);
-                    break;
-                }
-
-                case 'url': {
-                    // $urlarray = explode(';', ' ;' . $mplayer->external);
-                    $urlarray = explode(';', $mplayer->external);
-                    break;
-                }
-
-                case 'youtube': {
-                    $urlarray = explode(';', $mplayer->external);
-                    break;
-                }
-
-                default:
-                    $urlarray = array();
-            }
-            $playlistthumb = mplayer_get_file_url($mplayer, 'mplayerfiles', $context, '/thumbs/', true);
-            $this->playlist = array();
-
-            if (is_array($urlarray)) {
-                foreach ($urlarray as $index => $url) {
-                    if ($index !== '' && $url) {
-                        $clip = new StdClass;
-                        $clip->file = $url;
-                        $clip->image = isset($playlistthumb[$index]) ? $playlistthumb[$index] : '';
-                        $clip->title = 'test';
-                        $clip->duration = -1;
-                        $this->playlist[] = $clip;
-                    }
-                }
-            }
-        }
-
-        $jwbody = '<div id="jwplayer_'.$mplayer->id.'">'.get_string('loadingplayer', 'mplayer').'</div>';
+        $jwbody = '<div id="jwplayer_'.$mplayer->id.'" style="width: {$mpplayer->width}; height:{$mplayer->height}">'.get_string('loadingplayer', 'mplayer').'</div>';
 
         $jwbody .= '<script type="text/javascript">
         window.onload = function() {
@@ -858,11 +840,52 @@ class mod_mplayer_renderer extends plugin_renderer_base {
 
         if ($completioninfo->is_enabled($cm) && in_array($mplayer->technology, array('jw712', 'jw'))) {
             $jwbody .= '<div class="mplayer-jw-completion-container">';
-            $jwbody .= $this->flowplayer_completion($mplayer, $this->playlist);
+            $jwbody .= $this->mplayer_completion($mplayer, $this->playlist);
             $jwbody .= '</div>';
         }
 
         return $jwbody;
+    }
+
+    public function build_jw_playlist($mplayer, $context, &$urlarray) {
+
+        switch ($mplayer->type) {
+
+            case 'video':
+            case 'sound': {
+                $urlarray = mplayer_get_file_url($mplayer, 'mplayerfiles', $context, '/medias/0/', true);
+                break;
+            }
+
+            case 'url': {
+                // $urlarray = explode(';', ' ;' . $mplayer->external);
+                $urlarray = explode(';', $mplayer->external);
+                break;
+            }
+
+            case 'youtube': {
+                $urlarray = explode(';', $mplayer->external);
+                break;
+            }
+
+            default:
+                $urlarray = array();
+        }
+        $playlistthumb = mplayer_get_file_url($mplayer, 'mplayerfiles', $context, '/thumbs/', true);
+        $this->playlist = array();
+
+        if (is_array($urlarray)) {
+            foreach ($urlarray as $index => $url) {
+                if ($index !== '' && $url) {
+                    $clip = new StdClass;
+                    $clip->file = $url;
+                    $clip->image = isset($playlistthumb[$index]) ? $playlistthumb[$index] : '';
+                    $clip->title = 'test';
+                    $clip->duration = -1;
+                    $this->playlist[] = $clip;
+                }
+            }
+        }
     }
 
     /**
@@ -943,6 +966,13 @@ class mod_mplayer_renderer extends plugin_renderer_base {
         return $this->output->render_from_template('mod_mplayer/progressbar', $template);
     }
 
+    public function progressicon($progressbar, $clipid) {
+        if ($progressbar == 100) {
+            return '<a title="Clip '.$clipid.'"><img class="mplayer-clip-state" src="'.$this->output->pix_url('ok', 'mplayer').'" alt="Clip $clipid not seen"></a>';
+        } else {
+            return '<a title="Clip '.$clipid.'"><img class="mplayer-clip-state" src="'.$this->output->pix_url('nook', 'mplayer').'" alt="Clip $clipid not seen"></a>';
+        }
+    }
 
     /**
      * plays a soundcard
@@ -1044,5 +1074,136 @@ class mod_mplayer_renderer extends plugin_renderer_base {
         $template->id = $mplayer->id;
 
         return $this->output->render_from_template('mod_mplayer/assesscontrols', $template);
+    }
+
+    public function report_table($mplayer, $users, $context) {
+        global $OUTPUT;
+
+        $cm = get_coursemodule_from_instance('mplayer', $mplayer->id);
+
+        if (empty($users)) {
+            return $this->output->notification(get_string('nousers', 'mplayer'));
+        }
+
+        $userstr = get_string('user');
+        $viewstatestr = get_string('viewstate', 'mplayer');
+
+        $table = new html_table();
+        $table->header = ['', $userstr, $viewstatestr, ''];
+        $table->size = ['10%', '30%', '50%', '10%'];
+        $table->width = '100%';
+
+        $clips = mplayer_get_clips($mplayer, $context);
+
+        foreach ($users as $u) {
+            $row = [];
+            $row[] = $this->output->user_picture($u);
+            $row[] = fullname($u);
+
+            $reseturl = new moodle_url('/mod/mplayer/report.php', ['id' => $cm->id, 'what' => 'reset', 'userid' => $u->id]);
+            $cmds = '<a href="'.$reseturl.'">'.$OUTPUT->pix_icon('i/reset', get_string('reset'), 'core').'</a>';
+            // $row[] = $cmds;
+
+            $row[] = $this->mplayer_completion($mplayer, $clips, $u);
+
+            $table->data[] = $row;
+        }
+
+        return html_writer::table($table);
+    }
+
+    public function return_button($cm, $return) {
+        global $COURSE, $CFG;
+
+        $str = '';
+        if (($COURSE->format != 'singleactivity') || ($COURSE->format == 'page' && optional_param('aspage', false, PARAM_INT))) {
+            $str .= '<center>';
+            if ($return == 'mod') {
+                $params = array('id' => $cm->id);
+                $label = get_string('backtoplayer', 'mplayer');
+                $str .= $this->output->single_button(new moodle_url('/mod/mplayer/view.php', $params), $label);
+            } else {
+                if ($COURSE->format == 'page') {
+                    include_once($CFG->dirroot.'/course/format/page/xlib.php');
+                    page_print_page_format_navigation($cm, false);
+                }
+                $params = array('id' => $COURSE->id);
+                $label = get_string('backtocourse', 'mplayer');
+                $str .= $this->output->single_button(new moodle_url('/course/view.php', $params), $label);
+            }
+            $str .= '</center>';
+        }
+
+        return $str;
+    }
+
+    /**
+     *
+     */
+    public function report_button($cm, $return = 'mod') {
+
+        $str = '';
+        $context = context_module::instance($cm->id);
+        if (has_capability('mod/mplayer:assessor', $context)) {
+            $str .= '<center>';
+            $params = array('id' => $cm->id, 'return' => $return);
+            $label = get_string('report', 'mplayer');
+            $str .= $this->output->single_button(new moodle_url('/mod/mplayer/report.php', $params), $label);
+            $str .= '</center>';
+        }
+        return $str;
+    }
+
+    public function namefilter(&$thispageurl) {
+        $str = '';
+
+        $letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+        $firstnamefilter = optional_param('filterfirstname', false, PARAM_TEXT);
+
+        $str .= get_string('firstname').': ';
+        for ($i = 0; $i < strlen($letters); $i++) {
+            $letter = $letters[$i];
+            if ($firstnamefilter == $letter) {
+                $str .= $letter.'&nbsp';
+            } else {
+                $str .= '<a href="'.$thispageurl.'&filterfirstname='.$letter.'" >'.$letter.'</a>&nbsp';
+            }
+        }
+        if (!$firstnamefilter) {
+            $str .= get_string('all').'&nbsp';
+        } else {
+            $str .= '<a href="'.$thispageurl.'&filterfirstname=" >'.get_string('all').'</a>&nbsp';
+        }
+
+        $str .= '<br/>';
+
+        $lastnamefilter = optional_param('filterlastname', false, PARAM_TEXT);
+
+        $str .= get_string('lastname').': ';
+        for ($i = 0; $i < strlen($letters); $i++) {
+            $letter = $letters[$i];
+            if ($lastnamefilter == $letter) {
+                $str .= $letter.'&nbsp';
+            } else {
+                $str .= '<a href="'.$thispageurl.'&filterlastname='.$letter.'" >'.$letter.'</a>&nbsp';
+            }
+        }
+        if (!$lastnamefilter) {
+            $str .= get_string('all').'&nbsp';
+        } else {
+            $str .= '<a href="'.$thispageurl.'&filterlastname=" >'.get_string('all').'</a>&nbsp';
+        }
+
+        $params = array();
+        if ($firstnamefilter) {
+            $params['filterfirstname'] = $firstnamefilter;
+        }
+        if ($lastnamefilter) {
+            $params['filterlastname'] = $lastnamefilter;
+        }
+        $thispageurl->params();
+
+        return $str;
     }
 }

@@ -54,6 +54,8 @@ function mplayer_set_instance(&$block) {
         $str .= $renderer->intro($mplayer);
     }
 
+    $str .= $renderer->report_button($block->cm, 'course');
+
     // Trigger module viewed event.
     $context = context_module::instance($block->cm->id);
     require_capability('mod/mplayer:view', $context);

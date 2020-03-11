@@ -21,6 +21,8 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+define('AJAX_SCRIPT', 1);
+
 require('../../../config.php');
 require_once($CFG->dirroot.'/mod/mplayer/lib.php');
 require_once($CFG->dirroot.'/mod/mplayer/locallib.php');
@@ -33,6 +35,7 @@ $action = required_param('what', PARAM_TEXT);
 if (!$mplayer = $DB->get_record('mplayer', array('id' => $mpid))) {
     die("Bad Mplayer id");
 }
+
 mplayer_unpack_attributes($mplayer);
 if (!$cm = get_coursemodule_from_instance('mplayer', $mpid)) {
     die("Bad course module");
@@ -89,7 +92,6 @@ if ($action == 'progress') {
 }
 
 $cliptrack = $passpoints->get_cliptrack($USER->id, $clipid);
-$clippasspoints = $cliptrack->passpoints;
 
 if ($action == 'finished') {
 
@@ -107,7 +109,12 @@ if ($action == 'finished') {
     if (empty($progress)) {
         $progress = 100;
     }
-    $output = $renderer->progressbar($mplayer, 100, $progress, $clippasspoints, $highlights, $clipid);
+
+    if (is_string($cliptrack->passpoints)) {
+        $cliptrack->passpoints = json_decode($cliptrack->passpoints);
+    }
+
+    $output = $renderer->progressbar($mplayer, 100, $progress, $cliptrack, $highlights, $clipid);
 
     $event = \mod_mplayer\event\mplayer_viewedall::create(array(
         'objectid' => $cm->id,

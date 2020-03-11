@@ -29,6 +29,9 @@ defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->dirroot.'/mod/mplayer/locallib.php');
 
+// Can be used event if not installed. this is just an alias definition.
+use \format\page\course_page;
+
 /**
  * This function is not implemented in this plugin, but is needed to mark
  * the vf documentation custom volume availability.
@@ -393,6 +396,7 @@ function mplayer_cron() {
  * @return bool false if file not found, does not return if found - justsend the file
  */
 function mplayer_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload) {
+    global $CFG;
 
     $guests = false;
     if ($course->id > SITEID) {
@@ -405,8 +409,20 @@ function mplayer_pluginfile($course, $cm, $context, $filearea, $args, $forcedown
         }
     }
 
-    if (!$guests) {
-        require_login($course);
+    if ($course->format == 'page') {
+        /*
+         * In page format, some pages may not require login. Just check the customlabel
+         * is accessible to the user (no mater pages are or not).
+         */
+        require_once($CFG->dirroot.'/course/format/page/lib.php');
+
+        if (!course_page::check_page_public_accessibility($course)) {
+            require_course_login($course, true, $cm);
+        }
+    } else {
+        if (!$guests) {
+            require_course_login($course, true, $cm);
+        }
     }
 
     if ($context->contextlevel != CONTEXT_MODULE) {
@@ -572,18 +588,44 @@ function mplayer_get_completion_state($course, $cm, $userid, $type) {
 
     $result = $type; // Default return value.
 
-    // If completion option is enabled, evaluate it and return true/false.
-    if ($mplayerinstance->completionmediaviewed) {
-        $params = array('userid' => $userid, 'mplayerid' => $cm->instance, 'finished' => 1);
-        $finished = $DB->count_records('mplayer_userdata', $params);
-        if ($type == COMPLETION_AND) {
-            $result = $result && $finished;
-        } else {
-            $result = $result || $finished;
-        }
+    $context = context_module::instance($cm->id);
+
+    if (strpos($mplayerinstance->technology, 'flowplayer') === 0) {
+        $clips = mplayer_get_clips($mplayerinstance, $context);
     } else {
-        // Completion option is not enabled so just return $type.
-        return $type;
+        $clips = jwplayer_get_clips($mplayerinstance, $context);
+    }
+
+    $params = array('userid' => $userid, 'mplayerid' => $cm->instance);
+    $cliprecords = $DB->get_records('mplayer_userdata', $params, 'clipid', 'clipid, finished');
+
+    // If completion option is enabled, evaluate it and return true/false.
+    $finished = false;
+
+    if (!empty($mplayerinstance->completionmediaviewed)) {
+        $finished = false;
+        foreach ($cliprecords as $rec) {
+            if ($rec->finished) {
+                $finished = true;
+                break;
+            }
+        }
+    }
+
+    if (!empty($mplayerinstance->completionallmediaviewed)) {
+        $finished = true;
+        foreach (array_keys($clips) as $clipid) {
+            if (!array_key_exists($clipid, $cliprecords) || !$cliprecords[$clipid]->finished) {
+                $finished = false;
+                break;
+            }
+        }
+    }
+
+    if ($type == COMPLETION_AND) {
+        $result = $result && $finished;
+    } else {
+        $result = $result || $finished;
     }
 
     return $result;

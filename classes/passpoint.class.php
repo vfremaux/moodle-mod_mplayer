@@ -135,6 +135,9 @@ class Passpoint {
                     if (is_array($track->passpoints)) {
                         $track->passpoints = json_encode($track->passpoints);
                     }
+                    if (is_object($track->passpoints)) {
+                        $track->passpoints =  json_encode((array)$track->passpoints);
+                    }
                     $DB->update_record('mplayer_userdata', $track);
                 }
             }
@@ -213,7 +216,7 @@ class Passpoint {
 
         $this->check_initialized($userid, $clipid);
 
-        $passpoints = $this->cliptracks[$userid][$clipid]->passpoints;
+        $passpoints = (array)$this->cliptracks[$userid][$clipid]->passpoints;
         ksort($passpoints);
 
         $validatedloc = 0;
@@ -222,7 +225,6 @@ class Passpoint {
                 $validatedloc = $loc;
             }
             if ($state == 0) {
-                break;
                 return $validatedloc;
             }
         }
@@ -266,7 +268,11 @@ class Passpoint {
     }
 
     public function get_cliptrack($userid, $clipid) {
-        return $this->cliptracks[$userid][$clipid];
+        $cliptrack = $this->cliptracks[$userid][$clipid];
+        if (is_string($cliptrack->passpoints)) {
+            $cliptrack->passpoints = json_decode($cliptrack->passpoints);
+        }
+        return $cliptrack;
     }
 
     /**
@@ -277,6 +283,7 @@ class Passpoint {
      */
     public function is_passed($userid, $clipid) {
 
+        // echo "Pass rule ".$this->mplayer->passrule;
         if ($this->mplayer->passrule == 'none') {
             return true;
         }
@@ -285,10 +292,12 @@ class Passpoint {
 
         if ($this->mplayer->passrule == 'fromstart') {
             $expected = $this->get_passed_maxprogress($userid, $clipid);
+            // echo "Expected $expected Passed ".$this->mplayer->passpercent;
             return $expected >= $this->mplayer->passpercent;
         } else if ($this->mplayer->passrule == 'freeloc') {
-            $passedate = $this->get_passed_rate($userid, $clipid);
-            return $passedate >= $this->mplayer->passpercent;
+            $passedrate = $this->get_passed_rate($userid, $clipid);
+            // echo "passedrate $expected Passed ".$this->mplayer->passpercent;
+            return $passedrate >= $this->mplayer->passpercent;
         }
     }
 

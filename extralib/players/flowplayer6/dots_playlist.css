@@ -1,5 +1,20 @@
-.dots{
-    max-width:700px;
+
+@media all and (max-width: 1024px) {
+    .dots{
+        max-width:700px;
+    }
+}
+
+@media all and (min-width: 1024px) and (max-width: 1280px) {
+    .dots{
+        max-width:860px;
+    }
+}
+
+@media all and (min-width: 1280px) {
+    .dots{
+        max-width:1024px;
+    }
 }
 
 .dots.is-loading{

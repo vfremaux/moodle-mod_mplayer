@@ -30,65 +30,64 @@ require_once($CFG->dirroot.'/mod/mplayer/lib.php');
 
 list($cm, $course, $mplayer) = mplayer_get_context();
 
-// Check and init storage if empty.
-mplayer_init_storage($cm, 0);
+$pagesize = 20;
+$page = optional_param('page', 0, PARAM_INT);
+$firstnamefilter = optional_param('filterfirstname', false, PARAM_TEXT);
+$lastnamefilter = optional_param('filterlastname', false, PARAM_TEXT);
+$return = optional_param('return', 'mod', PARAM_TEXT);
 
-$url = new moodle_url('/mod/mplayer/view.php', array('id' => $cm->id));
+$params = ['id' => $cm->id, 'firstnamefilter' => $firstnamefilter, 'lastnamefilter' => $lastnamefilter, 'return' => $return];
+$url = new moodle_url('/mod/mplayer/report.php', $params);
 $PAGE->set_url($url);
 
 // Security.
-require_login($course->id);
-
-if (!isset($CFG->mplayer_default_player)) {
-    set_config('mplayer_default_player', 'flowplayer');
-}
-
-// Trigger module viewed event.
 $context = context_module::instance($cm->id);
-require_capability('mod/mplayer:view', $context);
+require_login($course->id);
+require_capability('mod/mplayer:assessor', $context);
 
-$event = \mod_mplayer\event\mplayer_viewed::create(array(
+$event = \mod_mplayer\event\mplayer_report_viewed::create(array(
     'objectid' => $cm->id,
     'context' => $context,
     'other' => array(
         'objectname' => $mplayer->name
     )
 ));
-$event->add_record_snapshot('course_modules', $cm);
 $event->trigger();
-
-$completion = new completion_info($course);
-$completion->set_module_viewed($cm);
 
 // Print the page header.
 $strmplayers = get_string('modulenameplural', 'mplayer');
 $strmplayer  = get_string('modulename', 'mplayer');
 $PAGE->set_title(format_string($mplayer->name));
 $PAGE->set_heading('');
-$PAGE->navbar->add(get_string('mplayer', 'mplayer').': '.$mplayer->name);
+$PAGE->navbar->add(get_string('report', 'mplayer').': '.$mplayer->name);
 $PAGE->set_focuscontrol('');
 $PAGE->set_cacheable(true);
 
-if (mod_mplayer_supports_feature('assessables/highlightzones') && $mplayer->assessmode > 0) {
-    $PAGE->requires->js_call_amd('mod_mplayer/mplayer_assessables', 'init');
-}
+$renderer = $PAGE->get_renderer('mod_mplayer');
+$renderer->set_mplayer($mplayer);
+
+$groupid = groups_get_activity_group($cm, true);
+
+$fields = 'u.id,'.get_all_user_name_fields(true, 'u').',u.picture, u.imagealt, u.email, u.emailstop';
+$allusers = get_users_by_capability($context, 'mod/mplayer:assessed', $fields, 'lastname, firstname', 0, 0, $groupid);
+$totalusers = count($allusers);
+$users = get_users_by_capability($context, 'mod/mplayer:assessed', $fields, 'lastname, firstname', $page * $pagesize, $pagesize, $groupid);
+mplayer_apply_namefilters($users);
 
 echo $OUTPUT->header();
 
-echo mplayer_require_js($mplayer, 'script');
+echo $OUTPUT->heading(get_string('report', 'mplayer'));
 
-$mplayer->instance = $cm->instance;
+echo groups_print_activity_menu($cm, $url, true);
 
-$renderer = $PAGE->get_renderer('mod_mplayer');
+echo $renderer->namefilter($url);
 
-echo $renderer->print_body($mplayer); // See mod/mplayer/lib.php.
+echo $OUTPUT->paging_bar($totalusers, $page, $pagesize, $url);
 
-echo $renderer->intro($mplayer);
+echo $renderer->report_table($mplayer, $users, $context);
 
-echo $renderer->report_button($cm);
+echo $OUTPUT->paging_bar($totalusers, $page, $pagesize, $url);
 
-echo $renderer->return_button($cm, 'course');
+echo $renderer->return_button($cm, $return);
 
-// Finish the page.
-echo $OUTPUT->footer($course);
-// End of mod/mplayer/view.php.
+echo $OUTPUT->footer();

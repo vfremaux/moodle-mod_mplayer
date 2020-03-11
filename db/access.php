@@ -50,6 +50,14 @@ $capabilities = array(
         )
     ),
 
+    'mod/mplayer:assessed' => array(
+        'captype' => 'read',
+        'contextlevel' => CONTEXT_MODULE,
+        'archetypes' => array(
+            'student' => CAP_ALLOW,
+        )
+    ),
+
     'mod/mplayer:assessor' => array(
         'captype' => 'read',
         'contextlevel' => CONTEXT_MODULE,

@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * The mod_mplayer course module viewed event.
+ * The mod_mplayer report viewed event.
  *
  * @package     mod_mplayer
  * @category    mod
@@ -30,7 +30,7 @@ defined('MOODLE_INTERNAL') || die();
 /**
  * The mod_mplayer module viewed event class.
  */
-class mplayer_viewed extends \core\event\base {
+class mplayer_report_viewed extends \core\event\base {
 
     /**
      * Init method.
@@ -49,7 +49,7 @@ class mplayer_viewed extends \core\event\base {
      * @return string
      */
     public function get_description() {
-        return "view";
+        return "view report";
     }
 
     /**
@@ -58,7 +58,7 @@ class mplayer_viewed extends \core\event\base {
      * @return string
      */
     public static function get_name() {
-        return get_string('mplayer_viewed_event', 'mplayer');
+        return get_string('report_viewed_event', 'mplayer');
     }
 
     /**
@@ -76,15 +76,8 @@ class mplayer_viewed extends \core\event\base {
      * @return array|null
      */
     protected function get_legacy_logdata() {
-        return array($this->courseid, 'mplayer', 'view', 'view.php?id='.$this->objectid,
+        return array($this->courseid, 'mplayer', 'view report', 'view.php?id='.$this->objectid,
             $this->other['objectname'], $this->contextinstanceid);
-    }
-
-    /**
-     * @return null|string
-     */
-    public static function get_legacy_eventname() {
-        return 'add_to_log';
     }
 
     /**

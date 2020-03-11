@@ -15,6 +15,7 @@
             <FIELD NAME="timemodified" TYPE="int" LENGTH="11" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" COMMENT="timemodified"/>
             <FIELD NAME="technology" TYPE="char" LENGTH="15" NOTNULL="false" SEQUENCE="false" COMMENT="technology"/>
             <FIELD NAME="description" TYPE="text" LENGTH="medium" NOTNULL="false" SEQUENCE="false" COMMENT="description"/>
+            <FIELD NAME="playerparams" TYPE="text" LENGTH="medium" NOTNULL="false" SEQUENCE="false" COMMENT="bunch of player internal params"/>
             <FIELD NAME="mplayerfile" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="deprecated"/>
             <FIELD NAME="external" TYPE="text" LENGTH="medium" NOTNULL="false" SEQUENCE="false" COMMENT="external"/>
             <FIELD NAME="cuelists" TYPE="text" LENGTH="medium" NOTNULL="false" SEQUENCE="false" COMMENT="deprecated"/>
@@ -29,7 +30,7 @@
             <FIELD NAME="numpasspoints" TYPE="int" LENGTH="3" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Number of tracking points" />
             <FIELD NAME="passrule" TYPE="char" LENGTH="16" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Name of the rule to check full media was seen, 'fromstart', or 'freeloc'" />
             <FIELD NAME="passpercent" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="100" SEQUENCE="false" COMMENT="Percent of the media to view to pass completion" />
-            <FIELD NAME="showpasspoints" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" SEQUENCE="false" COMMENT="If passpoints must show or not" />
+            <FIELD NAME="showpasspoints" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="1" SEQUENCE="false" COMMENT="If passpoints must show or not" />
             <FIELD NAME="assessmode" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="1" SEQUENCE="false" COMMENT="If assessables, what assess activity is activated" />
             <FIELD NAME="grade" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="1" SEQUENCE="false" COMMENT="Max Grade for assessables" />
         </FIELDS>

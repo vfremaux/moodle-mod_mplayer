@@ -281,7 +281,8 @@ function mplayer_get_clips(&$mplayer, $context) {
                 break;
             }
 
-            case 'url': {
+            case 'url':
+            case 'youtube': {
                 // In that case, one clip per URL. No alternate sources possible.
                 if (!empty($mplayer->external)) {
                     $sources = explode(';', $mplayer->external);
@@ -444,6 +445,51 @@ function mplayer_get_clips_from_files(&$mplayer) {
     }
 
     return $clips;
+}
+
+/**
+ * Get the internal "clips" model for jwplayer.
+ */
+function jwplayer_get_clips(&$mplayer, $context) {
+    switch ($mplayer->type) {
+
+        case 'video':
+        case 'sound': {
+            $urlarray = mplayer_get_file_url($mplayer, 'mplayerfiles', $context, '/medias/0/', true);
+            break;
+        }
+
+        case 'url': {
+            // $urlarray = explode(';', ' ;' . $mplayer->external);
+            $urlarray = explode(';', $mplayer->external);
+            break;
+        }
+
+        case 'youtube': {
+            $urlarray = explode(';', $mplayer->external);
+            break;
+        }
+
+        default:
+            $urlarray = array();
+    }
+
+    $playlistthumb = mplayer_get_file_url($mplayer, 'mplayerfiles', $context, '/thumbs/', true);
+    $playlist = array();
+
+    if (is_array($urlarray)) {
+        foreach ($urlarray as $index => $url) {
+            if ($index !== '' && $url) {
+                $playlistitem = new StdClass;
+                $playlistitem->file = $url;
+                $playlistitem->image = isset($playlistthumb[$index]) ? $playlistthumb[$index] : '';
+                $playlistitem->title = 'test';
+                $playlist[] = $playlistitem;
+            }
+        }
+    }
+
+    return $playlist;
 }
 
 /**
@@ -654,6 +700,17 @@ function mplayer_list_quality() {
                  'autohigh' => get_string('autohigh', 'mplayer'),
                  'autolow' => get_string('autolow', 'mplayer'),
                  'low' => get_string('low', 'mplayer'));
+}
+
+
+function mplayer_list_showpasspoints() {
+    $showoptions = array(
+        '0' => get_string('hidetracking', 'mplayer'),
+        '1' => get_string('showall', 'mplayer'),
+        '2' => get_string('hidepasspoints', 'mplayer'),
+        '3' => get_string('showclipstates', 'mplayer'),
+    );
+    return $showoptions;
 }
 
 /**
@@ -1550,4 +1607,29 @@ function mplayer_get_highlighted_zones($mplayer, $clipix, $seeall = false) {
     }
 
     return $highlightzones;
+}
+
+function mplayer_apply_namefilters(&$fullusers) {
+    $firstnamefilter = optional_param('filterfirstname', false, PARAM_TEXT);
+    $lastnamefilter = optional_param('filterlastname', false, PARAM_TEXT);
+
+    if (!$firstnamefilter && !$lastnamefilter) {
+        return;
+    }
+
+    if ($firstnamefilter) {
+        foreach ($fullusers as $userid => $user) {
+            if (!preg_match('/^'.$firstnamefilter.'/i', $user->firstname)) {
+                unset($fullusers[$userid]);
+            }
+        }
+    }
+
+    if ($lastnamefilter) {
+        foreach ($fullusers as $userid => $user) {
+            if (!preg_match('/^'.$lastnamefilter.'/i', $user->lastname)) {
+                unset($fullusers[$userid]);
+            }
+        }
+    }
 }

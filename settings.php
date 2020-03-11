@@ -50,6 +50,10 @@ $desc = get_string('allowtechnologychoicedesc', 'mplayer');
 $settings->add(new admin_setting_configselect($key, $label, $desc, 0, $yesnooptions));
 
 // APPEARANCE.
+
+$label = get_string('appearance', 'mplayer');
+$settings->add(new admin_setting_heading('h1', $label, ''));
+
 // Width.
 $key = 'mplayer/default_width';
 $label = get_string('width', 'mplayer');
@@ -105,6 +109,10 @@ $desc = '';
 $settings->add(new admin_setting_configtext($key, $label, $desc, '', PARAM_TEXT));
 
 // BEHAVIOUR.
+
+$label = get_string('behaviour', 'mplayer');
+$settings->add(new admin_setting_heading('h2', $label, ''));
+
 // Auto start.
 $key = 'mplayer/default_autostart';
 $label = get_string('autostart', 'mplayer');
@@ -161,3 +169,11 @@ foreach ($storages as $st) {
     $instance = new $classname();
     $instance->get_settings($settings);
 }
+
+$label = get_string('tracking', 'mplayer');
+$settings->add(new admin_setting_heading('h3', $label, ''));
+
+$key = 'mplayer/default_show_passpoints';
+$label = get_string('showpasspoints', 'mplayer');
+$desc = '';
+$settings->add(new admin_setting_configselect($key, $label, $desc, 'false', mplayer_list_showpasspoints()));

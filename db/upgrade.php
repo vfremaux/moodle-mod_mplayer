@@ -37,7 +37,7 @@ function xmldb_mplayer_upgrade($oldversion = 0) {
     $dbman = $DB->get_manager();
 
     if ($oldversion < 2014081100) {
-        // Add new fields to certificate table.
+        // Add new fields to mplayer table.
         $table = new xmldb_table('mplayer');
         $field = new xmldb_field('notesformat');
         $field->set_attributes(XMLDB_TYPE_INTEGER, 4, XMLDB_UNSIGNED, XMLDB_NOTNULL, null, 0, 'notes');
@@ -177,7 +177,6 @@ function xmldb_mplayer_upgrade($oldversion = 0) {
         if ($dbman->field_exists($table, $field)) {
             $dbman->rename_field($table, $field, 'videotags');
         }
-
 
         $table = new xmldb_table('mplayer');
         $field = new xmldb_field('forcefullscreen', XMLDB_TYPE_CHAR, 6, null, XMLDB_NOTNULL, null, 'false', 'fullscreen');

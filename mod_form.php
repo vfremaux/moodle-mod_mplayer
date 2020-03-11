@@ -147,8 +147,9 @@ class mod_mplayer_mod_form extends moodleform_mod {
         $mform->addHelpButton('passpercent', 'passpercent', 'mplayer');
         $mform->disabledIf('passpercent', 'passrule', 'eq', 'none');
 
-        $mform->addElement('checkbox', 'showpasspoints', get_string('showpasspoints', 'mplayer'));
-        $mform->setDefault('showpasspoints', 1);
+        $showoptions = mplayer_list_showpasspoints();
+        $mform->addElement('select', 'showpasspoints', get_string('showpasspoints', 'mplayer'), $showoptions);
+        $mform->setDefault('showpasspoints', $config->default_show_passpoints);
         $mform->addHelpButton('showpasspoints', 'showpasspoints', 'mplayer');
 
         if (mod_mplayer_supports_feature('assessables/highlightzones')) {
@@ -248,14 +249,18 @@ class mod_mplayer_mod_form extends moodleform_mod {
     public function add_completion_rules() {
         $mform =& $this->_form;
 
+        $group = array();
         $label = get_string('mediaviewed', 'mplayer');
         $mform->addElement('checkbox', 'completionmediaviewed', $label, get_string('completionmediaviewed', 'mplayer'));
 
-        return array('completionmediaviewed');
+        $label = get_string('allmediaviewed', 'mplayer');
+        $mform->addElement('checkbox', 'completionallmediaviewed', $label, get_string('completionallmediaviewed', 'mplayer'));
+
+        return array('completionmediaviewed', 'completionallmediaviewed');
     }
 
     public function completion_rule_enabled($data) {
-        return(!empty($data['completionmediaviewed']));
+        return(!empty($data['completionmediaviewed']) && !empty($data['completionallmediaviewed']));
     }
 
     protected function get_player_elements($technology) {

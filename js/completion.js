@@ -64,19 +64,22 @@ function send_video_progress(e, api, progresstime) {
         });
 
         // If there is an assessable extension, push value to it
-        if (modmplayerassessables !== undefined) {
-            if (modmplayerassessables.ismarking) {
-                // Push only segment end further.
-                modmplayerassessables.endpoint = progress;
-                modmplayerassessables.endpointtime = progresstime;
-                modmplayerassessables.currentzone.css('width', progress - modmplayerassessables.startpoint);
-            } else {
-                // Push both segment ends further.
-                modmplayerassessables.startpoint = progress;
-                modmplayerassessables.startpointtime = progresstime;
-                modmplayerassessables.endpoint = progress;
-                modmplayerassessables.endpointtime = progresstime;
+        try {
+            if (modmplayerassessables !== undefined) {
+                if (modmplayerassessables.ismarking) {
+                    // Push only segment end further.
+                    modmplayerassessables.endpoint = progress;
+                    modmplayerassessables.endpointtime = progresstime;
+                    modmplayerassessables.currentzone.css('width', progress - modmplayerassessables.startpoint);
+                } else {
+                    // Push both segment ends further.
+                    modmplayerassessables.startpoint = progress;
+                    modmplayerassessables.startpointtime = progresstime;
+                    modmplayerassessables.endpoint = progress;
+                    modmplayerassessables.endpointtime = progresstime;
+                }
             }
+        } catch {
         }
     }
 

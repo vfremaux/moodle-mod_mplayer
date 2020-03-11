@@ -15,56 +15,9 @@ div.flowplayer {
 
 /* PROGRESS BARS */
 
-/*
-div.mod-mplayer.progressbar{
-    height:24px;
-    margin-bottom:10px;
+.mplayer-player-progresstrack {
+    display: flex;
 }
-
-.dots div.mod-mplayer.progressbar-outer{
-    max-width:700px;
-}
-
-div.mplayer-jw-completion-container {
-    padding-top: 40px;
-}
-
-div.mplayer-completion {
-    height:24px;
-    border:solid 1px #e0e0e0;
-    border-radius:3px;
-    display:inline-block;
-}
-
-div.mod-mplayer-progressbar-outer{
-    height:22px;
-    border:2px solid #606060;
-    border-radius:4px;
-    text-align:left;
-}
-
-div.mod-mplayer-progressbar-inner{
-    height:20px;
-    min-height:20px;
-    border:1px solid #606060;
-    border-radius:4px;
-    background-image:url();
-    background-color:#00A000;
-    background-position:0% 50%; 
-}
-
-div.mod-mplayer-progressbar-inner2{
-    height:20px;
-    min-height:20px;
-    border:1px solid #606060;
-    border-radius:4px;
-    background-image:url();
-    background-color:#00E000;
-    background-position:0% 50%;
-    position:relative;
-    top:-22px;
-}
-*/
 
 .mplayer-clip-progresstrack {
     width: 100%;
@@ -170,13 +123,13 @@ div.currentread{
 
 /* in format page */
 .block_page_module .mplayer-external-container {
-    background-color: #000;
+    /* background-color: #000; */
     text-align: center;
     margin-bottom: 20px;
 }
 
 .mplayer-external-container {
-    background-color: #222;
+    /* background-color: #222; */
     text-align:center;
 }
 
@@ -195,13 +148,18 @@ div.currentread{
     grid-column-gap: 1em;
 }
 
+.thumbs .fp-playlist a img,
 .mplayer-thumb-link img {
     width: 125px;
     height: 125px;
 }
 
+.thumbs .fp-playlist a,
+.mplayer-thumb-link {
+    margin-right: 4px;
+}
 
-@media all and (max-width: 480px) {
+@media all and (max-width: 805px) {
     div.flowplayer {
         height: 180px;
         max-height: 180px;
@@ -211,25 +169,42 @@ div.currentread{
         padding: 0 !important;
     }
 
-    .dots .fp-playlist{
+    .dots .fp-playlist {
         /* small dots on bottom right, under the player video */
         bottom:-13% !important;
     }
 
-    .fp-playlist {
+    .thumbs .fp-playlist {
         display: grid;
         grid-template-columns: 32% 32% 32%;
         grid-column-gap: 1em;
     }
 
+    .shadow-playlist.thumbs {
+        display: grid;
+        grid-template-columns: 32% 32% 32%;
+        grid-column-gap: 1em;
+        height: auto;
+    }
+
+    .thumbs .fp-playlist a img,
     .mplayer-thumb-link img {
-        width: 90px;
-        height: 90px;
-        margin-top: 5px;
-        margin-right: 0;
+        width: 80px;
+        height: 80px;
+    }
+
+    .thumbs .fp-playlist a,
+    .mplayer-thumb-link {
+        margin: 4px;
+    }
+
+    .mplayer-clip-state {
+        width:50%;
+        height:50%;
+        margin-bottom: 10px;
     }
 }
 
-.mplayer-assess-controls{
-    text-align: center;
+.flowplayer {
+    background-color: #fcfcfc;
 }
