@@ -37,7 +37,7 @@ class mod_mplayer_mod_form extends moodleform_mod {
     public function definition() {
         global $CFG, $COURSE, $USER, $PAGE;
 
-        $mform =& $this->_form;
+        $mform = &$this->_form;
         $PAGE->requires->js_call_amd('mod_mplayer/technologychooser', 'init', array('formid' => $mform->getAttribute('id')));
 
         $config = get_config('mplayer');
@@ -105,6 +105,57 @@ class mod_mplayer_mod_form extends moodleform_mod {
         }
         $mform->addElement('hidden', 'addtechnologyoptionshere');
         $mform->setType('addtechnologyoptionshere', PARAM_BOOL);
+
+        // Adding the "general" fieldset, where all the common settings are shown.
+        $mform->addElement('header', 'tracking', get_string('tracking', 'mplayer'));
+
+        $options = array(
+            '2' => 2,
+            '5' => 5,
+            '10' => 10,
+            '20' => 20,
+            '30' => 30
+        );
+        $mform->addElement('select', 'numpasspoints', get_string('numpasspoints', 'mplayer'), $options);
+        $mform->setDefault('numpasspoints', 10);
+        $mform->addHelpButton('numpasspoints', 'numpasspoints', 'mplayer');
+        $mform->disabledIf('numpasspoints', 'passrule', 'eq', 'none');
+
+        $options = array(
+            'none' => get_string('passrulenone', 'mplayer'),
+            'fromstart' => get_string('passrulefromstart', 'mplayer'),
+            'freeloc' => get_string('passrulefreeloc', 'mplayer')
+        );
+        $mform->addElement('select', 'passrule', get_string('passrule', 'mplayer'), $options);
+        $mform->setDefault('passrule', 'freeloc');
+        $mform->addHelpButton('passrule', 'passrule', 'mplayer');
+
+        $options = array(
+            '10' => 10,
+            '20' => 20,
+            '30' => 30,
+            '40' => 40,
+            '50' => 50,
+            '60' => 60,
+            '70' => 70,
+            '80' => 80,
+            '90' => 90,
+            '100' => 100,
+        );
+        $mform->addElement('select', 'passpercent', get_string('passrule', 'mplayer'), $options);
+        $mform->setDefault('passpercent', 80);
+        $mform->addHelpButton('passpercent', 'passpercent', 'mplayer');
+        $mform->disabledIf('passpercent', 'passrule', 'eq', 'none');
+
+        $showoptions = mplayer_list_showpasspoints();
+        $mform->addElement('select', 'showpasspoints', get_string('showpasspoints', 'mplayer'), $showoptions);
+        $mform->setDefault('showpasspoints', $config->default_show_passpoints);
+        $mform->addHelpButton('showpasspoints', 'showpasspoints', 'mplayer');
+
+        if (mod_mplayer_supports_feature('assessables/highlightzones')) {
+            include_once($CFG->dirroot.'/mod/mplayer/pro/mod_form.php');
+            mod_form_extensions::add_assessable_behaviours($this, $mform, $this->current->id);
+        }
 
         // Add standard elements, common to all modules.
         $this->standard_coursemodule_elements();
@@ -198,14 +249,18 @@ class mod_mplayer_mod_form extends moodleform_mod {
     public function add_completion_rules() {
         $mform =& $this->_form;
 
+        $group = array();
         $label = get_string('mediaviewed', 'mplayer');
         $mform->addElement('checkbox', 'completionmediaviewed', $label, get_string('completionmediaviewed', 'mplayer'));
 
-        return array('completionmediaviewed');
+        $label = get_string('allmediaviewed', 'mplayer');
+        $mform->addElement('checkbox', 'completionallmediaviewed', $label, get_string('completionallmediaviewed', 'mplayer'));
+
+        return array('completionmediaviewed', 'completionallmediaviewed');
     }
 
     public function completion_rule_enabled($data) {
-        return(!empty($data['completionmediaviewed']));
+        return(!empty($data['completionmediaviewed']) && !empty($data['completionallmediaviewed']));
     }
 
     protected function get_player_elements($technology) {
@@ -221,16 +276,16 @@ class mod_mplayer_mod_form extends moodleform_mod {
         $elements = array();
 
         // Type.
-        $mform->addElement('select', 'type', get_string('type', 'mplayer'), mplayer_list_type($technology));
+        $elements[] = $mform->addElement('select', 'type', get_string('type', 'mplayer'), mplayer_list_type($technology));
         $value = $mform->getElementValue('type');
         $preset = (!empty($value)) ? $value[0] : 'video';
         $mform->setDefault('type', $preset);
 
         // External url alternative.
         $attrs = array('rows' => 5, 'style' => 'width:97%', 'height' => 0);
-        $mform->addElement('textarea', 'external', get_string('external', 'mplayer'), $attrs);
+        $elements[] = $mform->addElement('textarea', 'external', get_string('external', 'mplayer'), $attrs);
 
-        $mform->addElement('select', 'streamer', get_string('streamer', 'mplayer'), mplayer_list_streamer());
+        $elements[] = $mform->addElement('select', 'streamer', get_string('streamer', 'mplayer'), mplayer_list_streamer());
         $mform->disabledIf('streamer', 'type', 'neq', 'rtmp');
         $value = $mform->getElementValue('streamer');
         $preset = (!empty($value)) ? $value[0] : 'none';
@@ -465,6 +520,16 @@ class mod_mplayer_mod_form extends moodleform_mod {
         $value = $mform->getElementValue('fullscreen');
         $preset = (!empty($value)) ? $value[0] : $config->default_fullscreen;
         $mform->setDefault('fullscreen', $preset);
+
+        // Force fullscreen.
+        $elements[] = $mform->addElement('select', 'forcefullscreen', get_string('forcefullscreen', 'mplayer'), mplayer_list_truefalse());
+        if (empty($config->default_forcefullscreen)) {
+            set_config('default_forcefullscreen', 'true', 'mplayer');
+            $config->default_forcefullscreen = 'true';
+        }
+        $value = $mform->getElementValue('forcefullscreen');
+        $preset = (!empty($value)) ? $value[0] : $config->default_forcefullscreen;
+        $mform->setDefault('forcefullscreen', $preset);
 
         // Splashmode.
         if ('jw' == substr($technology, 0, 2)) {

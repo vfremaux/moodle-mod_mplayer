@@ -32,7 +32,6 @@ list($cm, $course, $mplayer) = mplayer_get_context();
 
 // Check and init storage if empty.
 mplayer_init_storage($cm, 0);
-mplayer_require_js($mplayer, 'require');
 
 $url = new moodle_url('/mod/mplayer/view.php', array('id' => $cm->id));
 $PAGE->set_url($url);
@@ -56,8 +55,6 @@ $event = \mod_mplayer\event\mplayer_viewed::create(array(
     )
 ));
 $event->add_record_snapshot('course_modules', $cm);
-$event->add_record_snapshot('course', $course);
-$event->add_record_snapshot('mplayer', $mplayer);
 $event->trigger();
 
 $completion = new completion_info($course);
@@ -72,7 +69,13 @@ $PAGE->navbar->add(get_string('mplayer', 'mplayer').': '.$mplayer->name);
 $PAGE->set_focuscontrol('');
 $PAGE->set_cacheable(true);
 
+if (mod_mplayer_supports_feature('assessables/highlightzones') && $mplayer->assessmode > 0) {
+    $PAGE->requires->js_call_amd('mod_mplayer/mplayer_assessables', 'init');
+}
+
 echo $OUTPUT->header();
+
+echo mplayer_require_js($mplayer, 'script');
 
 $mplayer->instance = $cm->instance;
 
@@ -82,17 +85,9 @@ echo $renderer->print_body($mplayer); // See mod/mplayer/lib.php.
 
 echo $renderer->intro($mplayer);
 
-if (($COURSE->format != 'singleactivity') || ($COURSE->format == 'page' && optional_param('aspage', false, PARAM_INT))) {
-    echo '<center>';
-    if ($COURSE->format == 'page') {
-        include_once($CFG->dirroot.'/course/format/page/xlib.php');
-        page_print_page_format_navigation($cm, false);
-    }
-    $params = array('id' => $course->id);
-    $label = get_string('backtocourse', 'mplayer');
-    echo $OUTPUT->single_button(new moodle_url('/course/view.php', $params), $label);
-    echo '</center>';
-}
+echo $renderer->report_button($cm);
+
+echo $renderer->return_button($cm, 'course');
 
 // Finish the page.
 echo $OUTPUT->footer($course);

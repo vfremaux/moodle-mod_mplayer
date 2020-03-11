@@ -28,18 +28,9 @@ class backup_mplayer_activity_structure_step extends backup_activity_structure_s
     protected function define_structure() {
 
         $mplayer = new backup_nested_element('mplayer', array('id'), array(
-            'name', 'intro', 'introformat', 'timecreated', 'timemodified', 'technology', 'configxml', 'author', 'mplayerdate',
-            'description', 'infoboxcolor', 'infoboxposition', 'infoboxsize', 'duration', 'mplayerfile', 'external', 'cuelists',
-            'hdbitrate', 'hdfile', 'hdfullscreen', 'hdstate', 'livestreamfile', 'livestreamimage', 'livestreaminterval',
-            'livestreammessage', 'livestreamstreamer', 'livestreamtags', 'image', 'audiodescriptionfile', 'audiodescriptionstate',
-            'audiodescriptionvolume', 'mplayerstart', 'videotags', 'title', 'type', 'backcolor', 'frontcolor', 'lightcolor',
-            'screencolor', 'controlbar', 'smoothing', 'height', 'playlist', 'playlistsize', 'skin', 'width', 'autostart',
-            'bufferlength', 'fullscreen', 'icons', 'item', 'logoboxalign', 'logoboxfile', 'logoboxlink', 'logoboxmargin',
-            'logoboxposition', 'logofile', 'logolink', 'logohide', 'logoposition', 'mute', 'quality', 'mplayerrepeat',
-            'resizing', 'shuffle', 'state', 'stretching', 'volume', 'plugins', 'streamer', 'tracecall', 'captionsback',
-            'captionsfile', 'captionsfontsize', 'captionsstate', 'fpversion', 'notes', 'metaviewerposition', 'metaviewersize',
-            'searchbarcolor', 'searchbarlabel', 'searchbarposition', 'searchbarscript', 'snapshotbitmap', 'snapshotscript',
-            'splashmode', 'completionmediaviewed'));
+            'name', 'intro', 'introformat', 'timecreated', 'timemodified', 'technology', 
+            'description', 'mplayerfile', 'external', 'cuelists', 'image', 'mplayerstart',
+            'title', 'type', 'notes', 'completionmediaviewed', 'numpasspoints', 'passrule', 'passpercent'));
 
         // Sources.
         $mplayer->set_source_table('mplayer', array('id' => backup::VAR_ACTIVITYID));

@@ -12,7 +12,11 @@ function fire_video_finished(e, api) {
     var mpid = api.conf._mplayerid;
 
     if (api.video.index === undefined) {
-        index = 0;
+        if (api.playlist.queue.idx === undefined) {
+            index = 0;
+        } else {
+            index = api.playlist.queue.idx;
+        }
     } else {
         index = api.video.index;
     }
@@ -41,7 +45,11 @@ function send_video_progress(e, api, progresstime) {
     }
 
     if (api.video.index === undefined) {
-        index = 0;
+        if (api.playlist.queue.idx === undefined) {
+            index = 0;
+        } else {
+            index = api.playlist.queue.idx;
+        }
     } else {
         index = api.video.index;
     }
@@ -54,6 +62,25 @@ function send_video_progress(e, api, progresstime) {
         $.get(url, function(data,status) {
             $('#mplayer-progress-' + mpid + '_' + index).html(data);
         });
+
+        // If there is an assessable extension, push value to it
+        try {
+            if (modmplayerassessables !== undefined) {
+                if (modmplayerassessables.ismarking) {
+                    // Push only segment end further.
+                    modmplayerassessables.endpoint = progress;
+                    modmplayerassessables.endpointtime = progresstime;
+                    modmplayerassessables.currentzone.css('width', progress - modmplayerassessables.startpoint);
+                } else {
+                    // Push both segment ends further.
+                    modmplayerassessables.startpoint = progress;
+                    modmplayerassessables.startpointtime = progresstime;
+                    modmplayerassessables.endpoint = progress;
+                    modmplayerassessables.endpointtime = progresstime;
+                }
+            }
+        } catch {
+        }
     }
 
     clockdividers[mpid]++;

@@ -23,7 +23,7 @@
 // jshint unused: true, undef:true
 define(['jquery', 'core/config', 'core/log'], function($, config, log) {
 
-    return {
+    var mplayer = {
 
         init: function(args) {
             if (args) {
@@ -42,6 +42,8 @@ define(['jquery', 'core/config', 'core/log'], function($, config, log) {
                 log.debug('Mod mplayer AMD initialized');
             }
         }
-    }
+    };
+
+    return mplayer;
 
 });

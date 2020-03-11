@@ -40,10 +40,17 @@ function setup_player_completion() {
             return;
         }
 
-        var progress = jwplayer(this.id).getPosition() * 100 / jwplayer(this.id).getDuration();
+        var progress = Math.ceil(jwplayer(this.id).getPosition() * 100 / jwplayer(this.id).getDuration());
+        var url;
 
-        var url = M.cfg.wwwroot + '/mod/mplayer/ajax/markmediacompletion.php';
-        url += '?mpid=' + mpid + '&clipid=0&what=progress&progress=' + progress;
+        if (progress >= 99) {
+            // Be permissive on final bound.
+            url = M.cfg.wwwroot + '/mod/mplayer/ajax/markmediacompletion.php';
+            url += '?mpid=' + mpid + '&clipid=0&what=finished';
+        } else {
+            url = M.cfg.wwwroot + '/mod/mplayer/ajax/markmediacompletion.php';
+            url += '?mpid=' + mpid + '&clipid=0&what=progress&progress=' + progress;
+        }
 
         $.get(url, function(data) {
             $('#mplayer-progress-' + mpid + '_0').html(data);

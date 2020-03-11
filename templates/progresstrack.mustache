@@ -1,0 +1,14 @@
+
+
+<!-- mod_mplayer/progressbar -->
+<div class="mplayer-player-progresstrack">
+    {{#progressbars}}
+    <div class="mplayer-clip-progresstrack">
+        <div class="mplayer-completion" id="mplayer-progress-{{mpid}}_{{clipid}}" style="width:{{barwidth}}%">
+            {{> mod_mplayer/progressbar}}
+        </div>
+    </div>
+    <span id="mplayer-assess-counts-{{mpid}}_{{clipid}}" class="mplayer-assess-counts">{{startcount}}</span>
+    {{/progressbars}}
+</div>
+<!-- /mod_mplayer/progressbar -->
