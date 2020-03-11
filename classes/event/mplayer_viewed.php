@@ -58,7 +58,7 @@ class mplayer_viewed extends \core\event\base {
      * @return string
      */
     public static function get_name() {
-        return 'mplayer';
+        return get_string('mplayer_viewed_event', 'mplayer');
     }
 
     /**

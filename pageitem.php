@@ -37,7 +37,12 @@ function mplayer_set_instance(&$block) {
     $context = context_module::instance($block->cm->id);
 
     $mplayer = $DB->get_record('mplayer', array('id' => $block->cm->instance));
+    mplayer_unpack_attributes($mplayer);
     $str = mplayer_require_js($mplayer, 'script');
+
+    if (mod_mplayer_supports_feature('assessables/highlightzones') && $mplayer->assessmode > 0) {
+        $PAGE->requires->js_call_amd('mod_mplayer/mplayer_assessables', 'init');
+    }
 
     // Transfer content from title to content.
     $block->title = format_string($mplayer->name);
@@ -48,6 +53,8 @@ function mplayer_set_instance(&$block) {
     if (!empty($block->cm->showdescription)) {
         $str .= $renderer->intro($mplayer);
     }
+
+    $str .= $renderer->report_button($block->cm, 'course');
 
     // Trigger module viewed event.
     $context = context_module::instance($block->cm->id);
@@ -61,7 +68,6 @@ function mplayer_set_instance(&$block) {
         )
     ));
     $event->add_record_snapshot('course_modules', $block->cm);
-    $event->add_record_snapshot('mplayer', $mplayer);
     $event->trigger();
 
     $course = $DB->get_record('course', array('id' => $mplayer->course));

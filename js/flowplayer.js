@@ -173,5 +173,12 @@ var FlowplayerConfig = new ClassBuilder( {
             clip.bind("resume", resume_video_progress);
             */
         }
-    }
+        // Transport eventual shadowed thumbs to visible playlist.
+        var thumbs = $('#shadow-playlist-' + id + ' > a.hasthumb > img');
+        thumbs.each(function(ix) {
+            var index = $( this ).attr('data-clipid');
+            var target = '#flp' + id + ' .fp-playlist a[data-index=' + index + ']';
+            $( this ).clone().appendTo(target);
+        });
+    },
 });

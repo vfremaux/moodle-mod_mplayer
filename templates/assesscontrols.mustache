@@ -1,0 +1,17 @@
+
+
+
+<!-- mod_mplayer/assesscontrols -->
+<div class="mplayer-assess-controls">
+    {{^assessor}}
+    {{#findzones}}
+        <input type="button" id="mplayer-bumper-{{id}}" class="mplayer-bumper" value="{{#str}}findzones, mplayer{{/str}}">
+    {{/findzones}}
+
+    {{#matchzones}}
+        <input type="button" id="mplayer-punchinout-{{id}}" class="mplayer-punchinout" value="{{#str}}startmarkzone, mplayer{{/str}}">
+    {{/matchzones}}
+    {{/assessor}}
+
+</div>
+<!-- /mod_mplayer/assesscontrols -->

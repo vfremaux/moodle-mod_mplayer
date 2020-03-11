@@ -26,6 +26,10 @@
  */
 defined('MOODLE_INTERNAL') || die();
 
+define('MPLAYER_NO_ASSESS', 0);
+define('MPLAYER_ASSESS_FIND_ZONES', 1);
+define('MPLAYER_ASSESS_MATCH_ZONES', 2);
+
 /**
  *
  */
@@ -56,6 +60,8 @@ function mplayer_get_context() {
             print_error('invalidcoursemodule');
         }
     }
+
+    mplayer_unpack_attributes($mplayer);
 
     return array($cm, $course, $mplayer);
 }
@@ -223,6 +229,85 @@ function mplayer_get_file_url(&$mplayer, $filearea, $context = null, $path = '/'
 }
 
 /**
+ * Get clip information from any possible source
+ *
+ * @param objectref &$mplayer
+ * @param object $context
+ * @return an array of arrays as source definitions per clip
+ */
+function mplayer_get_clips(&$mplayer, $context) {
+
+    if (empty($mplayer->clipscache)) {
+
+        // These are alternate playlist resolutions in case we are NOT using an XML formal playlist.
+        $clips = array();
+
+        if (debugging() && !empty($config->displaydebugcode)) {
+            echo "making $mplayer->type playlist";
+        }
+        switch ($mplayer->type) {
+            case 'xml':
+            case 'xmlrtmp': {
+                // The playlist file has been uploaded.
+                $cm = get_coursemodule_from_instance('mplayer', $mplayer->id);
+                $context = context_module::instance($cm->id);
+                if (($playlistfile = mplayer_get_file_location($mplayer, 'playlistfiles', $context, '/playlist/'))) {
+                    $clips = mplayer_xml_playlist($mplayer, $playlistfile);
+                }
+                break;
+            }
+
+            case 'httpxml':
+            case 'httpxmlrtmp': {
+                /* The playlist file is obtained from an external URL and stored into a special filearea.
+                 * this filearea is NOT backuped and reloaded each time the media is accessed.
+                 * TODO : Possibly add a hold time of the playlist.
+                 *
+                 * In RTMP case, the play list should contain stream references
+                 */
+                mplayer_load_remote_file($mplayer->external);
+                $playlistfile = mplayer_get_file_location($mplayer, 'remoteplaylist', $context);
+                $clips = mplayer_xml_playlist($mplayer, $playlistfile);
+                break;
+            }
+
+            case 'rtmp':
+            case 'video': {
+                /* Video stores files into moodle filestore directly, with eventual thumbs
+                 * In RTMP case sources can be :
+                 * - local rtmp proxies stored into the local storage (.stm files)
+                 */
+                $clips = mplayer_get_clips_from_files($mplayer);
+                break;
+            }
+
+            case 'url':
+            case 'youtube': {
+                // In that case, one clip per URL. No alternate sources possible.
+                if (!empty($mplayer->external)) {
+                    $sources = explode(';', $mplayer->external);
+                    $ix = 0;
+                    foreach ($sources as $source) {
+                        $clip = new StdClass();
+                        $clip->sources[] = $source;
+                        $clips[$ix] = $clip;
+                        $ix++;
+                    }
+                }
+                break;
+            }
+
+            default:
+                $mplayer->clipscache = null;
+        }
+
+        $mplayer->clipscache = json_encode($clips);
+    }
+
+    return json_decode($mplayer->clipscache);
+}
+
+/**
  * Get clips from loaded files depending on their organisation
  * Following rules are checked :
  * if a filename starts with <n>_ then the file url is assigned to clip <n> as a source.
@@ -266,13 +351,14 @@ function mplayer_get_clips_from_files(&$mplayer) {
                         continue;
                     }
 
+                    $contenthash = $storedfile->get_contenthash();
+                    $l1 = $contenthash[0].$contenthash[1];
+                    $l2 = $contenthash[2].$contenthash[3];
+                    $physicallocation = $CFG->dataroot.'/filedir/'.$l1.'/'.$l2.'/'.$contenthash;
+
                     if (preg_match('/\.stm$/', $filename)) {
                         // This is a stream manifest. Get url from it.
-                        $contenthash = $storedfile->get_contenthash();
-                        $l1 = $contenthash[0].$contenthash[1];
-                        $l2 = $contenthash[2].$contenthash[3];
-                        $manifestlocation = $CFG->dataroot.'/filedir/'.$l1.'/'.$l2.'/'.$contenthash;
-                        $streamedobj = simplexml_load_file($manifestlocation);
+                        $streamedobj = simplexml_load_file($physicallocation);
 
                         if (!$streamedobj) {
                             // Manifest not readable. Continue.
@@ -283,13 +369,21 @@ function mplayer_get_clips_from_files(&$mplayer) {
                             $ix = $streamedobj->clip;
                         }
                         $url = ''.$streamedobj->stream;
+                        $duration = -1; // unkown;
                     } else {
                         // Normal local case.
                         $url = moodle_url::make_pluginfile_url($context->id, 'mod_mplayer', 'mplayerfiles', 0, $filepath, $filename);
+                        $videoinfo = mplayer_ffmpeg_info($physicallocation);
+                        $duration = $videoinfo['durationSecond'];
                     }
 
+                    /*
+                     * At the moment, just one source effectively supported.
+                     */
                     $clip = new Stdclass();
-                    $clip->sources[] = $url;
+                    $clip->sources[] = $url->out();
+                    $clip->locations[] = $physicallocation;
+                    $clip->duration = $duration;
                     $clip->title = '';
 
                     $clips[$ix] = $clip;
@@ -297,34 +391,37 @@ function mplayer_get_clips_from_files(&$mplayer) {
             }
         }
 
-        if ($mplayer->playlist == 'thumbs') {
-            // Get thumbs and fill clip array with.
-            if ($thumbfiles = $fs->get_directory_files($context->id, 'mod_mplayer', 'mplayerfiles', 0, '/thumbs/', true, false,
-                                                       'filepath, filename')) {
-                if (count($areafiles) > 0) {
-                    // If we do have some media files.
-                    foreach ($thumbfiles as $storedfile) {
+        if (!empty($mplayer->playlist)) {
 
-                        /*
-                         * Process each entry. an entry can be at root level and thus is a clip 0 source, or
-                         * may be in a numbered subdir and will be registered for the corresponding clip.
-                         */
-                        $filepath = $storedfile->get_filepath();
-                        $filename = $storedfile->get_filename();
-                        if ($filepath == '/thumbs/') {
-                            $ix = 0;
-                        } else if (preg_match('#^/thumbs/(\d+)#', $filepath, $matches)) {
-                            $ix = $matches[1];
-                        } else if (preg_match('#^(\d+)#', $filename, $matches)) {
-                            $ix = $matches[1];
-                        } else {
-                            // Ignore.
-                            continue;
-                        }
-                        if (array_key_exists($ix, $clips)) {
-                            $clips[$ix]->thumb = moodle_url::make_pluginfile_url($context->id, 'mod_mplayer', 'mplayerfiles', 0,
-                                                                                 $storedfile->get_filepath(),
-                                                                                 $storedfile->get_filename());
+            if ($mplayer->playlist == 'thumbs') {
+                // Get thumbs and fill clip array with.
+                if ($thumbfiles = $fs->get_directory_files($context->id, 'mod_mplayer', 'mplayerfiles', 0, '/thumbs/', true, false,
+                                                           'filepath, filename')) {
+                    if (count($areafiles) > 0) {
+                        // If we do have some media files.
+                        foreach ($thumbfiles as $storedfile) {
+
+                            /*
+                             * Process each entry. an entry can be at root level and thus is a clip 0 source, or
+                             * may be in a numbered subdir and will be registered for the corresponding clip.
+                             */
+                            $filepath = $storedfile->get_filepath();
+                            $filename = $storedfile->get_filename();
+                            if ($filepath == '/thumbs/') {
+                                $ix = 0;
+                            } else if (preg_match('#^/thumbs/(\d+)#', $filepath, $matches)) {
+                                $ix = $matches[1];
+                            } else if (preg_match('#^(\d+)#', $filename, $matches)) {
+                                $ix = $matches[1];
+                            } else {
+                                // Ignore.
+                                continue;
+                            }
+                            if (array_key_exists($ix, $clips)) {
+                                $clips[$ix]->thumb = moodle_url::make_pluginfile_url($context->id, 'mod_mplayer', 'mplayerfiles', 0,
+                                                                                     $storedfile->get_filepath(),
+                                                                                     $storedfile->get_filename());
+                            }
                         }
                     }
                 }
@@ -351,6 +448,51 @@ function mplayer_get_clips_from_files(&$mplayer) {
 }
 
 /**
+ * Get the internal "clips" model for jwplayer.
+ */
+function jwplayer_get_clips(&$mplayer, $context) {
+    switch ($mplayer->type) {
+
+        case 'video':
+        case 'sound': {
+            $urlarray = mplayer_get_file_url($mplayer, 'mplayerfiles', $context, '/medias/0/', true);
+            break;
+        }
+
+        case 'url': {
+            // $urlarray = explode(';', ' ;' . $mplayer->external);
+            $urlarray = explode(';', $mplayer->external);
+            break;
+        }
+
+        case 'youtube': {
+            $urlarray = explode(';', $mplayer->external);
+            break;
+        }
+
+        default:
+            $urlarray = array();
+    }
+
+    $playlistthumb = mplayer_get_file_url($mplayer, 'mplayerfiles', $context, '/thumbs/', true);
+    $playlist = array();
+
+    if (is_array($urlarray)) {
+        foreach ($urlarray as $index => $url) {
+            if ($index !== '' && $url) {
+                $playlistitem = new StdClass;
+                $playlistitem->file = $url;
+                $playlistitem->image = isset($playlistthumb[$index]) ? $playlistthumb[$index] : '';
+                $playlistitem->title = 'test';
+                $playlist[] = $playlistitem;
+            }
+        }
+    }
+
+    return $playlist;
+}
+
+/**
  * As an alternative from using internal files, you may parse an xml playlist file and
  * get all clips information from it
  * @param objectref &$mplayer the mplayer instance
@@ -372,6 +514,11 @@ function mplayer_xml_playlist(&$mplayer, $playlistfile) {
         // TODO : process multiple locations in a track as alternative sources.
         $clip = new StdClass();
         $clip->sources[] = $videoinfo->location;
+        if (isset($videoinfo->duration)) {
+            $clip->duration = $videoinfo->duration;
+        } else {
+            $clip->duration = -1; // Unknown.
+        }
         $listitemcontent = '';
         if ($mplayer->playlist == 'thumbs') {
             if (isset($videoinfo->thumb)) {
@@ -431,32 +578,38 @@ function mplayer_require_js($mplayer, $mode) {
     global $PAGE, $CFG;
     static $jsloaded = false;
 
-    $PAGE->requires->jquery();
     if ($mplayer->technology == 'jw') {
         if (debugging()) {
-            $jsplayerfile = '/mod/mplayer/jw/8.0/bin-debug/jwplayer.js';
+            $jsplayerfile = '/mod/mplayer/extralib/players/jw/8.0/bin-debug/jwplayer.js';
         } else {
-            $jsplayerfile = '/mod/mplayer/jw/8.0/bin-release/jwplayer.js';
+            $jsplayerfile = '/mod/mplayer/extralib/players/jw/8.0/bin-release/jwplayer.js';
         }
         $completionfile = '/mod/mplayer/js/completion_jw.js';
     } else if ($mplayer->technology == 'jw712') {
         if (debugging()) {
-            $jsplayerfile = '/mod/mplayer/jw/7.12/bin-debug/jwplayer.js';
+            $jsplayerfile = '/mod/mplayer/extralib/players/jw/7.12/bin-debug/jwplayer.js';
         } else {
-            $jsplayerfile = '/mod/mplayer/jw/7.12/bin-release/jwplayer.js';
+            // Release has a bug in calculating the map unique id.
+            // $jsplayerfile = '/mod/mplayer/jw/7.12/bin-release/jwplayer.js';
+            $jsplayerfile = '/mod/mplayer/extralib/players/jw/7.12/bin-debug/jwplayer.js';
         }
         $completionfile = '/mod/mplayer/js/completion_jw.js';
     } else if ($mplayer->technology == 'jw611') {
-        $jsplayerfile = '/mod/mplayer/jw/6.11/jwplayer.js';
+        $jsplayerfile = '/mod/mplayer/extralib/players/jw/6.11/jwplayer.js';
         $completionfile = '/mod/mplayer/js/completion_jw.js';
+    } else if ($mplayer->technology == 'flowplayer8') {
+        //cdn.flowplayer.com/releases/native/stable/flowplayer.min.js
+        $flowplayercuejscode = '/mod/mplayer/js/cuepoints.js';
+        $flowplayerjswrapper = '/mod/mplayer/js/flowplayer.js';
+        $flowplayercss = '/mod/mplayer/extralib/players/flowplayer7/skin/skin.css';
     } else {
         $flowplayercuejscode = '/mod/mplayer/js/cuepoints.js';
         $flowplayerjswrapper = '/mod/mplayer/js/flowplayer.js';
-        $flowplayercss = '/mod/mplayer/flowplayer6/skin/functional.css';
+        $flowplayercss = '/mod/mplayer/extralib/players/flowplayer6/skin/functional.css';
         if (debugging()) {
-            $jsplayerfile = '/mod/mplayer/flowplayer6/flowplayer.js';
+            $jsplayerfile = '/mod/mplayer/extralib/players/flowplayer6/flowplayer.js';
         } else {
-            $jsplayerfile = '/mod/mplayer/flowplayer6/flowplayer.min.js';
+            $jsplayerfile = '/mod/mplayer/extralib/players/flowplayer6/flowplayer.min.js';
         }
         $completionfile = '/mod/mplayer/js/completion.js';
     }
@@ -467,11 +620,23 @@ function mplayer_require_js($mplayer, $mode) {
         $jsloaded[$mplayer->technology] = true;
     } else {
         if (empty($jsloaded[$mplayer->technology])) {
+            if ($mplayer->technology == 'flowplayer8') {
+                $jsfragment = '<script src="//cdn.flowplayer.com/releases/native/stable/flowplayer.min.js" type="text/javascript"></script>';
+                $jsfragment .= '<script src="//cdn.flowplayer.com/releases/native/stable/plugins/playlist.min.js" type="text/javascript"></script>';
+                $jsfragment .= '<script src="//cdn.flowplayer.com/releases/native/stable/plugins/cuepoints.min.js" type="text/javascript"></script>';
+                $jsfragment .= '<script src="'.$CFG->wwwroot.$flowplayercuejscode.'" type="text/javascript"></script>';
+                $jsfragment .= '<script src="'.$CFG->wwwroot.$flowplayerjswrapper.'" type="text/javascript"></script>';
+                $cssfragment = '<link rel="stylesheet" type="text/css" href="'.$CFG->wwwroot.$flowplayercss.'">';
+                return $jsfragment.$cssfragment;
+            }
             $jsloaded[$mplayer->technology] = true;
             $jsfragment = '<script src="'.$CFG->wwwroot.$jsplayerfile.'" type="text/javascript"></script>';
             $jsfragment .= '<script src="'.$CFG->wwwroot.$completionfile.'" type="text/javascript"></script>';
             $cssfragment = '';
             if ($mplayer->technology == 'flowplayer') {
+                if (isset($jsplayerplaylistfile)) {
+                    $jsfragment .= '<script src="'.$CFG->wwwroot.$jsplayerplaylistfile.'" type="text/javascript"></script>';
+                }
                 $jsfragment .= '<script src="'.$CFG->wwwroot.$flowplayercuejscode.'" type="text/javascript"></script>';
                 $jsfragment .= '<script src="'.$CFG->wwwroot.$flowplayerjswrapper.'" type="text/javascript"></script>';
                 $cssfragment .= '<link rel="stylesheet" type="text/css" href="'.$CFG->wwwroot.$flowplayercss.'">';
@@ -497,10 +662,11 @@ function mplayer_get_fileareas() {
  * @return string
  */
 function mplayer_print_header_js($mplayer) {
+    global $CFG;
 
     // Build Javascript code for view.php print_header() function.
 
-    $js = '<script type="text/javascript" src="swfobject/swfobject.js"></script>';
+    $js = '<script type="text/javascript" src="'.$CFG->wwwroot.'/mod/mplayer/extralib/players/swfobject/swfobject.js"></script>';
     $js .= '    <script type="text/javascript">';
     $js .= '        swfobject.registerObject("jwPlayer", "'.$mplayer->fpversion.'");';
     $js .= '    </script>';
@@ -534,6 +700,17 @@ function mplayer_list_quality() {
                  'autohigh' => get_string('autohigh', 'mplayer'),
                  'autolow' => get_string('autolow', 'mplayer'),
                  'low' => get_string('low', 'mplayer'));
+}
+
+
+function mplayer_list_showpasspoints() {
+    $showoptions = array(
+        '0' => get_string('hidetracking', 'mplayer'),
+        '1' => get_string('showall', 'mplayer'),
+        '2' => get_string('hidepasspoints', 'mplayer'),
+        '3' => get_string('showclipstates', 'mplayer'),
+    );
+    return $showoptions;
 }
 
 /**
@@ -588,9 +765,11 @@ function mplayer_list_type($technology) {
  */
 function mplayer_list_technologies() {
 
-    return array('flowplayer' => 'Flowplayer',
-                 'jw' => 'JW Player 8.0',
-                 'jw712' => 'JW Player 7.12 (Youtube compatible)',
+    return array(
+        'flowplayer' => 'Flowplayer 7',
+        'flowplayer8' => 'Flowplayer 8 (Using flowplayer CDN - Non free - Experimental)',
+        'jw' => 'JW Player 8.0',
+        'jw712' => 'JW Player 7.12 (Youtube compatible)',
                  /* 'jw611' => 'JW Player 6.11 (Youtube compatible)' */
     );
 }
@@ -950,7 +1129,7 @@ function mplayer_convert_storage_for_streamer($mplayer) {
 
                 // Remove old file in the way if any.
                 if ($oldfile = $fs->get_file($context->id, 'mod_mplayer', 'mplayerfiles', 0, $rec->filepath, $rec->filename)) {
-                    mtrace("Deleting old one ");
+                    // mtrace("Deleting old one ");
                     $oldfile->delete();
                 }
 
@@ -1191,4 +1370,266 @@ function mplayer_get_media_storage($storage) {
     require_once($CFG->dirroot.'/mod/mplayer/storage/'.$storageclass.'.class.php');
     $storageobj = new $storageclass();
     return $storageobj;
+}
+
+function mplayer_get_packed_attributes() {
+
+    $attrs = ['configxml', 'author', 'mplayerdate',
+        'infoboxcolor', 'infoboxposition', 'infoboxsize', 'duration',
+        'hdbitrate', 'hdfile', 'hdfullscreen', 'hdstate', 'livestreamfile',
+        'livestreamimage', 'livestreaminterval', 'livestreammessage', 'livestreamstreamer',
+        'livestreamtags', 'audiodescriptionfile', 'audiodescriptionstate', 'audiodescriptionvolume',
+        'videotags', 'backcolor', 'frontcolor', 'lightcolor', 'screencolor', 'controlbar',
+        'smoothing', 'height', 'playlist', 'playlistsize', 'skin', 'width',
+        'autostart', 'bufferlength', 'fullscreen', 'forcefullscreen', 'icons',
+        'item', 'logoboxalign', 'logoboxfile', 'logoboxlink', 'logoboxmargin', 'logoboxposition',
+        'logofile', 'logolink', 'logohide', 'logoposition', 'mute', 'quality',
+        'mplayerrepeat', 'resizing', 'shuffle', 'state', 'stretching', 'volume',
+        'plugins', 'streamer', 'tracecall', 'captionsback', 'captionsfile', 'captionsfontsize',
+        'captionsstate', 'fpversion', 'metaviewerposition', 'metaviewersize', 'searchbarcolor',
+        'searchbarlabel', 'searchbarposition', 'searchbarscript', 'snapshotbitmap', 'snapshotscript',
+        'splashmode', 'langselection'];
+
+    return $attrs;
+}
+
+function mplayer_pack_attributes(&$mplayer) {
+
+    $attrs = mplayer_get_packed_attributes();
+
+    $playerparams = new StdClass;
+    foreach ($attrs as $attr) {
+        if (isset($mplayer->$attr)) {
+            $playerparams->$attr = $mplayer->$attr;
+            unset($mplayer->$attr);
+        } else {
+            $playerparams->$attr = '';
+        }
+    }
+
+    return $mplayer->playerparams = json_encode($playerparams);
+}
+
+function mplayer_unpack_attributes(&$mplayer) {
+
+    $attrs = mplayer_get_packed_attributes();
+
+    $playerparams = json_decode($mplayer->playerparams);
+
+    foreach ($attrs as $attr) {
+        if (isset($playerparams->$attr)) {
+            $mplayer->$attr = $playerparams->$attr;
+        } else {
+            $mplayer->$attr = '';
+        }
+
+        unset($mplayer->playerparams);
+    }
+}
+
+function mplayer_ffmpeg_info($filepath) {
+
+    $config = get_config('mplayer');
+
+    if (empty($config->ffmpegpath)) {
+        throw new Exception("FFMpeg not configured in mplayer settings.");
+    }
+
+    if (!is_executable($config->ffmpegpath)) {
+        throw new Exception("FFMpeg not executable. Check file permissions.");
+    }
+
+    $cmd = '"'.$config->ffmpegpath."\" -i \"$filepath\" -hide_banner 2>&1";
+    $ffmpeg = shell_exec($cmd);
+    $search = "/Duration: (.*?)\./";
+    preg_match($search, $ffmpeg, $matches);
+    $data['duration'] = $matches[1];
+    $time_sec = explode(':', $data['duration']);
+    $data['durationSecond'] = ($time_sec['0'] * 3600) + ($time_sec['1'] * 60) + $time_sec['2'];
+
+    $search = "|Video:.* (\d{3,4}+x\d{3,4})|";
+    preg_match($search, $ffmpeg, $matches);
+    $data['video'] = $matches[1];
+
+    return $data;
+}
+
+/**
+ * Computes track percent locations from start time and end time
+ * on video.
+ * @param int $starttime start relative timestamp in seconds
+ * @param int $endtime end relative timestamp in seconds
+ */
+function mplayer_compute_segment_points($starttime, $endtime, $clip) {
+
+    if (!isset($clip->duration)) {
+        throw new \coding_exception("clip should have a duration or at least -1");
+    }
+
+    if ($clip->duration == -1) {
+        return [-1, -1];
+    }
+
+    $startpc = $starttime / $clip->duration * 100;
+    $endpc = $endtime / $clip->duration * 100;
+
+    $result = [$startpc, $endpc];
+
+    return $result;
+}
+
+function mplayer_save_attributes($mplayer) {
+    global $DB;
+
+    mplayer_pack_attributes($mplayer);
+    $DB->update_record('mplayer', $mplayer);
+}
+
+function mplayer_parse_time($hms) {
+    $parts = explode(':', $hms);
+    if (count($parts) == 1) {
+        return $hms;
+    } else if (count($parts) == 2) {
+        return $parts[0] * 60 + $parts[1];
+    } else if (count($parts) == 3) {
+        return $parts[0] * 3600 + $parts[1] * 60 + $parts[2];
+    }
+}
+
+function mplayer_format_time($secs) {
+    $mins = floor($secs / 60);
+    $secs = $secs - $mins * 60;
+    $hours = floor($mins / 60);
+    $mins = $mins - $hours * 60;
+
+    $time = $secs;
+    if (!empty($mins)) {
+        $time = "$mins:$time";
+    } else {
+        $time = "0:$time";
+    }
+    if (!empty($hours)) {
+        $time = "$hours:$time";
+    }
+
+    return $time;
+}
+
+/**
+ * Get all highlight zones.
+ */
+function mplayer_get_highlighted_zones_counter($mplayer, $clipid) {
+    global $DB, $USER;
+
+    $sql = "
+        SELECT
+            COUNT(*) as allclipzones,
+            SUM(CASE WHEN mur.id IS NOT NULL THEN 1 ELSE 0 END) as foundzones
+        FROM
+            {mplayer_highlighted_zones} mhz
+        LEFT JOIN
+            {mplayer_user_results} mur
+        ON
+           mhz.id = mur.zoneid
+        WHERE
+           mhz.mplayerid = ? AND
+           mhz.clipid = ? AND
+           mhz.userid = 0  AND
+           (mur.userid = ? OR mur.userid IS NULL)
+    ";
+
+    $params = [$mplayer->id, $clipid, $USER->id];
+    if ($zonecounters = $DB->get_record_sql($sql, $params)) {
+        return $zonecounters->foundzones.'/'.$zonecounters->allclipzones;
+    }
+    return '';
+}
+
+/**
+ * Get all highlight zones.
+ */
+function mplayer_get_highlighted_zones($mplayer, $clipix, $seeall = false) {
+    global $DB, $USER;
+
+    $cm = get_coursemodule_from_instance('mplayer', $mplayer->id);
+    $context = context_module::instance($cm->id);
+    $isassessor = has_capability('mod/mplayer:assessor', $context);
+
+    $params = ['mplayerid' => $mplayer->id, 'clipid' => $clipix, 'userid' => 0];
+    if ($isassessor || $seeall) {
+        $highlightzones = $DB->get_records('mplayer_highlighted_zones', $params);
+        if ($highlightzones) {
+            foreach ($highlightzones as $hlz) {
+                $hlz->class = 'teacherzone';
+            }
+        }
+    }
+
+    if (!$isassessor) {
+
+        if ($mplayer->assessmode == MPLAYER_ASSESS_FIND_ZONES) {
+            $params = ['mplayerid' => $mplayer->id, 'clipid' => $clipix, 'userid' => $USER->id];
+            // Fetch teachers zones that have been punched by student.
+            $sql = "
+                SELECT
+                    mhz.*,
+                    'studentfoundzone' as class
+                FROM
+                    {mplayer_highlighted_zones} mhz,
+                    {mplayer_user_results} mur
+                WHERE
+                   mhz.id = mur.zoneid AND
+                   mhz.mplayerid = ? AND
+                   mhz.clipid = ? AND
+                   mhz.userid = 0 AND
+                   mur.userid = ?
+            ";
+
+            $highlightzones = $DB->get_records_sql($sql, $params);
+        } else {
+            $params = ['mplayerid' => $mplayer->id, 'clipid' => $clipix, 'userid' => $USER->id];
+            // Fetch student zones.
+            $sql = "
+                SELECT
+                    mhz.*,
+                    'studentzone' as class
+                FROM
+                    {mplayer_highlighted_zones} mhz
+                WHERE
+                   mhz.mplayerid = ? AND
+                   mhz.clipid = ? AND
+                   mhz.userid = ?
+            ";
+
+            $params['userid'] = $USER->id;
+            $highlightzones = $DB->get_records_sql($sql, $params);
+        }
+    }
+
+    return $highlightzones;
+}
+
+function mplayer_apply_namefilters(&$fullusers) {
+    $firstnamefilter = optional_param('filterfirstname', false, PARAM_TEXT);
+    $lastnamefilter = optional_param('filterlastname', false, PARAM_TEXT);
+
+    if (!$firstnamefilter && !$lastnamefilter) {
+        return;
+    }
+
+    if ($firstnamefilter) {
+        foreach ($fullusers as $userid => $user) {
+            if (!preg_match('/^'.$firstnamefilter.'/i', $user->firstname)) {
+                unset($fullusers[$userid]);
+            }
+        }
+    }
+
+    if ($lastnamefilter) {
+        foreach ($fullusers as $userid => $user) {
+            if (!preg_match('/^'.$lastnamefilter.'/i', $user->lastname)) {
+                unset($fullusers[$userid]);
+            }
+        }
+    }
 }

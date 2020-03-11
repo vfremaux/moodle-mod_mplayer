@@ -50,6 +50,10 @@ $desc = get_string('allowtechnologychoicedesc', 'mplayer');
 $settings->add(new admin_setting_configselect($key, $label, $desc, 0, $yesnooptions));
 
 // APPEARANCE.
+
+$label = get_string('appearance', 'mplayer');
+$settings->add(new admin_setting_heading('h1', $label, ''));
+
 // Width.
 $key = 'mplayer/default_width';
 $label = get_string('width', 'mplayer');
@@ -105,6 +109,10 @@ $desc = '';
 $settings->add(new admin_setting_configtext($key, $label, $desc, '', PARAM_TEXT));
 
 // BEHAVIOUR.
+
+$label = get_string('behaviour', 'mplayer');
+$settings->add(new admin_setting_heading('h2', $label, ''));
+
 // Auto start.
 $key = 'mplayer/default_autostart';
 $label = get_string('autostart', 'mplayer');
@@ -114,7 +122,13 @@ $settings->add(new admin_setting_configselect($key, $label, $desc, 'false', mpla
 // Full screen.
 $key = 'mplayer/default_fullscreen';
 $label = get_string('fullscreen', 'mplayer');
-$desc = $desc;
+$desc = '';
+$settings->add(new admin_setting_configselect($key, $label, $desc, 'true', mplayer_list_truefalse()));
+
+// force Full screen.
+$key = 'mplayer/default_forcefullscreen';
+$label = get_string('forcefullscreen', 'mplayer');
+$desc = '';
 $settings->add(new admin_setting_configselect($key, $label, $desc, 'true', mplayer_list_truefalse()));
 
 // Stretching.
@@ -135,6 +149,18 @@ $label = get_string('nativefullscreen', 'mplayer');
 $desc = '';
 $settings->add(new admin_setting_configselect($key, $label, $desc, 'false', mplayer_list_truefalse()));
 
+// Extra CSS to add to all players.
+$key = 'mplayer/extracss';
+$label = get_string('configextracss', 'mplayer');
+$desc = get_string('configextracss_desc', 'mplayer');
+$settings->add(new admin_setting_configtextarea($key, $label, $desc, '', PARAM_TEXT, 120, 10));
+
+// Extra CSS to add to all players.
+$key = 'mplayer/ffmpegpath';
+$label = get_string('configffmpegpath', 'mplayer');
+$desc = get_string('configffmpegpath_desc', 'mplayer');
+$settings->add(new admin_setting_configexecutable($key, $label, $desc, ''));
+
 $storages = glob($CFG->dirroot.'/mod/mplayer/storage/*_storage.class.php');
 foreach ($storages as $st) {
     include_once($st);
@@ -143,3 +169,11 @@ foreach ($storages as $st) {
     $instance = new $classname();
     $instance->get_settings($settings);
 }
+
+$label = get_string('tracking', 'mplayer');
+$settings->add(new admin_setting_heading('h3', $label, ''));
+
+$key = 'mplayer/default_show_passpoints';
+$label = get_string('showpasspoints', 'mplayer');
+$desc = '';
+$settings->add(new admin_setting_configselect($key, $label, $desc, 'false', mplayer_list_showpasspoints()));
