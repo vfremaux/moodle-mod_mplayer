@@ -48,7 +48,7 @@ $context = context_module::instance($cm->id);
 require_capability('mod/mplayer:view', $context);
 
 $event = \mod_mplayer\event\mplayer_viewed::create(array(
-    'objectid' => $cm->id,
+    'objectid' => $mplayer->id,
     'context' => $context,
     'other' => array(
         'objectname' => $mplayer->name

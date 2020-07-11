@@ -262,7 +262,7 @@ function xmldb_mplayer_upgrade($oldversion = 0) {
     }
 
     /**
-     * Massive DB record simplification.
+     * Adding pedagogic activities.
      */
     if ($oldversion < 2019051401) {
 
@@ -309,7 +309,7 @@ function xmldb_mplayer_upgrade($oldversion = 0) {
     }
 
     /**
-     * Massive DB record simplification.
+     * Pedagogic local assessing.
      */
     if ($oldversion < 2019052100) {
         $table = new xmldb_table('mplayer');
@@ -338,6 +338,13 @@ function xmldb_mplayer_upgrade($oldversion = 0) {
         upgrade_mod_savepoint(true, 2019052100, 'mplayer');
     }
 
+    if ($oldversion < 2020042801) {
+
+        xmldb_mplayer_fix_all_logs();
+
+        upgrade_mod_savepoint(true, 2020042801, 'mplayer');
+    }
+
     return $result;
 }
 
@@ -353,4 +360,80 @@ function xmldb_mplayer_pack_all_players() {
             $DB->update_record('mplayer', $pl);
         }
     }
+}
+
+function xmldb_mplayer_fix_all_logs() {
+    global $DB;
+    static $CACHE = [];
+
+    // Fix viewed.
+    $params = ['objecttable' => 'mplayer', 'action' => 'viewed'];
+    $rs = $DB->get_recordset('logstore_standard_log', $params);
+    $total = $DB->count_records('logstore_standard_log', $params);
+
+    $a = new stdClass();
+    $a->total = $total;
+    $a->done = 0;
+
+    $pbar = new progress_bar('fixmplayerlogs', 500, true);
+    foreach ($rs as $fixrec) {
+        if (!array_key_exists($fixrec->objectid, $CACHE)) {
+            $cm = $DB->get_record('course_modules', ['id' => $fixrec->objectid]);
+            $CACHE[$fixrec->objectid] = $cm;
+        }
+        if (!empty($CACHE[$fixrec->objectid])) {
+            $DB->set_field('logstore_standard_log', 'objectid', $CACHE[$fixrec->objectid]->instance, ['id' => $fixrec->id]);
+        } else {
+            // Clean out unbindable logs.
+            $DB->delete_records('logstore_standard_log', ['id' => $fixrec->id]);
+        }
+
+        $a->done++;
+        $pbar->update($a->done, $a->total, get_string('fixmplayerlogs', 'mplayer', $a));
+    }
+    $rs->close($rs);
+
+    // Fix viewing events.
+    $params = ['objecttable' => 'mplayer', 'action' => 'viewing'];
+    $rs = $DB->get_recordset('logstore_standard_log', $params);
+    $total = $DB->count_records('logstore_standard_log', $params);
+
+    $a = new stdClass();
+    $a->total = $total;
+    $a->done = 0;
+
+    $pbar = new progress_bar('fixmplayerviewtraces', 500, true);
+    foreach ($rs as $fixrec) {
+        if (!array_key_exists($fixrec->objectid, $CACHE)) {
+            $cm = $DB->get_record('course_modules', ['id' => $fixrec->objectid]);
+            $CACHE[$fixrec->objectid] = $cm;
+        }
+        $DB->set_field('logstore_standard_log', 'objectid', $CACHE[$fixrec->objectid]->instance, ['id' => $fixrec->id]);
+
+        $a->done++;
+        $pbar->update($a->done, $a->total, get_string('fixmplayertraces', 'mplayer', $a));
+    }
+    $rs->close($rs);
+
+    // Fix viewing endpoints.
+    $params = ['objecttable' => 'mplayer', 'action' => 'viewedall'];
+    $rs = $DB->get_recordset('logstore_standard_log', $params);
+    $total = $DB->count_records('logstore_standard_log', $params);
+
+    $a = new stdClass();
+    $a->total = $total;
+    $a->done = 0;
+
+    $pbar = new progress_bar('fixmplayerviewedall', 500, true);
+    foreach ($rs as $fixrec) {
+        if (!array_key_exists($fixrec->objectid, $CACHE)) {
+            $cm = $DB->get_record('course_modules', ['id' => $fixrec->objectid]);
+            $CACHE[$fixrec->objectid] = $cm;
+        }
+        $DB->set_field('logstore_standard_log', 'objectid', $CACHE[$fixrec->objectid]->instance, ['id' => $fixrec->id]);
+
+        $a->done++;
+        $pbar->update($a->done, $a->total, get_string('fixmplayerviewedall', 'mplayer', $a));
+    }
+    $rs->close($rs);
 }
