@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="mod/mplayer/db" VERSION="20070401" COMMENT="XMLDB file for Moodle mod/mplayer"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
+>
+  <TABLES>
+    <TABLE NAME="mplayer" COMMENT="Wrapper for Jeroen Wijering FLV Player">
+        <FIELDS>
+            <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" COMMENT="id"/>
+            <FIELD NAME="course" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" COMMENT="course"/>
+            <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="name"/>
+            <FIELD NAME="intro" TYPE="text" LENGTH="medium" NOTNULL="false" SEQUENCE="false" COMMENT="intro"/>
+            <FIELD NAME="introformat" TYPE="int" LENGTH="4" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" COMMENT="introformat"/>
+            <FIELD NAME="timecreated" TYPE="int" LENGTH="11" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" COMMENT="timecreated"/>
+            <FIELD NAME="timemodified" TYPE="int" LENGTH="11" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" COMMENT="timemodified"/>
+            <FIELD NAME="technology" TYPE="char" LENGTH="15" NOTNULL="false" SEQUENCE="false" COMMENT="technology"/>
+            <FIELD NAME="description" TYPE="text" LENGTH="medium" NOTNULL="false" SEQUENCE="false" COMMENT="description"/>
+            <FIELD NAME="playerparams" TYPE="text" LENGTH="medium" NOTNULL="false" SEQUENCE="false" COMMENT="bunch of player internal params"/>
+            <FIELD NAME="mplayerfile" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="deprecated"/>
+            <FIELD NAME="external" TYPE="text" LENGTH="medium" NOTNULL="false" SEQUENCE="false" COMMENT="external"/>
+            <FIELD NAME="cuelists" TYPE="text" LENGTH="medium" NOTNULL="false" SEQUENCE="false" COMMENT="deprecated"/>
+            <FIELD NAME="clipscache" TYPE="text" LENGTH="medium" NOTNULL="false" SEQUENCE="false" COMMENT="caches clips definition"/>
+            <FIELD NAME="image" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="image"/>
+            <FIELD NAME="mplayerstart" TYPE="int" LENGTH="1" NOTNULL="false" SEQUENCE="false" COMMENT="start"/>
+            <FIELD NAME="title" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="title" />
+            <FIELD NAME="type" TYPE="char" LENGTH="50" NOTNULL="false" SEQUENCE="false" DEFAULT="undefined" COMMENT="type"/>
+            <FIELD NAME="notes" TYPE="text" LENGTH="medium" NOTNULL="false" SEQUENCE="false" COMMENT="notes"/>
+            <FIELD NAME="notesformat" TYPE="text" LENGTH="medium" NOTNULL="false" SEQUENCE="false" COMMENT="notes"/>
+            <FIELD NAME="completionmediaviewed" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="If this field is set to 1, then the activity will be marked as 'complete' once the user has watched the full media." />
+            <FIELD NAME="completionallmediaviewed" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="If this field is set to 1, then the activity will be marked as 'complete' once the user has watched the full media." />
+            <FIELD NAME="numpasspoints" TYPE="int" LENGTH="3" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Number of tracking points" />
+            <FIELD NAME="passrule" TYPE="char" LENGTH="16" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Name of the rule to check full media was seen, 'fromstart', or 'freeloc'" />
+            <FIELD NAME="passpercent" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="100" SEQUENCE="false" COMMENT="Percent of the media to view to pass completion" />
+            <FIELD NAME="showpasspoints" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="1" SEQUENCE="false" COMMENT="If passpoints must show or not" />
+            <FIELD NAME="assessmode" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="1" SEQUENCE="false" COMMENT="If assessables, what assess activity is activated" />
+            <FIELD NAME="grade" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="1" SEQUENCE="false" COMMENT="Max Grade for assessables" />
+        </FIELDS>
+        <KEYS>
+            <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        </KEYS>
+        <INDEXES>
+            <INDEX NAME="course" UNIQUE="false" FIELDS="course"/>
+        </INDEXES>
+    </TABLE>
+    <TABLE NAME="mplayer_userdata" COMMENT="Full view state">
+        <FIELDS>
+            <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" COMMENT="id"/>
+            <FIELD NAME="mplayerid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" COMMENT="Mplayer ID"/>
+            <FIELD NAME="userid" TYPE="int" LENGTH="11" NOTNULL="true" SEQUENCE="false" COMMENT="name"/>
+            <FIELD NAME="clipid" TYPE="int" LENGTH="11" NOTNULL="true" SEQUENCE="false" COMMENT="name"/>
+            <FIELD NAME="maxprogress" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="name"/>
+            <FIELD NAME="passpoints" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="Serialized pass checkpoints track"/>
+            <FIELD NAME="finished" TYPE="int" LENGTH="1" NOTNULL="true" SEQUENCE="false" COMMENT="name"/>
+        </FIELDS>
+        <KEYS>
+            <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        </KEYS>
+        <INDEXES>
+            <INDEX NAME="ix_instanceid" UNIQUE="false" FIELDS="mplayerid"/>
+            <INDEX NAME="ix_userid" UNIQUE="false" FIELDS="userid"/>
+        </INDEXES>
+    </TABLE>
+    <TABLE NAME="mplayer_highlighted_zones" COMMENT="An highlight zone is remarkable">
+        <FIELDS>
+            <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" COMMENT="id"/>
+            <FIELD NAME="mplayerid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" COMMENT="Mplayer ID"/>
+            <FIELD NAME="clipid" TYPE="int" LENGTH="11" NOTNULL="true" SEQUENCE="false" COMMENT="clip ID"/>
+            <FIELD NAME="userid" TYPE="int" LENGTH="11" DEFAULT="0" NOTNULL="true" SEQUENCE="false" COMMENT="User ID"/>
+            <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="zone name"/>
+            <FIELD NAME="startpoint" TYPE="int" LENGTH="11" NOTNULL="true" SEQUENCE="false" COMMENT="Highlight zone start"/>
+            <FIELD NAME="endpoint" TYPE="int" LENGTH="11" NOTNULL="true" SEQUENCE="false" COMMENT="Highlight zone end"/>
+        </FIELDS>
+        <KEYS>
+            <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        </KEYS>
+        <INDEXES>
+            <INDEX NAME="ix_instanceid" UNIQUE="false" FIELDS="mplayerid, clipid"/>
+        </INDEXES>
+    </TABLE>
+    <TABLE NAME="mplayer_user_results" COMMENT="Per user results over highlight zones">
+        <FIELDS>
+            <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" COMMENT="id"/>
+            <FIELD NAME="mplayerid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" COMMENT="Mplayer ID"/>
+            <FIELD NAME="clipid" TYPE="int" LENGTH="11" NOTNULL="true" SEQUENCE="false" COMMENT="clip ID"/>
+            <FIELD NAME="zoneid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Highlight zone id"/>
+            <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="User id"/>
+            <FIELD NAME="intresultdata" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Direct integer result"/>
+            <FIELD NAME="floatresultdata" TYPE="number" LENGTH="10" DECIMALS="2" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Direct number result"/>
+            <FIELD NAME="textresultdata" TYPE="text" LENGTH="small" NOTNULL="false" SEQUENCE="false" COMMENT="Textual or serialized data"/>
+        </FIELDS>
+        <KEYS>
+            <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        </KEYS>
+        <INDEXES>
+            <INDEX NAME="ix_unique_ix" UNIQUE="true" FIELDS="mplayerid, clipid, zoneid, userid"/>
+        </INDEXES>
+    </TABLE>
+  </TABLES>
+</XMLDB>

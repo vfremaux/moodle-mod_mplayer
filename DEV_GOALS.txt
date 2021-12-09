@@ -1,0 +1,38 @@
+MPlayer aims to be a versatile and full featured video player 
+integration for Moodle.
+
+It offers two major open source integration as flowplayer and JW Player.
+
+flow^player is already integrated but with minimal features as standard player 
+for links on video through the multimediafilter. But this offsers very few options, 
+no play list, no cue points, no thumbnails.
+
+Flowplayer and JW player are offered for convenience for an admin prefering
+offerring one of both players.
+
+Thus the set of options when configuring is colliding at the moment. We would like
+to be clearer in the option given for either on or the other player.
+
+some developement tracks may be complex, such are reloading dynamically the mod_form.php form
+when changing the player technology choice. At the moment, this choice is made in global settings
+for the whole platform. Reloading the mod_form.php could allow each instance to provide either technologies
+as a choice result of the teacher.
+
+Some points are not clearly set up at the moment
+
+1. JW player is not working at the moment. Finish implement JW support
+
+2. Cue lists are unhandled or potentially not collected correctly in the instance attribute set. Maybe
+even this is a reliquate of the older JW implementation that was at the origin.
+
+3. Clarify the settings, being sure Flowplayer and JW settings are acurate and adequate for the 
+used player.
+
+4. add support to external video URLs, in addition to uploaded content.
+
+5. Add support to streaming configuration, when supported.
+
+6. Add better support of GUI colouring support, move this paramtric support to central settings (the video colour
+choice is likely consistant with global theme choices).
+
+7. M27 version should be build, rebuilding logging code with events

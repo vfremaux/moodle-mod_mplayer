@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+<libraries>
+  <library>
+    <location>flowplayer_flash</location>
+    <name>Flowplayer technology</name>
+    <license></license>
+    <version></version>
+    <licenseversion></licenseversion>
+  </library>
+  <library>
+    <location>flowplayer6</location>
+    <name>Flowplayer technology</name>
+    <license></license>
+    <version></version>
+    <licenseversion></licenseversion>
+  </library>
+  <library>
+    <location>jw</location>
+    <name>Video Player technology</name>
+    <license></license>
+    <version></version>
+    <licenseversion></licenseversion>
+  </library>
+  <library>
+    <location>plugins</location>
+    <name>Video Player technology</name>
+    <license></license>
+    <version></version>
+    <licenseversion></licenseversion>
+  </library>
+  <library>
+    <location>scripts</location>
+    <name>Video Player technology</name>
+    <license></license>
+    <version></version>
+    <licenseversion></licenseversion>
+  </library>
+  <library>
+    <location>skins</location>
+    <name>Video Player technology</name>
+    <license></license>
+    <version></version>
+    <licenseversion></licenseversion>
+  </library>
+  <library>
+    <location>mp3player</location>
+    <name>Video Player tecnhology</name>
+    <license></license>
+    <version></version>
+    <licenseversion></licenseversion>
+  </library>
+  <library>
+    <location>swfobject</location>
+    <name>flash techology</name>
+    <license></license>
+    <version></version>
+    <licenseversion></licenseversion>
+  </library>
+  <library>
+    <location>extralib</location>
+    <name>Extra additional libraries</name>
+    <license></license>
+    <version></version>
+    <licenseversion></licenseversion>
+  </library>
+</libraries>

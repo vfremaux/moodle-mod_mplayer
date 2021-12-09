@@ -1,0 +1,46 @@
+Media Player Module for Moodle 2 - 3.1
+
+Originally Designed and developed by Matt Bury
+
+© Matt Bury 2009 onwards
+Website: http://matbury.com/
+
+Redrawn for Moodle 2 by Valery Fremaux (valery.fremaux@gmail.com)
+
+This version is a preliminary publication after formal review.  This is yet a beta version where we tried to rearchitecture
+main features. Documentation writing and review is in progress. There are advanced features that are not yet fully tested
+such as simple dealing with streamers or pseudo-streaming. A further package may clean the "bad ideas" options when we can
+finish the complete qualification.
+
+Our final goal is to provide an economic minimal viable way for small institutions to diffuse a reasonable set of videos with
+a very simple as possible, lightweight and costless solution. 
+
+Do not be to greedy anyway : video and live media are very complex and heavy technologies that fully justify the "cost of service"
+of major providers such as Kaltura, Livemedia or other professional providers. This plugin has limited goals and no service garantees
+as being free development initiative. It will probably be in "on progress" status driven by our internal needs and challenges.
+
+Design Notes
+===============
+
+The .stm format
+
+STM files are manifests that are used as proxy descriptors for remotely dispatched medias. 
+the effective media file may be stored into an extra storage out of control of Moodle and
+may be delivered from a streamed URL. the manifest file should be usually built by the MPlayer 
+module, after a media upload. the manifest file is an XML file with a simple internal schema :
+
+<XML version="1.0">
+<Video>
+    <Source>
+        <streamer>wowza</streamer>
+        <streamerurl>rtmp://medias.mysite/com</streamerurl>
+        <appication>/vod</application>
+        <clip>0</clip>
+        <location>mp4:streamedfile.mp4</location>
+    </Source>
+</Video>
+
+#####
+2017121100
+
+Adds the mod_mplayer/event/mplayer_viewing class to track progression updates in logs.
