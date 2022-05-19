@@ -80,7 +80,7 @@ class mod_mplayer_mod_form extends moodleform_mod {
 
         } else {
             $mform->addElement('hidden', 'technology', $config->default_player);
-            $mform->setType('technology', PARAM_ALPHA);
+            $mform->setType('technology', PARAM_ALPHANUM);
         }
 
         // Introduction.

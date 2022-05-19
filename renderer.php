@@ -46,11 +46,19 @@ class mod_mplayer_renderer extends plugin_renderer_base {
      * @param objectref &$mplayer
      */
     public function intro(&$mplayer) {
+
+        $cm = get_coursemodule_from_instance('mplayer', $mplayer->id);
+        $context = context_module::instance($cm->id);
+
         $str = '';
 
-        if (!empty($mplayer->intro)) {
+        if (!empty(strip_tags($mplayer->intro, '<img><a><button><input>'))) {
             $str .= '<div class="mplayer intro">';
-            $str .= format_text($mplayer->intro, $mplayer->introformat);
+            $introoptions = array('maxfiles' => EDITOR_UNLIMITED_FILES,
+            'noclean' => true, 'context' => $context, 'subdirs' => true);
+            $intro = file_rewrite_pluginfile_urls($mplayer->intro, 'pluginfile.php', $context->id,
+            'mod_mplayer', 'intro', null, $introoptions);
+            $str .= format_text($intro, $mplayer->introformat);
             $str .= '</div>';
         }
 
@@ -128,7 +136,7 @@ class mod_mplayer_renderer extends plugin_renderer_base {
             $mplayerbody = $this->jwplayer_body($mplayer, $cm, $context);
         }
 
-        if (!empty($mplayer->notes)) {
+        if (!empty(strip_tags($mplayer->notes, '<img><a><button><input>'))) {
             $mplayerbody .= '<div class="mplayer-notes"><p>'.$mplayer->notes.'</p></div>';
         }
 
@@ -809,7 +817,8 @@ class mod_mplayer_renderer extends plugin_renderer_base {
         $completioninfo = new completion_info($COURSE);
 
         $listbar = $mplayer->playlist ? $mplayer->playlist : 'none';
-        $mute = $mplayer->mute ? 'true' : 'false';
+        $mute = ($mplayer->mute == 'true') ? 'true' : 'false';
+        $autostart = ($mplayer->autostart == 'true') ? 'true' : 'false';
 
         $this->jw_build_playlist($mplayer, $context, $urlarray);
 
@@ -826,11 +835,12 @@ class mod_mplayer_renderer extends plugin_renderer_base {
                 "width": "'.$mplayer->width.'",
                 "volume": "'.$mplayer->volume.'",
                 "mute": "'.$mute.'",
-                "autostart": "'.$mplayer->autostart.'",
+                "autostart": "'.$autostart.'",
                 "stretching": "'.$mplayer->stretching.'",
                 "listbar": {
                     "position": "'.$listbar.'",
-                    "size": "'.$mplayer->playlistsize.'"
+                    "size": "'.$mplayer->playlistsize.'",
+                    "layout": "basic",
                 }
             });
             setup_player_completion("jwplayer_'.$mplayer->id.'", "'.$mplayer->id.'");
@@ -881,14 +891,15 @@ class mod_mplayer_renderer extends plugin_renderer_base {
 
                     // Admit failover type is encoded in piped extension.
                     $type = null;
+                    $title = '';
                     if (strpos($url, '|') !== false) {
-                        list($url, $type) = explode('|', $url);
+                        @list($url, $type, $title) = explode('|', $url);
                     }
 
                     $clip = new StdClass;
                     $clip->file = $url;
                     $clip->image = isset($playlistthumb[$index]) ? $playlistthumb[$index] : '';
-                    $clip->title = 'test';
+                    $clip->title = $title;
                     if ($type) {
                         $clip->type = $type;
                     }
@@ -1156,11 +1167,13 @@ class mod_mplayer_renderer extends plugin_renderer_base {
         $str = '';
         $context = context_module::instance($cm->id);
         if (has_capability('mod/mplayer:assessor', $context)) {
+            $str .= '<div class="mplayer-reports">';
             $str .= '<center>';
             $params = array('id' => $cm->id, 'return' => $return);
             $label = get_string('report', 'mplayer');
             $str .= $this->output->single_button(new moodle_url('/mod/mplayer/report.php', $params), $label);
             $str .= '</center>';
+            $str .= '</div>';
         }
         return $str;
     }

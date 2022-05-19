@@ -340,7 +340,9 @@ function xmldb_mplayer_upgrade($oldversion = 0) {
 
     if ($oldversion < 2020042801) {
 
-        xmldb_mplayer_fix_all_logs();
+        // This results to be generally too costfull at upgrade time.
+        // Use /mod/mplayer/cli/fix_logs_v2020042802.php in place, after version is updated.
+        // xmldb_mplayer_fix_all_logs();
 
         upgrade_mod_savepoint(true, 2020042801, 'mplayer');
     }
