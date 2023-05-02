@@ -1481,7 +1481,6 @@ function mplayer_compute_segment_points($starttime, $endtime, $clip) {
 function mplayer_save_attributes($mplayer) {
     global $DB;
 
-    $mplayer = clone($mplayer);
     mplayer_pack_attributes($mplayer);
     $DB->update_record('mplayer', $mplayer);
 }
