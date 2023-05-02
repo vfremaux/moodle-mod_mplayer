@@ -61,7 +61,7 @@ function mplayer_set_instance(&$block) {
     require_capability('mod/mplayer:view', $context);
 
     $event = \mod_mplayer\event\mplayer_viewed::create(array(
-        'objectid' => $block->cm->id,
+        'objectid' => $block->cm->instance,
         'context' => $context,
         'other' => array(
             'objectname' => $mplayer->name

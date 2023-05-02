@@ -146,7 +146,7 @@ class mod_mplayer_renderer extends plugin_renderer_base {
      * return html string
      */
     public function flowplayer_body($mplayer, $cm, $context, $forcedtype = '') {
-        global $CFG, $DB, $PAGE;
+        global $CFG, $DB;
         static $loaded = false;
 
         $config = get_config('mplayer');
@@ -811,7 +811,7 @@ class mod_mplayer_renderer extends plugin_renderer_base {
         $listbar = $mplayer->playlist ? $mplayer->playlist : 'none';
         $mute = $mplayer->mute ? 'true' : 'false';
 
-        $this->build_jw_playlist($mplayer, $context, $urlarray);
+        $this->jw_build_playlist($mplayer, $context, $urlarray);
 
         $jwbody = '<div id="jwplayer_'.$mplayer->id.'" style="width: {$mpplayer->width}; height:{$mplayer->height}">'.get_string('loadingplayer', 'mplayer').'</div>';
 
@@ -847,7 +847,7 @@ class mod_mplayer_renderer extends plugin_renderer_base {
         return $jwbody;
     }
 
-    public function build_jw_playlist($mplayer, $context, &$urlarray) {
+    public function jw_build_playlist($mplayer, $context, &$urlarray) {
 
         switch ($mplayer->type) {
 
@@ -871,16 +871,27 @@ class mod_mplayer_renderer extends plugin_renderer_base {
             default:
                 $urlarray = array();
         }
+
         $playlistthumb = mplayer_get_file_url($mplayer, 'mplayerfiles', $context, '/thumbs/', true);
         $this->playlist = array();
 
         if (is_array($urlarray)) {
             foreach ($urlarray as $index => $url) {
                 if ($index !== '' && $url) {
+
+                    // Admit failover type is encoded in piped extension.
+                    $type = null;
+                    if (strpos($url, '|') !== false) {
+                        list($url, $type) = explode('|', $url);
+                    }
+
                     $clip = new StdClass;
                     $clip->file = $url;
                     $clip->image = isset($playlistthumb[$index]) ? $playlistthumb[$index] : '';
                     $clip->title = 'test';
+                    if ($type) {
+                        $clip->type = $type;
+                    }
                     $clip->duration = -1;
                     $this->playlist[] = $clip;
                 }
