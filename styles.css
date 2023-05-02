@@ -68,7 +68,7 @@ div.progressbar-segment.studentzone {
     -moz-opacity: 0.5;
 }
 
-div.maxread{
+div.maxread {
     height:20px;
     min-height:20px;
     border-top:1px solid #606060;
@@ -81,7 +81,7 @@ div.maxread{
     z-index: 100;
 }
 
-div.currentread{
+div.currentread {
     height:20px;
     min-height:20px;
     border:1px solid #606060;
@@ -207,4 +207,8 @@ div.currentread{
 
 .flowplayer {
     background-color: #fcfcfc;
+}
+
+.mplayer-reports {
+    padding-top: 30px;
 }

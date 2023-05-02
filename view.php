@@ -48,7 +48,7 @@ $context = context_module::instance($cm->id);
 require_capability('mod/mplayer:view', $context);
 
 $event = \mod_mplayer\event\mplayer_viewed::create(array(
-    'objectid' => $cm->id,
+    'objectid' => $mplayer->id,
     'context' => $context,
     'other' => array(
         'objectname' => $mplayer->name
@@ -69,7 +69,7 @@ $PAGE->navbar->add(get_string('mplayer', 'mplayer').': '.$mplayer->name);
 $PAGE->set_focuscontrol('');
 $PAGE->set_cacheable(true);
 
-if (mod_mplayer_supports_feature('assessables/highlightzones') && $mplayer->assessmode > 0) {
+if (mplayer_supports_feature('assessables/highlightzones') && $mplayer->assessmode > 0) {
     $PAGE->requires->js_call_amd('mod_mplayer/mplayer_assessables', 'init');
 }
 
@@ -81,7 +81,7 @@ $mplayer->instance = $cm->instance;
 
 $renderer = $PAGE->get_renderer('mod_mplayer');
 
-echo $renderer->print_body($mplayer); // See mod/mplayer/lib.php.
+echo $renderer->print_body($mplayer);
 
 echo $renderer->intro($mplayer);
 

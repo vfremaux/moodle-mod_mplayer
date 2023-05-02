@@ -79,12 +79,13 @@ $string['description'] = 'Media Description';
 $string['displayclick'] = 'Display Click';
 $string['dots'] = 'Dots';
 $string['duration'] = 'Duration (seconds)';
-$string['emulatecommunity'] = 'Emulate the community version.';
-$string['emulatecommunity_desc'] = 'Switches the code to the community version. The result will be more compatible, but some features will not be available anymore.';
 $string['external'] = 'External Url';
 $string['findzones'] = 'Find zones';
 $string['startmarkzone'] = 'Start marking zone';
 $string['endmarkzone'] = 'End marking zone';
+$string['fixmplayerlogs'] = 'Fix Media Player old logs : Views';
+$string['fixmplayertraces'] = 'Fix Media Player old logs : Viewing traces';
+$string['fixmplayerviewedall'] = 'Fix Media Player old logs : View endings';
 $string['fpversion'] = 'Flash Player Version';
 $string['frontcolor'] = 'Front Color';
 $string['fullscreen'] = 'Full Screen';
@@ -124,10 +125,6 @@ $string['langselection'] = 'Subtitle language';
 $string['langteacherchoice'] = 'Teacher choice';
 $string['languser'] = 'User profile language';
 $string['left'] = 'At left';
-$string['licenseprovider'] = 'Pro License provider';
-$string['licenseprovider_desc'] = 'Input here your provider key';
-$string['licensekey'] = 'Pro license key';
-$string['licensekey_desc'] = 'Input here the product license key you got from your provider';
 $string['lightcolor'] = 'Light Color';
 $string['lighthttpdstreaming'] = 'Lighthttps Streaming';
 $string['livestream'] = 'Live Stream';
@@ -194,7 +191,6 @@ $string['playlists'] = 'Playlist';
 $string['playlistsize'] = 'Size (pixels)';
 $string['playliststyle'] = 'Layout';
 $string['pluginadministration'] = 'Media Player Administration';
-$string['plugindist'] = 'Plugin distribution';
 $string['pluginname'] = 'Media Player';
 $string['plugins'] = 'Plugins';
 $string['quality'] = 'Quality';
@@ -658,9 +654,4 @@ $string['passpercent_help'] = 'The amount of check points passed.';
 
 $string['showpasspoints_help'] = 'If disabled, passpoints marks will keep being hidden for students.';
 
-$string['plugindist_desc'] = '
-<p>This plugin is the community version and is published for anyone to use as is and check the plugin\'s
-core application. A "pro" version of this plugin exists and is distributed under conditions to feed the life cycle, upgrade, documentation
-and improvement effort.</p>
-<p>Please contact one of our distributors to get "Pro" version support.</p>
-<p><a href="http://www.mylearningfactory.com/index.php/documentation/Distributeurs?lang=en_utf8">MyLF Distributors</a></p>';
+include(__DIR__.'/pro_additional_strings.php');

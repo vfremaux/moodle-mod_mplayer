@@ -15,24 +15,16 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Version details.
- *
- * @package    mod_mplayer
- * @category   mod
- * @author     Matt Bury - matbury@gmail.com - http://matbury.com/
- * @copyright  (C) 2009  Matt Bury
- * @copyright  (C) 2015  Valery Fremaux (valery.fremaux@gmail.com)
- * @licence    http://www.gnu.org/copyleft/gpl.html GNU Public Licence
+ * @package   mod_mplayer
+ * @category  mod
+ * @copyright 2006 Valery Fremaux
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version  = 2021102100;  // The current module version (Date: YYYYMMDDXX).
-$plugin->requires = 2020060900;
-$plugin->component = 'mod_mplayer';
-$plugin->release = 'Moodle 3.9.0 (Build 2021102100)';
-$plugin->maturity = MATURITY_RC;
-
-// Non Moodle attributes.
-$plugin->codeincrement = '3.9.0012';
-$plugin->privacy = 'dualrelease';
+$definitions = array(
+    'pro' => array(
+        'mode' => cache_store::MODE_APPLICATION
+    )
+);

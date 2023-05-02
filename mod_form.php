@@ -80,7 +80,7 @@ class mod_mplayer_mod_form extends moodleform_mod {
 
         } else {
             $mform->addElement('hidden', 'technology', $config->default_player);
-            $mform->setType('technology', PARAM_ALPHA);
+            $mform->setType('technology', PARAM_ALPHANUM);
         }
 
         // Introduction.
@@ -152,7 +152,7 @@ class mod_mplayer_mod_form extends moodleform_mod {
         $mform->setDefault('showpasspoints', $config->default_show_passpoints);
         $mform->addHelpButton('showpasspoints', 'showpasspoints', 'mplayer');
 
-        if (mod_mplayer_supports_feature('assessables/highlightzones')) {
+        if (mplayer_supports_feature('assessables/highlightzones')) {
             include_once($CFG->dirroot.'/mod/mplayer/pro/mod_form.php');
             mod_form_extensions::add_assessable_behaviours($this, $mform, $this->current->id);
         }

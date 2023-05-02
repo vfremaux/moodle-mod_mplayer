@@ -74,7 +74,7 @@ if ($action == 'progress') {
 
     // Add view to Moodle log.
     $event = \mod_mplayer\event\mplayer_viewing::create(array(
-        'objectid' => $cm->id,
+        'objectid' => $mplayer->id,
         'context' => $context,
         'other' => array(
             'objectname' => $mplayer->name
@@ -117,7 +117,7 @@ if ($action == 'finished') {
     $output = $renderer->progressbar($mplayer, 100, $progress, $cliptrack, $highlights, $clipid);
 
     $event = \mod_mplayer\event\mplayer_viewedall::create(array(
-        'objectid' => $cm->id,
+        'objectid' => $mplayer->id,
         'context' => $context,
         'other' => array(
             'objectname' => $mplayer->name

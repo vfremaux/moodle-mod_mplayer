@@ -46,11 +46,19 @@ class mod_mplayer_renderer extends plugin_renderer_base {
      * @param objectref &$mplayer
      */
     public function intro(&$mplayer) {
+
+        $cm = get_coursemodule_from_instance('mplayer', $mplayer->id);
+        $context = context_module::instance($cm->id);
+
         $str = '';
 
-        if (!empty($mplayer->intro)) {
+        if (!empty(strip_tags($mplayer->intro, '<img><a><button><input>'))) {
             $str .= '<div class="mplayer intro">';
-            $str .= format_text($mplayer->intro, $mplayer->introformat);
+            $introoptions = array('maxfiles' => EDITOR_UNLIMITED_FILES,
+            'noclean' => true, 'context' => $context, 'subdirs' => true);
+            $intro = file_rewrite_pluginfile_urls($mplayer->intro, 'pluginfile.php', $context->id,
+            'mod_mplayer', 'intro', null, $introoptions);
+            $str .= format_text($intro, $mplayer->introformat);
             $str .= '</div>';
         }
 
@@ -76,7 +84,7 @@ class mod_mplayer_renderer extends plugin_renderer_base {
         // A nice small tiny library for detecting mobile devices.
         require_once($CFG->dirroot.'/mod/mplayer/extralib/Mobile_Detect.php');
 
-        $detect = new Mobile_Detect;
+        $detect = new Mobile_Detect();
 
         $cm = get_coursemodule_from_instance('mplayer', $mplayer->id);
         $context = context_module::instance($cm->id);
@@ -128,7 +136,7 @@ class mod_mplayer_renderer extends plugin_renderer_base {
             $mplayerbody = $this->jwplayer_body($mplayer, $cm, $context);
         }
 
-        if (!empty($mplayer->notes)) {
+        if (!empty(strip_tags($mplayer->notes, '<img><a><button><input>'))) {
             $mplayerbody .= '<div class="mplayer-notes"><p>'.$mplayer->notes.'</p></div>';
         }
 
@@ -809,9 +817,10 @@ class mod_mplayer_renderer extends plugin_renderer_base {
         $completioninfo = new completion_info($COURSE);
 
         $listbar = $mplayer->playlist ? $mplayer->playlist : 'none';
-        $mute = $mplayer->mute ? 'true' : 'false';
+        $mute = ($mplayer->mute == 'true') ? 'true' : 'false';
+        $autostart = ($mplayer->autostart == 'true') ? 'true' : 'false';
 
-        $this->build_jw_playlist($mplayer, $context, $urlarray);
+        $this->jw_build_playlist($mplayer, $context, $urlarray);
 
         $jwbody = '<div id="jwplayer_'.$mplayer->id.'" style="width: {$mpplayer->width}; height:{$mplayer->height}">'.get_string('loadingplayer', 'mplayer').'</div>';
 
@@ -826,11 +835,12 @@ class mod_mplayer_renderer extends plugin_renderer_base {
                 "width": "'.$mplayer->width.'",
                 "volume": "'.$mplayer->volume.'",
                 "mute": "'.$mute.'",
-                "autostart": "'.$mplayer->autostart.'",
+                "autostart": "'.$autostart.'",
                 "stretching": "'.$mplayer->stretching.'",
                 "listbar": {
                     "position": "'.$listbar.'",
-                    "size": "'.$mplayer->playlistsize.'"
+                    "size": "'.$mplayer->playlistsize.'",
+                    "layout": "basic",
                 }
             });
             setup_player_completion("jwplayer_'.$mplayer->id.'", "'.$mplayer->id.'");
@@ -847,7 +857,7 @@ class mod_mplayer_renderer extends plugin_renderer_base {
         return $jwbody;
     }
 
-    public function build_jw_playlist($mplayer, $context, &$urlarray) {
+    public function jw_build_playlist($mplayer, $context, &$urlarray) {
 
         switch ($mplayer->type) {
 
@@ -871,16 +881,28 @@ class mod_mplayer_renderer extends plugin_renderer_base {
             default:
                 $urlarray = array();
         }
+
         $playlistthumb = mplayer_get_file_url($mplayer, 'mplayerfiles', $context, '/thumbs/', true);
         $this->playlist = array();
 
         if (is_array($urlarray)) {
             foreach ($urlarray as $index => $url) {
                 if ($index !== '' && $url) {
+
+                    // Admit failover type is encoded in piped extension.
+                    $type = null;
+                    $title = '';
+                    if (strpos($url, '|') !== false) {
+                        @list($url, $type, $title) = explode('|', $url);
+                    }
+
                     $clip = new StdClass;
                     $clip->file = $url;
                     $clip->image = isset($playlistthumb[$index]) ? $playlistthumb[$index] : '';
-                    $clip->title = 'test';
+                    $clip->title = $title;
+                    if ($type) {
+                        $clip->type = $type;
+                    }
                     $clip->duration = -1;
                     $this->playlist[] = $clip;
                 }
@@ -1145,11 +1167,13 @@ class mod_mplayer_renderer extends plugin_renderer_base {
         $str = '';
         $context = context_module::instance($cm->id);
         if (has_capability('mod/mplayer:assessor', $context)) {
+            $str .= '<div class="mplayer-reports">';
             $str .= '<center>';
             $params = array('id' => $cm->id, 'return' => $return);
             $label = get_string('report', 'mplayer');
             $str .= $this->output->single_button(new moodle_url('/mod/mplayer/report.php', $params), $label);
             $str .= '</center>';
+            $str .= '</div>';
         }
         return $str;
     }
