@@ -81,7 +81,7 @@ $mplayer->instance = $cm->instance;
 
 $renderer = $PAGE->get_renderer('mod_mplayer');
 
-echo $renderer->print_body($mplayer);
+echo $renderer->print_body($mplayer); // See mod/mplayer/lib.php.
 
 echo $renderer->intro($mplayer);
 

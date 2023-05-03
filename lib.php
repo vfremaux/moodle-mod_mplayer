@@ -152,6 +152,11 @@ function mplayer_supports($feature) {
         case FEATURE_MOD_ARCHETYPE: {
             return MOD_ARCHETYPE_RESOURCE;
         }
+    	/*
+        case FEATURE_MOD_PURPOSE: {
+            return MOD_PURPOSE_CONTENT;
+        }
+    	*/
 
         default:
             return null;

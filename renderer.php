@@ -1099,9 +1099,11 @@ class mod_mplayer_renderer extends plugin_renderer_base {
     }
 
     public function report_table($mplayer, $users, $context) {
-        global $OUTPUT;
+        global $OUTPUT, $COURSE, $PAGE;
 
         $cm = get_coursemodule_from_instance('mplayer', $mplayer->id);
+        $modinfo = get_fast_modinfo($COURSE);
+        $completioninfo = new completion_info($COURSE);
 
         if (empty($users)) {
             return $this->output->notification(get_string('nousers', 'mplayer'));
@@ -1109,13 +1111,22 @@ class mod_mplayer_renderer extends plugin_renderer_base {
 
         $userstr = get_string('user');
         $viewstatestr = get_string('viewstate', 'mplayer');
+        $completionstatestr = get_string('completionstate', 'mplayer');
 
         $table = new html_table();
-        $table->header = ['', $userstr, $viewstatestr, ''];
-        $table->size = ['10%', '30%', '50%', '10%'];
+        $compenabled = false;
+        if ($completioninfo->is_enabled($cm)) {
+            $compenabled = true;
+            $table->head = ['', $userstr, $viewstatestr, $completionstatestr, ''];
+            $table->size = ['10%', '20%', '50%', '10%', '10%'];
+        } else {
+            $table->head = ['', $userstr, $viewstatestr, ''];
+            $table->size = ['10%', '20%', '50%', '10%'];
+        }
         $table->width = '100%';
 
         $clips = mplayer_get_clips($mplayer, $context);
+        $courserenderer = $PAGE->get_renderer('course');
 
         foreach ($users as $u) {
             $row = [];
@@ -1127,6 +1138,10 @@ class mod_mplayer_renderer extends plugin_renderer_base {
             // $row[] = $cmds;
 
             $row[] = $this->mplayer_completion($mplayer, $clips, $u);
+            if ($compenabled) {
+                $modcomp = $completioninfo->get_data($cm, false, $u->id);
+                $row[] = $courserenderer->course_section_cm_completion($COURSE, $completioninfo, $modinfo->cms[$cm->id]);
+            }
 
             $table->data[] = $row;
         }

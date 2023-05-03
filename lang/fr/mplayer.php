@@ -60,6 +60,7 @@ $string['captionsstate'] = 'Afficher les sous-titres';
 $string['clearconfigxml'] = 'Supprimer le fichier de configuration XML';
 $string['clearplaylist'] = 'Supprimer le fichier de playlist';
 $string['cleartrackfile'] = 'Vider la zone de fichiers';
+$string['completionstate'] = 'Achèvement';
 $string['completionmediaviewed'] = 'marqué complet quand l\'étudiant a visionné un média';
 $string['completionallmediaviewed'] = 'marqué complet quand l\'étudiant a visionné tous les clips';
 $string['config'] = 'Config XML';

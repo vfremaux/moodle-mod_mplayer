@@ -179,7 +179,7 @@ if ($ADMIN->fulltree) {
     $desc = '';
     $settings->add(new admin_setting_configselect($key, $label, $desc, 'false', mplayer_list_showpasspoints()));
 
-    if (learningtimecheck_supports_feature('emulate/community') == 'pro') {
+    if (mplayer_supports_feature('emulate/community') == 'pro') {
         include_once($CFG->dirroot.'/mod/mplayer/pro/prolib.php');
         $promanager = \mod_mplayer\pro_manager::instance();
         $promanager->add_settings($ADMIN, $settings);

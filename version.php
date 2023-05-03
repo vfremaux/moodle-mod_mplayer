@@ -31,7 +31,8 @@ $plugin->version  = 2021102100;  // The current module version (Date: YYYYMMDDXX
 $plugin->requires = 2020060900;
 $plugin->component = 'mod_mplayer';
 $plugin->release = 'Moodle 3.9.0 (Build 2021102100)';
-$plugin->maturity = MATURITY_RC;
+$plugin->supported = [39, 311];
+$plugin->maturity = MATURITY_STABLE;
 
 // Non Moodle attributes.
 $plugin->codeincrement = '3.9.0012';

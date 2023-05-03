@@ -51,6 +51,7 @@ $string['captionsfontsize'] = 'Font Size';
 $string['captionsstate'] = 'Show Captions';
 $string['clearconfigxml'] = 'Clear XML config file';
 $string['clearplaylist'] = 'Clear play list file';
+$string['completionstate'] = 'Activity completion';
 $string['completionmediaviewed'] = 'marked when student has finished to view one of the media';
 $string['completionallmediaviewed'] = 'marked when student has finished to view all the clips';
 $string['config'] = 'Config XML';
