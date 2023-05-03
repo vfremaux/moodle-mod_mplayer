@@ -36,11 +36,13 @@ use \format\page\course_page;
  * This function is not implemented in this plugin, but is needed to mark
  * the vf documentation custom volume availability.
  */
-function mod_mplayer_supports_feature($feature) {
+function mplayer_supports_feature($feature = null, $getsupported = false) {
     global $CFG;
     static $supports;
 
-    $config = get_config('mplayer');
+    if (!during_initial_install()) {
+        $config = get_config('mplayer');
+    }
 
     if (!isset($supports)) {
         $supports = array(
@@ -50,6 +52,10 @@ function mod_mplayer_supports_feature($feature) {
             'community' => array(
             ),
         );
+    }
+
+    if (!empty($getsupported)) {
+        return $supports;
     }
 
     // Check existance of the 'pro' dir in plugin.
@@ -64,6 +70,11 @@ function mod_mplayer_supports_feature($feature) {
         }
     } else {
         $versionkey = 'community';
+    }
+
+    if (empty($feature)) {
+        // Just return version.
+        return $versionkey;
     }
 
     list($feat, $subfeat) = explode('/', $feature);
@@ -141,6 +152,11 @@ function mplayer_supports($feature) {
         case FEATURE_MOD_ARCHETYPE: {
             return MOD_ARCHETYPE_RESOURCE;
         }
+    	/*
+        case FEATURE_MOD_PURPOSE: {
+            return MOD_PURPOSE_CONTENT;
+        }
+    	*/
 
         default:
             return null;

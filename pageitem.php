@@ -31,7 +31,7 @@ require_once($CFG->dirroot.'/mod/mplayer/locallib.php');
  * implements an alternative representation of this activity for the "page"
  * format.
  */
-function mplayer_set_instance(&$block) {
+function mplayer_set_instance($block) {
     global $DB, $PAGE;
 
     $context = context_module::instance($block->cm->id);
@@ -40,7 +40,7 @@ function mplayer_set_instance(&$block) {
     mplayer_unpack_attributes($mplayer);
     $str = mplayer_require_js($mplayer, 'script');
 
-    if (mod_mplayer_supports_feature('assessables/highlightzones') && $mplayer->assessmode > 0) {
+    if (mplayer_supports_feature('assessables/highlightzones') && $mplayer->assessmode > 0) {
         $PAGE->requires->js_call_amd('mod_mplayer/mplayer_assessables', 'init');
     }
 
@@ -61,7 +61,7 @@ function mplayer_set_instance(&$block) {
     require_capability('mod/mplayer:view', $context);
 
     $event = \mod_mplayer\event\mplayer_viewed::create(array(
-        'objectid' => $block->cm->id,
+        'objectid' => $block->cm->instance,
         'context' => $context,
         'other' => array(
             'objectname' => $mplayer->name

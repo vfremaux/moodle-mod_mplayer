@@ -1422,9 +1422,8 @@ function mplayer_unpack_attributes(&$mplayer) {
         } else {
             $mplayer->$attr = '';
         }
-
-        unset($mplayer->playerparams);
     }
+    unset($mplayer->playerparams);
 }
 
 function mplayer_ffmpeg_info($filepath) {

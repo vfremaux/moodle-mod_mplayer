@@ -24,7 +24,7 @@ function fire_video_finished(e, api) {
 
     $.get(url, function(data) {
         $('#mplayer-progress-' + mpid + '_' + index).html(data);
-    });
+    }, 'html');
 }
 
 /*
@@ -61,7 +61,7 @@ function send_video_progress(e, api, progresstime) {
 
         $.get(url, function(data,status) {
             $('#mplayer-progress-' + mpid + '_' + index).html(data);
-        });
+        }, 'html');
 
         // If there is an assessable extension, push value to it
         try {

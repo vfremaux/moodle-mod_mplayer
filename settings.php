@@ -32,148 +32,160 @@ require_once($CFG->dirroot.'/mod/mplayer/locallib.php');
 
 // Player technology.
 
-$playeroptions = mplayer_list_technologies();
-$key = 'mplayer/default_player';
-$label = get_string('player', 'mplayer');
-$desc = '';
-$settings->add(new admin_setting_configselect($key, $label, $desc, 'flowplayer', $playeroptions));
+if ($ADMIN->fulltree) {
+    $playeroptions = mplayer_list_technologies();
+    $key = 'mplayer/default_player';
+    $label = get_string('player', 'mplayer');
+    $desc = '';
+    $settings->add(new admin_setting_configselect($key, $label, $desc, 'flowplayer', $playeroptions));
+    
+    $key = 'mplayer/showdebugcode';
+    $label = get_string('showdebugcode', 'mplayer');
+    $desc = '';
+    $settings->add(new admin_setting_configcheckbox($key, $label, $desc, 0));
+    
+    $yesnooptions = array('0' => get_string('no'), '1' => get_string('yes'));
+    $key = 'mplayer/allowchoice';
+    $label = get_string('allowtechnologychoice', 'mplayer');
+    $desc = get_string('allowtechnologychoicedesc', 'mplayer');
+    $settings->add(new admin_setting_configselect($key, $label, $desc, 0, $yesnooptions));
 
-$key = 'mplayer/showdebugcode';
-$label = get_string('showdebugcode', 'mplayer');
-$desc = '';
-$settings->add(new admin_setting_configcheckbox($key, $label, $desc, 0));
+    // APPEARANCE.
 
-$yesnooptions = array('0' => get_string('no'), '1' => get_string('yes'));
-$key = 'mplayer/allowchoice';
-$label = get_string('allowtechnologychoice', 'mplayer');
-$desc = get_string('allowtechnologychoicedesc', 'mplayer');
-$settings->add(new admin_setting_configselect($key, $label, $desc, 0, $yesnooptions));
+    $label = get_string('appearance', 'mplayer');
+    $settings->add(new admin_setting_heading('h1', $label, ''));
 
-// APPEARANCE.
+    // Width.
+    $key = 'mplayer/default_width';
+    $label = get_string('width', 'mplayer');
+    $desc = '';
+    $settings->add(new admin_setting_configtext($key, $label, $desc, '100%', PARAM_TEXT));
 
-$label = get_string('appearance', 'mplayer');
-$settings->add(new admin_setting_heading('h1', $label, ''));
+    // Height.
+    $key = 'mplayer/default_height';
+    $label = get_string('height', 'mplayer');
+    $desc = '';
+    $settings->add(new admin_setting_configtext($key, $label, $desc, '570', PARAM_TEXT));
 
-// Width.
-$key = 'mplayer/default_width';
-$label = get_string('width', 'mplayer');
-$desc = '';
-$settings->add(new admin_setting_configtext($key, $label, $desc, '100%', PARAM_TEXT));
+    // Skin.
+    $key = 'mplayer/default_skin';
+    $label = get_string('configskin', 'mplayer');
+    $desc = '';
+    $settings->add(new admin_setting_configselect($key, $label, $desc, '', mplayer_list_skins()));
 
-// Height.
-$key = 'mplayer/default_height';
-$label = get_string('height', 'mplayer');
-$desc = '';
-$settings->add(new admin_setting_configtext($key, $label, $desc, '570', PARAM_TEXT));
+    // Show icons.
+    $key = 'mplayer/default_icons';
+    $label = get_string('icons', 'mplayer');
+    $desc = '';
+    $settings->add(new admin_setting_configselect($key, $label, $desc, 'true', mplayer_list_truefalse()));
 
-// Skin.
-$key = 'mplayer/default_skin';
-$label = get_string('configskin', 'mplayer');
-$desc = '';
-$settings->add(new admin_setting_configselect($key, $label, $desc, '', mplayer_list_skins()));
+    // Control bar.
+    $key = 'mplayer/default_controlbar';
+    $label = get_string('controlbar', 'mplayer');
+    $desc = '';
+    $settings->add(new admin_setting_configselect($key, $label, $desc, 'bottom', mplayer_list_controlbar()));
 
-// Show icons.
-$key = 'mplayer/default_icons';
-$label = get_string('icons', 'mplayer');
-$desc = '';
-$settings->add(new admin_setting_configselect($key, $label, $desc, 'true', mplayer_list_truefalse()));
+    // Front color.
+    $key = 'mplayer/default_frontcolor';
+    $label = get_string('frontcolor', 'mplayer');
+    $desc = '';
+    $settings->add(new admin_setting_configtext($key, $label, $desc, '', PARAM_TEXT));
 
-// Control bar.
-$key = 'mplayer/default_controlbar';
-$label = get_string('controlbar', 'mplayer');
-$desc = '';
-$settings->add(new admin_setting_configselect($key, $label, $desc, 'bottom', mplayer_list_controlbar()));
+    // Back color.
+    $key = 'mplayer/default_backcolor';
+    $label = get_string('backcolor', 'mplayer');
+    $desc = '';
+    $settings->add(new admin_setting_configtext($key, $label, $desc, '', PARAM_TEXT));
 
-// Front color.
-$key = 'mplayer/default_frontcolor';
-$label = get_string('frontcolor', 'mplayer');
-$desc = '';
-$settings->add(new admin_setting_configtext($key, $label, $desc, '', PARAM_TEXT));
+    // Light color.
+    $key = 'mplayer/default_lightcolor';
+    $label = get_string('lightcolor', 'mplayer');
+    $desc = '';
+    $settings->add(new admin_setting_configtext($key, $label, $desc, '', PARAM_TEXT));
 
-// Back color.
-$key = 'mplayer/default_backcolor';
-$label = get_string('backcolor', 'mplayer');
-$desc = '';
-$settings->add(new admin_setting_configtext($key, $label, $desc, '', PARAM_TEXT));
+    // Screen color.
+    $key = 'mplayer/default_screencolor';
+    $label = get_string('screencolor', 'mplayer');
+    $desc = '';
+    $settings->add(new admin_setting_configtext($key, $label, $desc, '', PARAM_TEXT));
 
-// Light color.
-$key = 'mplayer/default_lightcolor';
-$label = get_string('lightcolor', 'mplayer');
-$desc = '';
-$settings->add(new admin_setting_configtext($key, $label, $desc, '', PARAM_TEXT));
+    // BEHAVIOUR.
+    
+    $label = get_string('behaviour', 'mplayer');
+    $settings->add(new admin_setting_heading('h2', $label, ''));
 
-// Screen color.
-$key = 'mplayer/default_screencolor';
-$label = get_string('screencolor', 'mplayer');
-$desc = '';
-$settings->add(new admin_setting_configtext($key, $label, $desc, '', PARAM_TEXT));
+    // Auto start.
+    $key = 'mplayer/default_autostart';
+    $label = get_string('autostart', 'mplayer');
+    $desc = '';
+    $settings->add(new admin_setting_configselect($key, $label, $desc, 'false', mplayer_list_truefalse()));
 
-// BEHAVIOUR.
+    // Full screen.
+    $key = 'mplayer/default_fullscreen';
+    $label = get_string('fullscreen', 'mplayer');
+    $desc = '';
+    $settings->add(new admin_setting_configselect($key, $label, $desc, 'true', mplayer_list_truefalse()));
 
-$label = get_string('behaviour', 'mplayer');
-$settings->add(new admin_setting_heading('h2', $label, ''));
+    // force Full screen.
+    $key = 'mplayer/default_forcefullscreen';
+    $label = get_string('forcefullscreen', 'mplayer');
+    $desc = '';
+    $settings->add(new admin_setting_configselect($key, $label, $desc, 'true', mplayer_list_truefalse()));
 
-// Auto start.
-$key = 'mplayer/default_autostart';
-$label = get_string('autostart', 'mplayer');
-$desc = '';
-$settings->add(new admin_setting_configselect($key, $label, $desc, 'false', mplayer_list_truefalse()));
+    // Stretching.
+    $key = 'mplayer/default_stretching';
+    $label = get_string('configstretching', 'mplayer');
+    $desc = '';
+    $settings->add(new admin_setting_configselect($key, $label, $desc, 'uniform', mplayer_list_stretching()));
 
-// Full screen.
-$key = 'mplayer/default_fullscreen';
-$label = get_string('fullscreen', 'mplayer');
-$desc = '';
-$settings->add(new admin_setting_configselect($key, $label, $desc, 'true', mplayer_list_truefalse()));
+    // Volume.
+    $key = 'mplayer/default_volume';
+    $label = get_string('volume', 'mplayer');
+    $desc = '';
+    $settings->add(new admin_setting_configselect($key, $label, $desc, '100', mplayer_list_volume()));
 
-// force Full screen.
-$key = 'mplayer/default_forcefullscreen';
-$label = get_string('forcefullscreen', 'mplayer');
-$desc = '';
-$settings->add(new admin_setting_configselect($key, $label, $desc, 'true', mplayer_list_truefalse()));
+    // Native controls (Flowplayer)
+    $key = 'mplayer/default_native_fullscreen';
+    $label = get_string('nativefullscreen', 'mplayer');
+    $desc = '';
+    $settings->add(new admin_setting_configselect($key, $label, $desc, 'false', mplayer_list_truefalse()));
 
-// Stretching.
-$key = 'mplayer/default_stretching';
-$label = get_string('configstretching', 'mplayer');
-$desc = '';
-$settings->add(new admin_setting_configselect($key, $label, $desc, 'uniform', mplayer_list_stretching()));
+    // Extra CSS to add to all players.
+    $key = 'mplayer/extracss';
+    $label = get_string('configextracss', 'mplayer');
+    $desc = get_string('configextracss_desc', 'mplayer');
+    $settings->add(new admin_setting_configtextarea($key, $label, $desc, '', PARAM_TEXT, 120, 10));
 
-// Volume.
-$key = 'mplayer/default_volume';
-$label = get_string('volume', 'mplayer');
-$desc = '';
-$settings->add(new admin_setting_configselect($key, $label, $desc, '100', mplayer_list_volume()));
+    // Extra CSS to add to all players.
+    $key = 'mplayer/ffmpegpath';
+    $label = get_string('configffmpegpath', 'mplayer');
+    $desc = get_string('configffmpegpath_desc', 'mplayer');
+    $settings->add(new admin_setting_configexecutable($key, $label, $desc, ''));
 
-// Native controls (Flowplayer)
-$key = 'mplayer/default_native_fullscreen';
-$label = get_string('nativefullscreen', 'mplayer');
-$desc = '';
-$settings->add(new admin_setting_configselect($key, $label, $desc, 'false', mplayer_list_truefalse()));
+    $storages = glob($CFG->dirroot.'/mod/mplayer/storage/*_storage.class.php');
+    foreach ($storages as $st) {
+        include_once($st);
+        $classfile = basename($st);
+        $classname = str_replace('.class.php', '', $classfile);
+        $instance = new $classname();
+        $instance->get_settings($settings);
+    }
 
-// Extra CSS to add to all players.
-$key = 'mplayer/extracss';
-$label = get_string('configextracss', 'mplayer');
-$desc = get_string('configextracss_desc', 'mplayer');
-$settings->add(new admin_setting_configtextarea($key, $label, $desc, '', PARAM_TEXT, 120, 10));
+    $label = get_string('tracking', 'mplayer');
+    $settings->add(new admin_setting_heading('h3', $label, ''));
 
-// Extra CSS to add to all players.
-$key = 'mplayer/ffmpegpath';
-$label = get_string('configffmpegpath', 'mplayer');
-$desc = get_string('configffmpegpath_desc', 'mplayer');
-$settings->add(new admin_setting_configexecutable($key, $label, $desc, ''));
+    $key = 'mplayer/default_show_passpoints';
+    $label = get_string('showpasspoints', 'mplayer');
+    $desc = '';
+    $settings->add(new admin_setting_configselect($key, $label, $desc, 'false', mplayer_list_showpasspoints()));
 
-$storages = glob($CFG->dirroot.'/mod/mplayer/storage/*_storage.class.php');
-foreach ($storages as $st) {
-    include_once($st);
-    $classfile = basename($st);
-    $classname = str_replace('.class.php', '', $classfile);
-    $instance = new $classname();
-    $instance->get_settings($settings);
+    if (mplayer_supports_feature('emulate/community') == 'pro') {
+        include_once($CFG->dirroot.'/mod/mplayer/pro/prolib.php');
+        $promanager = \mod_mplayer\pro_manager::instance();
+        $promanager->add_settings($ADMIN, $settings);
+    } else {
+        $label = get_string('plugindist', 'mplayer');
+        $desc = get_string('plugindist_desc', 'mplayer');
+        $settings->add(new admin_setting_heading('plugindisthdr', $label, $desc));
+    }
 }
-
-$label = get_string('tracking', 'mplayer');
-$settings->add(new admin_setting_heading('h3', $label, ''));
-
-$key = 'mplayer/default_show_passpoints';
-$label = get_string('showpasspoints', 'mplayer');
-$desc = '';
-$settings->add(new admin_setting_configselect($key, $label, $desc, 'false', mplayer_list_showpasspoints()));
