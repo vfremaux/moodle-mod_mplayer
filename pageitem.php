@@ -60,19 +60,10 @@ function mplayer_set_instance($block) {
     $context = context_module::instance($block->cm->id);
     require_capability('mod/mplayer:view', $context);
 
-    $event = \mod_mplayer\event\mplayer_viewed::create(array(
-        'objectid' => $block->cm->instance,
-        'context' => $context,
-        'other' => array(
-            'objectname' => $mplayer->name
-        )
-    ));
-    $event->add_record_snapshot('course_modules', $block->cm);
-    $event->trigger();
-
     $course = $DB->get_record('course', array('id' => $mplayer->course));
-    $completion = new completion_info($course);
-    $completion->set_module_viewed($block->cm);
+
+    // Trigger module viewed event.
+    mplayer_view($mplayer, $course, $block->cm, $context);
 
     $block->content->text = $str;
     return true;

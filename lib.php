@@ -152,11 +152,6 @@ function mplayer_supports($feature) {
         case FEATURE_MOD_ARCHETYPE: {
             return MOD_ARCHETYPE_RESOURCE;
         }
-    	/*
-        case FEATURE_MOD_PURPOSE: {
-            return MOD_PURPOSE_CONTENT;
-        }
-    	*/
 
         default:
             return null;
@@ -606,14 +601,17 @@ function mplayer_get_completion_state($course, $cm, $userid, $type) {
 
     $context = context_module::instance($cm->id);
 
-    if (strpos($mplayerinstance->technology, 'flowplayer') === 0) {
-        $clips = mplayer_get_clips($mplayerinstance, $context);
-    } else {
-        $clips = jwplayer_get_clips($mplayerinstance, $context);
-    }
+    if (!empty($mplayerinstance->completionmediaviewed) || !empty($mplayerinstance->completionallmediaviewed)) {
 
-    $params = array('userid' => $userid, 'mplayerid' => $cm->instance);
-    $cliprecords = $DB->get_records('mplayer_userdata', $params, 'clipid', 'clipid, finished');
+        if (strpos($mplayerinstance->technology, 'flowplayer') === 0) {
+            $clips = mplayer_get_clips($mplayerinstance, $context);
+        } else {
+            $clips = jwplayer_get_clips($mplayerinstance, $context);
+        }
+
+        $params = array('userid' => $userid, 'mplayerid' => $cm->instance);
+        $cliprecords = $DB->get_records('mplayer_userdata', $params, 'clipid', 'clipid, finished');
+    }
 
     // If completion option is enabled, evaluate it and return true/false.
     $finished = false;
@@ -626,6 +624,7 @@ function mplayer_get_completion_state($course, $cm, $userid, $type) {
                 break;
             }
         }
+        $result = $finished;
     }
 
     if (!empty($mplayerinstance->completionallmediaviewed)) {
@@ -636,13 +635,29 @@ function mplayer_get_completion_state($course, $cm, $userid, $type) {
                 break;
             }
         }
-    }
-
-    if ($type == COMPLETION_AND) {
-        $result = $result && $finished;
-    } else {
-        $result = $result || $finished;
+        $result = $finished;
     }
 
     return $result;
 }
+
+function mplayer_view($mplayer, $course, $cm, $context) {
+
+    // Completion.
+    $completion = new completion_info($course);
+    $completion->set_module_viewed($cm);
+
+    // Trigger course_module_viewed event.
+
+    $params = array(
+        'context' => $context,
+        'objectid' => $mplayer->id
+    );
+
+    $event = \mod_mplayer\event\course_module_viewed::create($params);
+    $event->add_record_snapshot('course_modules', $cm);
+    $event->add_record_snapshot('course', $course);
+    $event->add_record_snapshot('mplayer', $mplayer);
+    $event->trigger();
+}
+

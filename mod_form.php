@@ -249,18 +249,18 @@ class mod_mplayer_mod_form extends moodleform_mod {
     public function add_completion_rules() {
         $mform =& $this->_form;
 
-        $group = array();
         $label = get_string('mediaviewed', 'mplayer');
-        $mform->addElement('checkbox', 'completionmediaviewed', $label, get_string('completionmediaviewed', 'mplayer'));
+        $mform->addElement('advcheckbox', 'completionmediaviewed', $label, get_string('completionmediaviewed', 'mplayer'));
 
         $label = get_string('allmediaviewed', 'mplayer');
-        $mform->addElement('checkbox', 'completionallmediaviewed', $label, get_string('completionallmediaviewed', 'mplayer'));
+        $mform->addElement('advcheckbox', 'completionallmediaviewed', $label, get_string('completionallmediaviewed', 'mplayer'));
 
         return array('completionmediaviewed', 'completionallmediaviewed');
     }
 
     public function completion_rule_enabled($data) {
-        return(!empty($data['completionmediaviewed']) && !empty($data['completionallmediaviewed']));
+        return (($data['completionmediaviewed'] != 0) ||
+            ($data['completionallmediaviewed'] != 0));
     }
 
     protected function get_player_elements($technology) {

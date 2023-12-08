@@ -43,22 +43,11 @@ if (!isset($CFG->mplayer_default_player)) {
     set_config('mplayer_default_player', 'flowplayer');
 }
 
-// Trigger module viewed event.
 $context = context_module::instance($cm->id);
 require_capability('mod/mplayer:view', $context);
 
-$event = \mod_mplayer\event\mplayer_viewed::create(array(
-    'objectid' => $mplayer->id,
-    'context' => $context,
-    'other' => array(
-        'objectname' => $mplayer->name
-    )
-));
-$event->add_record_snapshot('course_modules', $cm);
-$event->trigger();
-
-$completion = new completion_info($course);
-$completion->set_module_viewed($cm);
+// Trigger module viewed event.
+mplayer_view($mplayer, $course, $cm, $context);
 
 // Print the page header.
 $strmplayers = get_string('modulenameplural', 'mplayer');
