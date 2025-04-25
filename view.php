@@ -56,7 +56,10 @@ $PAGE->set_title(format_string($mplayer->name));
 $PAGE->set_heading('');
 $PAGE->navbar->add(get_string('mplayer', 'mplayer').': '.$mplayer->name);
 $PAGE->set_focuscontrol('');
+$PAGE->set_pagelayout('incourse');
 $PAGE->set_cacheable(true);
+$PAGE->set_cm($cm);
+$PAGE->set_activity_record($mplayer);
 
 if (mplayer_supports_feature('assessables/highlightzones') && $mplayer->assessmode > 0) {
     $PAGE->requires->js_call_amd('mod_mplayer/mplayer_assessables', 'init');
@@ -74,9 +77,14 @@ echo $renderer->print_body($mplayer); // See mod/mplayer/lib.php.
 
 echo $renderer->intro($mplayer);
 
+/*
+// Nav principle obsolete in moodle 4
 echo $renderer->report_button($cm);
 
+/*
+// Nav principle obsolete in moodle 4
 echo $renderer->return_button($cm, 'course');
+*/
 
 // Finish the page.
 echo $OUTPUT->footer($course);

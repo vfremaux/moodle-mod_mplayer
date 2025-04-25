@@ -564,8 +564,8 @@ intercaler des actvitiés pédagogiques au milieu du visionnage.
 $string['numpasspoints_help'] = 'Le nombre de points intermédiaires de tracking pour la lecture du média. Ajustez cette valeur en fonction
 de la longueur de la video.';
 
-$string['passrule_help'] = 'La règle pour valider la lecture : en mode "fromstart", la lecture doit avoir valider les checkpoints
-à partir du début. En mode "freeloc", la lecture a pu être alétoire jusqu\'à couvrir la portion espérée du média.';
+$string['passrule_help'] = 'La règle pour valider la lecture : en mode "A partir du début", la lecture doit avoir validé les checkpoints
+à partir du début. En mode "Position aléatoire", la lecture a pu être non continue jusqu\'à couvrir la proportion de visionnage requise du média.';
 
 $string['passpercent_help'] = 'Le pourcentage de visionnage, compté sur les checkpoints validés.';
 

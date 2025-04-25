@@ -36,7 +36,8 @@ function mplayer_set_instance($block) {
 
     $context = context_module::instance($block->cm->id);
 
-    $mplayer = $DB->get_record('mplayer', array('id' => $block->cm->instance));
+    $mplayerrec = $DB->get_record('mplayer', array('id' => $block->cm->instance));
+    $mplayer = clone($mplayerrec);
     mplayer_unpack_attributes($mplayer);
     $str = mplayer_require_js($mplayer, 'script');
 
@@ -63,7 +64,7 @@ function mplayer_set_instance($block) {
     $course = $DB->get_record('course', array('id' => $mplayer->course));
 
     // Trigger module viewed event.
-    mplayer_view($mplayer, $course, $block->cm, $context);
+    mplayer_view($mplayerrec, $course, $block->cm, $context);
 
     $block->content->text = $str;
     return true;

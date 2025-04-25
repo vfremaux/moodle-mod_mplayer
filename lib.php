@@ -30,7 +30,7 @@ defined('MOODLE_INTERNAL') || die();
 require_once($CFG->dirroot.'/mod/mplayer/locallib.php');
 
 // Can be used event if not installed. this is just an alias definition.
-use \format\page\course_page;
+use format_page\course_page;
 
 /**
  * This function is not implemented in this plugin, but is needed to mark
@@ -151,6 +151,9 @@ function mplayer_supports($feature) {
         }
         case FEATURE_MOD_ARCHETYPE: {
             return MOD_ARCHETYPE_RESOURCE;
+        }
+        case FEATURE_MOD_PURPOSE:{
+            return MOD_PURPOSE_CONTENT;
         }
 
         default:
@@ -661,3 +664,13 @@ function mplayer_view($mplayer, $course, $cm, $context) {
     $event->trigger();
 }
 
+/**
+ * M4 secondary navigation
+ */
+function mplayer_extend_settings_navigation(settings_navigation $settingsnav, navigation_node $mplayernode) {
+    if (has_capability("mod/mplayer:assessor", $settingsnav->get_page()->context)) {
+        $params = ['id' => $settingsnav->get_page()->cm->id];
+        $reportlink = new moodle_url("/mod/mplayer/report.php", $params);
+        $mplayernode->add(get_string('reports'), $reportlink, navigation_node::TYPE_CONTAINER);
+    }
+}

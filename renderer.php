@@ -441,16 +441,18 @@ class mod_mplayer_renderer extends plugin_renderer_base {
     /**
      * Prints the completion widget
      * @param object $mplayer the MPlayer instance
+     * @param object $clips the clips objects
+     * @param object $user the user to get completion for
      * @return string the completion HTML sequence and HTML representation.
      */
-    public function mplayer_completion(&$mplayer, $clips, $user = null) {
+    public function mplayer_completion(&$mplayer, $clips, $user = null, $inreport = false) {
         global $CFG, $USER, $DB;
 
         if (is_null($user)) {
             $user = $USER;
         }
 
-        if ($mplayer->showpasspoints == 0) {
+        if ($mplayer->showpasspoints == 0 && !$inreport) {
             return '';
         }
 
@@ -458,6 +460,7 @@ class mod_mplayer_renderer extends plugin_renderer_base {
         $context = context_module::instance($cm->id);
 
         if (!isloggedin() || is_guest($context)) {
+            // Guests and non logged users should never view this information.
             return;
         }
 
@@ -1133,15 +1136,21 @@ class mod_mplayer_renderer extends plugin_renderer_base {
             $row[] = $this->output->user_picture($u);
             $row[] = fullname($u);
 
+            // Clip viewing progress
+            $row[] = $this->mplayer_completion($mplayer, $clips, $u, true);
+
+            if ($compenabled) {
+                // Course module completion
+                $modcomp = $completioninfo->get_data($cm, false, $u->id);
+                $u->progress[$cm->id] = $modcomp;
+                $row[] = $this->print_completion_state($u, $cm);
+                // No ! this is the completion definition
+                // $row[] = $courserenderer->course_section_cm_completion($COURSE, $completioninfo, $modinfo->cms[$cm->id]);
+            }
+
             $reseturl = new moodle_url('/mod/mplayer/report.php', ['id' => $cm->id, 'what' => 'reset', 'userid' => $u->id]);
             $cmds = '<a href="'.$reseturl.'">'.$OUTPUT->pix_icon('i/reset', get_string('reset'), 'core').'</a>';
-            // $row[] = $cmds;
-
-            $row[] = $this->mplayer_completion($mplayer, $clips, $u);
-            if ($compenabled) {
-                $modcomp = $completioninfo->get_data($cm, false, $u->id);
-                $row[] = $courserenderer->course_section_cm_completion($COURSE, $completioninfo, $modinfo->cms[$cm->id]);
-            }
+            $row[] = $cmds;
 
             $table->data[] = $row;
         }
@@ -1244,5 +1253,61 @@ class mod_mplayer_renderer extends plugin_renderer_base {
         $thispageurl->params();
 
         return $str;
+    }
+
+    /**
+     * @param object $user
+     * @param object $activity a course module (cm) instance.
+     * @param object $context the course mdule context.
+     */
+    protected function print_completion_state($user, $activity) {
+        global $OUTPUT;
+
+        // Get progress information and state
+        if (array_key_exists($activity->id, $user->progress)) {
+            $thisprogress = $user->progress[$activity->id];
+            $state = $thisprogress->completionstate;
+            $overrideby = $thisprogress->overrideby;
+            $date = userdate($thisprogress->timemodified);
+        } else {
+            $state = COMPLETION_INCOMPLETE;
+            $overrideby = 0;
+            $date = '';
+        }
+
+        // Work out how it corresponds to an icon
+        switch($state) {
+            case COMPLETION_INCOMPLETE :
+                $completiontype = 'n'.($overrideby ? '-override' : '');
+                break;
+            case COMPLETION_COMPLETE :
+                $completiontype = 'y'.($overrideby ? '-override' : '');
+                break;
+            case COMPLETION_COMPLETE_PASS :
+                $completiontype = 'pass';
+                break;
+            case COMPLETION_COMPLETE_FAIL :
+                $completiontype = 'fail';
+                break;
+        }
+        $completiontrackingstring = $activity->completion == COMPLETION_TRACKING_AUTOMATIC ? 'auto' : 'manual';
+        $completionicon = 'completion-' . $completiontrackingstring. '-' . $completiontype;
+
+        if ($overrideby) {
+            $overridebyuser = \core_user::get_user($overrideby, '*', MUST_EXIST);
+            $describe = get_string('completion-' . $completiontype, 'completion', fullname($overridebyuser));
+        } else {
+            $describe = get_string('completion-' . $completiontype, 'completion');
+        }
+
+        $a = new StdClass;
+        $a->state = $describe;
+        $a->date = $date;
+        $a->user = fullname($user);
+        $a->activity = format_string($activity->name);
+        $fulldescribe = get_string('progress-title', 'completion', $a);
+
+        $celltext = $OUTPUT->pix_icon('i/' . $completionicon, s($fulldescribe));
+        return '<td class="completion-progresscell">'.$celltext . '</td>';
     }
 }

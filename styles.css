@@ -25,6 +25,15 @@ div.flowplayer {
     margin-top: 30px;
 }
 
+.mplayer-clip-progresstrack::first-child {
+    margin-top: 0;
+}
+
+.mplayer-assess-counts {
+    margin-left: 20px;
+    width: 100px;
+}
+
 div.mplayer-completion {
     position: relative;
     height:24px;
