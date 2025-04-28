@@ -60,6 +60,7 @@ $string['captionsstate'] = 'Afficher les sous-titres';
 $string['clearconfigxml'] = 'Supprimer le fichier de configuration XML';
 $string['clearplaylist'] = 'Supprimer le fichier de playlist';
 $string['cleartrackfile'] = 'Vider la zone de fichiers';
+$string['completionstate'] = 'Achèvement';
 $string['completionmediaviewed'] = 'marqué complet quand l\'étudiant a visionné un média';
 $string['completionallmediaviewed'] = 'marqué complet quand l\'étudiant a visionné tous les clips';
 $string['config'] = 'Config XML';
@@ -85,13 +86,14 @@ $string['displayclick'] = 'Click audio';
 $string['duration'] = 'Durée (secondes)';
 $string['embederror1'] = '<h3>Oups ! Il y a un problème.</h3> <h4>Un Player Flash de version ';
 $string['embederror2'] = ' ou plus récente est demandé.</h4>';
-$string['emulatecommunity'] = 'Emuler la version communautaire';
-$string['emulatecommunity_desc'] = 'Bascule le code sur la version communautaire. Le résultat est plus compatible avec d\'autres installations, mais certaines fonctionnalités avancées ne seront plus disponibles.';
 $string['external'] = 'Url Externe';
 $string['fpversion'] = 'Version de player flash';
 $string['frontcolor'] = 'Couleur de premier plan';
 $string['fullscreen'] = 'Plein écran';
 $string['forcefullscreen'] = 'Forcer le plein écran';
+$string['fixmplayerlogs'] = 'Correction des anciens logs du Media Player : Visionnages';
+$string['fixmplayertraces'] = 'Correction des anciens logs du Media Player : Traces de lecture';
+$string['fixmplayerviewedall'] = 'Correction des anciens logs du Media Player : Fins de lecture';
 $string['fullurl'] = 'Vidéo(s) externes (via URLs)';
 $string['hd'] = 'Video HD';
 $string['hdbitrate'] = 'Débit';
@@ -123,10 +125,6 @@ $string['langselection'] = 'Langue des sous-titres';
 $string['langteacherchoice'] = 'Langue au choix de l\'enseignant';
 $string['languser'] = 'Langue du profil utilisateur';
 $string['left'] = 'A gauche';
-$string['licenseprovider'] = 'Fournisseur version Pro';
-$string['licenseprovider_desc'] = 'Entrez la clef de votre distributeur.';
-$string['licensekey'] = 'Clef de license pro';
-$string['licensekey_desc'] = 'Entrez ici la clef de produit que vous avez reçu de votre distributeur.';
 $string['lightcolor'] = 'Couleur claire';
 $string['livestream'] = 'Lecture continue de flux';
 $string['livestreamfile'] = 'Flux RTMP';
@@ -566,16 +564,11 @@ intercaler des actvitiés pédagogiques au milieu du visionnage.
 $string['numpasspoints_help'] = 'Le nombre de points intermédiaires de tracking pour la lecture du média. Ajustez cette valeur en fonction
 de la longueur de la video.';
 
-$string['passrule_help'] = 'La règle pour valider la lecture : en mode "fromstart", la lecture doit avoir valider les checkpoints
-à partir du début. En mode "freeloc", la lecture a pu être alétoire jusqu\'à couvrir la portion espérée du média.';
+$string['passrule_help'] = 'La règle pour valider la lecture : en mode "A partir du début", la lecture doit avoir validé les checkpoints
+à partir du début. En mode "Position aléatoire", la lecture a pu être non continue jusqu\'à couvrir la proportion de visionnage requise du média.';
 
 $string['passpercent_help'] = 'Le pourcentage de visionnage, compté sur les checkpoints validés.';
 
 $string['showpasspoints_help'] = 'Si désactivés, alors les balises de viosionnage seront invisibles pour les étudiants.';
 
-$string['plugindist_desc'] = '
-<p>Ce plugin est distribué dans la communauté Moodle pour l\'évaluation de ses fonctions centrales
-correspondant à une utilisation courante du plugin. Une version "professionnelle" de ce plugin existe et est distribuée
-sous certaines conditions, afin de soutenir l\'effort de développement, amélioration; documentation et suivi des versions.</p>
-<p>Contactez un distributeur pour obtenir la version "Pro" et son support.</p>
-<p><a href="http://www.mylearningfactory.com/index.php/documentation/Distributeurs?lang=fr_utf8">Distributeurs MyLF</a></p>';
+include(__DIR__.'/pro_additional_strings.php');

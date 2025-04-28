@@ -80,7 +80,7 @@ class mod_mplayer_mod_form extends moodleform_mod {
 
         } else {
             $mform->addElement('hidden', 'technology', $config->default_player);
-            $mform->setType('technology', PARAM_ALPHA);
+            $mform->setType('technology', PARAM_ALPHANUM);
         }
 
         // Introduction.
@@ -152,7 +152,7 @@ class mod_mplayer_mod_form extends moodleform_mod {
         $mform->setDefault('showpasspoints', $config->default_show_passpoints);
         $mform->addHelpButton('showpasspoints', 'showpasspoints', 'mplayer');
 
-        if (mod_mplayer_supports_feature('assessables/highlightzones')) {
+        if (mplayer_supports_feature('assessables/highlightzones')) {
             include_once($CFG->dirroot.'/mod/mplayer/pro/mod_form.php');
             mod_form_extensions::add_assessable_behaviours($this, $mform, $this->current->id);
         }
@@ -249,18 +249,18 @@ class mod_mplayer_mod_form extends moodleform_mod {
     public function add_completion_rules() {
         $mform =& $this->_form;
 
-        $group = array();
         $label = get_string('mediaviewed', 'mplayer');
-        $mform->addElement('checkbox', 'completionmediaviewed', $label, get_string('completionmediaviewed', 'mplayer'));
+        $mform->addElement('advcheckbox', 'completionmediaviewed', $label, get_string('completionmediaviewed', 'mplayer'));
 
         $label = get_string('allmediaviewed', 'mplayer');
-        $mform->addElement('checkbox', 'completionallmediaviewed', $label, get_string('completionallmediaviewed', 'mplayer'));
+        $mform->addElement('advcheckbox', 'completionallmediaviewed', $label, get_string('completionallmediaviewed', 'mplayer'));
 
         return array('completionmediaviewed', 'completionallmediaviewed');
     }
 
     public function completion_rule_enabled($data) {
-        return(!empty($data['completionmediaviewed']) && !empty($data['completionallmediaviewed']));
+        return (($data['completionmediaviewed'] != 0) ||
+            ($data['completionallmediaviewed'] != 0));
     }
 
     protected function get_player_elements($technology) {

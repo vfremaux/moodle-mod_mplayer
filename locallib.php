@@ -325,7 +325,7 @@ function mplayer_get_clips_from_files(&$mplayer) {
     $cm = get_coursemodule_from_instance('mplayer', $mplayer->id);
     $context = context_module::instance($cm->id);
 
-    $clips = array();
+    $clips = [];
     $fs = get_file_storage();
 
     if (!$fs->is_area_empty($context->id, 'mod_mplayer', 'mplayerfiles', 0, true)) {
@@ -1422,9 +1422,8 @@ function mplayer_unpack_attributes(&$mplayer) {
         } else {
             $mplayer->$attr = '';
         }
-
-        unset($mplayer->playerparams);
     }
+    unset($mplayer->playerparams);
 }
 
 function mplayer_ffmpeg_info($filepath) {
@@ -1481,6 +1480,7 @@ function mplayer_compute_segment_points($starttime, $endtime, $clip) {
 function mplayer_save_attributes($mplayer) {
     global $DB;
 
+    $mplayer = clone($mplayer);
     mplayer_pack_attributes($mplayer);
     $DB->update_record('mplayer', $mplayer);
 }

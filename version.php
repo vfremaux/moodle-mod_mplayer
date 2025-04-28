@@ -27,12 +27,13 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version  = 2019062500;  // The current module version (Date: YYYYMMDDXX).
-$plugin->requires = 2019111200;
+$plugin->version  = 2025042503;  // The current module version (Date: YYYYMMDDXX).
+$plugin->requires = 2022112801;
 $plugin->component = 'mod_mplayer';
-$plugin->release = 'Moodle 3.8.0 (Build 2019062500)';
-$plugin->maturity = MATURITY_RC;
+$plugin->release = 'Moodle 4.5.0 (Build 2025042503)';
+$plugin->supported = [403, 405];
+$plugin->maturity = MATURITY_STABLE;
 
 // Non Moodle attributes.
-$plugin->codeincrement = '3.8.0010';
+$plugin->codeincrement = '4.5.0012';
 $plugin->privacy = 'dualrelease';

@@ -30,17 +30,19 @@ defined('MOODLE_INTERNAL') || die();
 require_once($CFG->dirroot.'/mod/mplayer/locallib.php');
 
 // Can be used event if not installed. this is just an alias definition.
-use \format\page\course_page;
+use format_page\course_page;
 
 /**
  * This function is not implemented in this plugin, but is needed to mark
  * the vf documentation custom volume availability.
  */
-function mod_mplayer_supports_feature($feature) {
+function mplayer_supports_feature($feature = null, $getsupported = false) {
     global $CFG;
     static $supports;
 
-    $config = get_config('mplayer');
+    if (!during_initial_install()) {
+        $config = get_config('mplayer');
+    }
 
     if (!isset($supports)) {
         $supports = array(
@@ -50,6 +52,10 @@ function mod_mplayer_supports_feature($feature) {
             'community' => array(
             ),
         );
+    }
+
+    if (!empty($getsupported)) {
+        return $supports;
     }
 
     // Check existance of the 'pro' dir in plugin.
@@ -64,6 +70,11 @@ function mod_mplayer_supports_feature($feature) {
         }
     } else {
         $versionkey = 'community';
+    }
+
+    if (empty($feature)) {
+        // Just return version.
+        return $versionkey;
     }
 
     list($feat, $subfeat) = explode('/', $feature);
@@ -140,6 +151,9 @@ function mplayer_supports($feature) {
         }
         case FEATURE_MOD_ARCHETYPE: {
             return MOD_ARCHETYPE_RESOURCE;
+        }
+        case FEATURE_MOD_PURPOSE:{
+            return MOD_PURPOSE_CONTENT;
         }
 
         default:
@@ -590,14 +604,17 @@ function mplayer_get_completion_state($course, $cm, $userid, $type) {
 
     $context = context_module::instance($cm->id);
 
-    if (strpos($mplayerinstance->technology, 'flowplayer') === 0) {
-        $clips = mplayer_get_clips($mplayerinstance, $context);
-    } else {
-        $clips = jwplayer_get_clips($mplayerinstance, $context);
-    }
+    if (!empty($mplayerinstance->completionmediaviewed) || !empty($mplayerinstance->completionallmediaviewed)) {
 
-    $params = array('userid' => $userid, 'mplayerid' => $cm->instance);
-    $cliprecords = $DB->get_records('mplayer_userdata', $params, 'clipid', 'clipid, finished');
+        if (strpos($mplayerinstance->technology, 'flowplayer') === 0) {
+            $clips = mplayer_get_clips($mplayerinstance, $context);
+        } else {
+            $clips = jwplayer_get_clips($mplayerinstance, $context);
+        }
+
+        $params = array('userid' => $userid, 'mplayerid' => $cm->instance);
+        $cliprecords = $DB->get_records('mplayer_userdata', $params, 'clipid', 'clipid, finished');
+    }
 
     // If completion option is enabled, evaluate it and return true/false.
     $finished = false;
@@ -610,6 +627,7 @@ function mplayer_get_completion_state($course, $cm, $userid, $type) {
                 break;
             }
         }
+        $result = $finished;
     }
 
     if (!empty($mplayerinstance->completionallmediaviewed)) {
@@ -620,13 +638,39 @@ function mplayer_get_completion_state($course, $cm, $userid, $type) {
                 break;
             }
         }
-    }
-
-    if ($type == COMPLETION_AND) {
-        $result = $result && $finished;
-    } else {
-        $result = $result || $finished;
+        $result = $finished;
     }
 
     return $result;
+}
+
+function mplayer_view($mplayer, $course, $cm, $context) {
+
+    // Completion.
+    $completion = new completion_info($course);
+    $completion->set_module_viewed($cm);
+
+    // Trigger course_module_viewed event.
+
+    $params = array(
+        'context' => $context,
+        'objectid' => $mplayer->id
+    );
+
+    $event = \mod_mplayer\event\course_module_viewed::create($params);
+    $event->add_record_snapshot('course_modules', $cm);
+    $event->add_record_snapshot('course', $course);
+    $event->add_record_snapshot('mplayer', $mplayer);
+    $event->trigger();
+}
+
+/**
+ * M4 secondary navigation
+ */
+function mplayer_extend_settings_navigation(settings_navigation $settingsnav, navigation_node $mplayernode) {
+    if (has_capability("mod/mplayer:assessor", $settingsnav->get_page()->context)) {
+        $params = ['id' => $settingsnav->get_page()->cm->id];
+        $reportlink = new moodle_url("/mod/mplayer/report.php", $params);
+        $mplayernode->add(get_string('reports'), $reportlink, navigation_node::TYPE_CONTAINER);
+    }
 }

@@ -29,8 +29,9 @@ class backup_mplayer_activity_structure_step extends backup_activity_structure_s
 
         $mplayer = new backup_nested_element('mplayer', array('id'), array(
             'name', 'intro', 'introformat', 'timecreated', 'timemodified', 'technology', 
-            'description', 'mplayerfile', 'external', 'cuelists', 'image', 'mplayerstart',
-            'title', 'type', 'notes', 'completionmediaviewed', 'numpasspoints', 'passrule', 'passpercent'));
+            'description', 'playerparams', 'mplayerfile', 'external', 'cuelists', 'image', 'mplayerstart',
+            'title', 'type', 'notes', 'notesformat', 'completionmediaviewed', 'completionallmediaviewed', 'numpasspoints', 'passrule', 'passpercent',
+            'showpasspoints', 'assessmode', 'grade'));
 
         // Sources.
         $mplayer->set_source_table('mplayer', array('id' => backup::VAR_ACTIVITYID));

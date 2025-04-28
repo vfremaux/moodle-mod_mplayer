@@ -46,11 +46,19 @@ class mod_mplayer_renderer extends plugin_renderer_base {
      * @param objectref &$mplayer
      */
     public function intro(&$mplayer) {
+
+        $cm = get_coursemodule_from_instance('mplayer', $mplayer->id);
+        $context = context_module::instance($cm->id);
+
         $str = '';
 
-        if (!empty($mplayer->intro)) {
+        if (!empty(strip_tags($mplayer->intro, '<img><a><button><input>'))) {
             $str .= '<div class="mplayer intro">';
-            $str .= format_text($mplayer->intro, $mplayer->introformat);
+            $introoptions = array('maxfiles' => EDITOR_UNLIMITED_FILES,
+            'noclean' => true, 'context' => $context, 'subdirs' => true);
+            $intro = file_rewrite_pluginfile_urls($mplayer->intro, 'pluginfile.php', $context->id,
+            'mod_mplayer', 'intro', null, $introoptions);
+            $str .= format_text($intro, $mplayer->introformat);
             $str .= '</div>';
         }
 
@@ -64,7 +72,7 @@ class mod_mplayer_renderer extends plugin_renderer_base {
      * @param objectref &$mplayer (mdl_mplayer DB record for current mplayer module instance)
      * @return string
      */
-    public function print_body(&$mplayer) {
+    public function print_body($mplayer) {
         global $CFG;
         static $styleloaded = false;
 
@@ -76,7 +84,7 @@ class mod_mplayer_renderer extends plugin_renderer_base {
         // A nice small tiny library for detecting mobile devices.
         require_once($CFG->dirroot.'/mod/mplayer/extralib/Mobile_Detect.php');
 
-        $detect = new Mobile_Detect;
+        $detect = new Mobile_Detect();
 
         $cm = get_coursemodule_from_instance('mplayer', $mplayer->id);
         $context = context_module::instance($cm->id);
@@ -110,7 +118,7 @@ class mod_mplayer_renderer extends plugin_renderer_base {
      * @param objectref &$context the associated context
      * @return a complete HTML string with all flow player code.
      */
-    public function get_device_based_mplayer(&$mplayer, &$cm, &$context) {
+    public function get_device_based_mplayer($mplayer, $cm, $context) {
         global $CFG, $SESSION;
 
         $SESSION->assessabletries = 0;
@@ -128,7 +136,7 @@ class mod_mplayer_renderer extends plugin_renderer_base {
             $mplayerbody = $this->jwplayer_body($mplayer, $cm, $context);
         }
 
-        if (!empty($mplayer->notes)) {
+        if (!empty(strip_tags($mplayer->notes, '<img><a><button><input>'))) {
             $mplayerbody .= '<div class="mplayer-notes"><p>'.$mplayer->notes.'</p></div>';
         }
 
@@ -145,8 +153,8 @@ class mod_mplayer_renderer extends plugin_renderer_base {
      * whatever the technical detection.
      * return html string
      */
-    public function flowplayer_body(&$mplayer, &$cm, &$context, $forcedtype = '') {
-        global $CFG, $DB;
+    public function flowplayer_body($mplayer, $cm, $context, $forcedtype = '') {
+        global $CFG, $DB, $PAGE;
         static $loaded = false;
 
         $config = get_config('mplayer');
@@ -433,16 +441,18 @@ class mod_mplayer_renderer extends plugin_renderer_base {
     /**
      * Prints the completion widget
      * @param object $mplayer the MPlayer instance
+     * @param object $clips the clips objects
+     * @param object $user the user to get completion for
      * @return string the completion HTML sequence and HTML representation.
      */
-    public function mplayer_completion(&$mplayer, $clips, $user = null) {
+    public function mplayer_completion(&$mplayer, $clips, $user = null, $inreport = false) {
         global $CFG, $USER, $DB;
 
         if (is_null($user)) {
             $user = $USER;
         }
 
-        if ($mplayer->showpasspoints == 0) {
+        if ($mplayer->showpasspoints == 0 && !$inreport) {
             return '';
         }
 
@@ -450,6 +460,7 @@ class mod_mplayer_renderer extends plugin_renderer_base {
         $context = context_module::instance($cm->id);
 
         if (!isloggedin() || is_guest($context)) {
+            // Guests and non logged users should never view this information.
             return;
         }
 
@@ -809,9 +820,10 @@ class mod_mplayer_renderer extends plugin_renderer_base {
         $completioninfo = new completion_info($COURSE);
 
         $listbar = $mplayer->playlist ? $mplayer->playlist : 'none';
-        $mute = $mplayer->mute ? 'true' : 'false';
+        $mute = ($mplayer->mute == 'true') ? 'true' : 'false';
+        $autostart = ($mplayer->autostart == 'true') ? 'true' : 'false';
 
-        $this->build_jw_playlist($mplayer, $context, $urlarray);
+        $this->jw_build_playlist($mplayer, $context, $urlarray);
 
         $jwbody = '<div id="jwplayer_'.$mplayer->id.'" style="width: {$mpplayer->width}; height:{$mplayer->height}">'.get_string('loadingplayer', 'mplayer').'</div>';
 
@@ -826,11 +838,12 @@ class mod_mplayer_renderer extends plugin_renderer_base {
                 "width": "'.$mplayer->width.'",
                 "volume": "'.$mplayer->volume.'",
                 "mute": "'.$mute.'",
-                "autostart": "'.$mplayer->autostart.'",
+                "autostart": "'.$autostart.'",
                 "stretching": "'.$mplayer->stretching.'",
                 "listbar": {
                     "position": "'.$listbar.'",
-                    "size": "'.$mplayer->playlistsize.'"
+                    "size": "'.$mplayer->playlistsize.'",
+                    "layout": "basic",
                 }
             });
             setup_player_completion("jwplayer_'.$mplayer->id.'", "'.$mplayer->id.'");
@@ -847,7 +860,7 @@ class mod_mplayer_renderer extends plugin_renderer_base {
         return $jwbody;
     }
 
-    public function build_jw_playlist($mplayer, $context, &$urlarray) {
+    public function jw_build_playlist($mplayer, $context, &$urlarray) {
 
         switch ($mplayer->type) {
 
@@ -871,16 +884,28 @@ class mod_mplayer_renderer extends plugin_renderer_base {
             default:
                 $urlarray = array();
         }
+
         $playlistthumb = mplayer_get_file_url($mplayer, 'mplayerfiles', $context, '/thumbs/', true);
         $this->playlist = array();
 
         if (is_array($urlarray)) {
             foreach ($urlarray as $index => $url) {
                 if ($index !== '' && $url) {
+
+                    // Admit failover type is encoded in piped extension.
+                    $type = null;
+                    $title = '';
+                    if (strpos($url, '|') !== false) {
+                        @list($url, $type, $title) = explode('|', $url);
+                    }
+
                     $clip = new StdClass;
                     $clip->file = $url;
                     $clip->image = isset($playlistthumb[$index]) ? $playlistthumb[$index] : '';
-                    $clip->title = 'test';
+                    $clip->title = $title;
+                    if ($type) {
+                        $clip->type = $type;
+                    }
                     $clip->duration = -1;
                     $this->playlist[] = $clip;
                 }
@@ -1077,9 +1102,11 @@ class mod_mplayer_renderer extends plugin_renderer_base {
     }
 
     public function report_table($mplayer, $users, $context) {
-        global $OUTPUT;
+        global $OUTPUT, $COURSE, $PAGE;
 
         $cm = get_coursemodule_from_instance('mplayer', $mplayer->id);
+        $modinfo = get_fast_modinfo($COURSE);
+        $completioninfo = new completion_info($COURSE);
 
         if (empty($users)) {
             return $this->output->notification(get_string('nousers', 'mplayer'));
@@ -1087,24 +1114,43 @@ class mod_mplayer_renderer extends plugin_renderer_base {
 
         $userstr = get_string('user');
         $viewstatestr = get_string('viewstate', 'mplayer');
+        $completionstatestr = get_string('completionstate', 'mplayer');
 
         $table = new html_table();
-        $table->header = ['', $userstr, $viewstatestr, ''];
-        $table->size = ['10%', '30%', '50%', '10%'];
+        $compenabled = false;
+        if ($completioninfo->is_enabled($cm)) {
+            $compenabled = true;
+            $table->head = ['', $userstr, $viewstatestr, $completionstatestr, ''];
+            $table->size = ['10%', '20%', '50%', '10%', '10%'];
+        } else {
+            $table->head = ['', $userstr, $viewstatestr, ''];
+            $table->size = ['10%', '20%', '50%', '10%'];
+        }
         $table->width = '100%';
 
         $clips = mplayer_get_clips($mplayer, $context);
+        $courserenderer = $PAGE->get_renderer('course');
 
         foreach ($users as $u) {
             $row = [];
             $row[] = $this->output->user_picture($u);
             $row[] = fullname($u);
 
+            // Clip viewing progress
+            $row[] = $this->mplayer_completion($mplayer, $clips, $u, true);
+
+            if ($compenabled) {
+                // Course module completion
+                $modcomp = $completioninfo->get_data($cm, false, $u->id);
+                $u->progress[$cm->id] = $modcomp;
+                $row[] = $this->print_completion_state($u, $cm);
+                // No ! this is the completion definition
+                // $row[] = $courserenderer->course_section_cm_completion($COURSE, $completioninfo, $modinfo->cms[$cm->id]);
+            }
+
             $reseturl = new moodle_url('/mod/mplayer/report.php', ['id' => $cm->id, 'what' => 'reset', 'userid' => $u->id]);
             $cmds = '<a href="'.$reseturl.'">'.$OUTPUT->pix_icon('i/reset', get_string('reset'), 'core').'</a>';
-            // $row[] = $cmds;
-
-            $row[] = $this->mplayer_completion($mplayer, $clips, $u);
+            $row[] = $cmds;
 
             $table->data[] = $row;
         }
@@ -1145,11 +1191,13 @@ class mod_mplayer_renderer extends plugin_renderer_base {
         $str = '';
         $context = context_module::instance($cm->id);
         if (has_capability('mod/mplayer:assessor', $context)) {
+            $str .= '<div class="mplayer-reports">';
             $str .= '<center>';
             $params = array('id' => $cm->id, 'return' => $return);
             $label = get_string('report', 'mplayer');
             $str .= $this->output->single_button(new moodle_url('/mod/mplayer/report.php', $params), $label);
             $str .= '</center>';
+            $str .= '</div>';
         }
         return $str;
     }
@@ -1205,5 +1253,61 @@ class mod_mplayer_renderer extends plugin_renderer_base {
         $thispageurl->params();
 
         return $str;
+    }
+
+    /**
+     * @param object $user
+     * @param object $activity a course module (cm) instance.
+     * @param object $context the course mdule context.
+     */
+    protected function print_completion_state($user, $activity) {
+        global $OUTPUT;
+
+        // Get progress information and state
+        if (array_key_exists($activity->id, $user->progress)) {
+            $thisprogress = $user->progress[$activity->id];
+            $state = $thisprogress->completionstate;
+            $overrideby = $thisprogress->overrideby;
+            $date = userdate($thisprogress->timemodified);
+        } else {
+            $state = COMPLETION_INCOMPLETE;
+            $overrideby = 0;
+            $date = '';
+        }
+
+        // Work out how it corresponds to an icon
+        switch($state) {
+            case COMPLETION_INCOMPLETE :
+                $completiontype = 'n'.($overrideby ? '-override' : '');
+                break;
+            case COMPLETION_COMPLETE :
+                $completiontype = 'y'.($overrideby ? '-override' : '');
+                break;
+            case COMPLETION_COMPLETE_PASS :
+                $completiontype = 'pass';
+                break;
+            case COMPLETION_COMPLETE_FAIL :
+                $completiontype = 'fail';
+                break;
+        }
+        $completiontrackingstring = $activity->completion == COMPLETION_TRACKING_AUTOMATIC ? 'auto' : 'manual';
+        $completionicon = 'completion-' . $completiontrackingstring. '-' . $completiontype;
+
+        if ($overrideby) {
+            $overridebyuser = \core_user::get_user($overrideby, '*', MUST_EXIST);
+            $describe = get_string('completion-' . $completiontype, 'completion', fullname($overridebyuser));
+        } else {
+            $describe = get_string('completion-' . $completiontype, 'completion');
+        }
+
+        $a = new StdClass;
+        $a->state = $describe;
+        $a->date = $date;
+        $a->user = fullname($user);
+        $a->activity = format_string($activity->name);
+        $fulldescribe = get_string('progress-title', 'completion', $a);
+
+        $celltext = $OUTPUT->pix_icon('i/' . $completionicon, s($fulldescribe));
+        return '<td class="completion-progresscell">'.$celltext . '</td>';
     }
 }

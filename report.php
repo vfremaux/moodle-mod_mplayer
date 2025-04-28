@@ -39,6 +39,8 @@ $return = optional_param('return', 'mod', PARAM_TEXT);
 $params = ['id' => $cm->id, 'firstnamefilter' => $firstnamefilter, 'lastnamefilter' => $lastnamefilter, 'return' => $return];
 $url = new moodle_url('/mod/mplayer/report.php', $params);
 $PAGE->set_url($url);
+$PAGE->set_cm($cm);
+$PAGE->set_activity_record($mplayer);
 
 // Security.
 $context = context_module::instance($cm->id);
@@ -58,17 +60,22 @@ $event->trigger();
 $strmplayers = get_string('modulenameplural', 'mplayer');
 $strmplayer  = get_string('modulename', 'mplayer');
 $PAGE->set_title(format_string($mplayer->name));
+$PAGE->set_pagelayout('incourse');
 $PAGE->set_heading('');
 $PAGE->navbar->add(get_string('report', 'mplayer').': '.$mplayer->name);
 $PAGE->set_focuscontrol('');
 $PAGE->set_cacheable(true);
+$PAGE->set_cm($cm);
+$PAGE->set_activity_record($mplayer);
 
 $renderer = $PAGE->get_renderer('mod_mplayer');
 $renderer->set_mplayer($mplayer);
 
 $groupid = groups_get_activity_group($cm, true);
 
-$fields = 'u.id,'.get_all_user_name_fields(true, 'u').',u.picture, u.imagealt, u.email, u.emailstop';
+// M4.
+$fields = \core_user\fields::for_name()->with_userpic()->excluding('id')->get_required_fields();
+$fields = 'u.id,'.implode(',', $fields);
 $allusers = get_users_by_capability($context, 'mod/mplayer:assessed', $fields, 'lastname, firstname', 0, 0, $groupid);
 $totalusers = count($allusers);
 $users = get_users_by_capability($context, 'mod/mplayer:assessed', $fields, 'lastname, firstname', $page * $pagesize, $pagesize, $groupid);
@@ -77,6 +84,8 @@ mplayer_apply_namefilters($users);
 echo $OUTPUT->header();
 
 echo $OUTPUT->heading(get_string('report', 'mplayer'));
+
+echo "<!-- mplayerid : {$mplayer->id} -->";
 
 echo groups_print_activity_menu($cm, $url, true);
 
@@ -88,6 +97,9 @@ echo $renderer->report_table($mplayer, $users, $context);
 
 echo $OUTPUT->paging_bar($totalusers, $page, $pagesize, $url);
 
+/*
+// M4.0 navigation should not need any more bottom return button 
 echo $renderer->return_button($cm, $return);
+*/
 
 echo $OUTPUT->footer();
