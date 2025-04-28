@@ -1,0 +1,56 @@
+Pro version of mplayer offers new assesable activities on video tjat makes the mplayer
+an interactive video based learning module.
+
+Avtivity types:
+
+### Highlighted zones finding (bumping).
+
+The teacher prepares a set of timestamped defined highlight time segments within the
+video duration. The student does not see any of those highlights and is proposed to 
+identify them on base of the mplayer instructions (notes or description).
+
+the student plays the video and has a bumper to mark "it's here". The mplayer records
+for each student the number of bumps (may affect the final grade), and reveals
+the highlight segment if bumped inside.
+
+At the end of the play, a grade is computed on how many highlighted segments were discovered
+in the clip. the grade is affected down if there are many unsuccessfull attempts to bump. The max
+grade is obtained (100%) if all highlight zones where matched without failed bumps. A failed 
+bump with affect the grade depending on a mplayer parameter, it can be less or more severe, 
+removing more or less grade units per fail.
+
+At the moment of the POC, only one attempt is stored. the student MAY or MAY NOT be
+allowed to repeat the test.
+
+Grading options :
+- ignore fails : count found zones over all existing. grade proportionally
+- ignore fails shifted : id but the amount of matched zones providing the 100% score is lower than the amount of highlight zones.
+- fails minusgrade : each fail looses some % of grade.
+- nofail : No fail allowed. One fail nullifies.
+
+### Sequence marking match
+
+Based on similar setup of the teacher, some highlighted sections of the video are prepared
+teacher side.
+
+The student is asked to punch-in-out some zones he considers matching with the instructions.
+the student can play, punch in, punch out, stop, eventually remove some segments, until submits
+for assessment.
+
+when finished to play and mark, a comparison is made between the teacher and the student's markpoints
+and a intersection score is computed. Score is maximum is both marking full match with a certain
+error shift admitted. Score will decrease when match surface diverges on both sides : the student may have 
+marked more, less length, or same lengh but non matching.
+
+Grading options :
+-match/unmatch : Just counts match/unmatch
+-match/unmatch + segment count assessment
+
+Match = L(INTER) / L(UNION)
+
+simul : 
+I     U      Match
+100   100    1
+100   150    0,666
+0     200    0
+
