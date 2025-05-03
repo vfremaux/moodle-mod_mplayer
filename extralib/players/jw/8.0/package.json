@@ -7,7 +7,7 @@
   "license": "CC-BY-NC-SA-3.0",
   "dependencies": {},
   "devDependencies": {
-    "async": "2.5.0",
+    "async": "2.6.4",
     "autoprefixer": "7.1.2",
     "autoprefixer-loader": "3.2.0",
     "babel-core": "6.25.0",
