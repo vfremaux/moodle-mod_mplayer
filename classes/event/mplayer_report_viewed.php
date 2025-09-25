@@ -71,16 +71,6 @@ class mplayer_report_viewed extends \core\event\base {
     }
 
     /**
-     * Return the legacy event log data.
-     *
-     * @return array|null
-     */
-    protected function get_legacy_logdata() {
-        return array($this->courseid, 'mplayer', 'view report', 'view.php?id='.$this->objectid,
-            $this->other['objectname'], $this->contextinstanceid);
-    }
-
-    /**
      * Custom validation.
      *
      * @throws \coding_exception
