@@ -71,23 +71,6 @@ class mplayer_viewing extends \core\event\base {
     }
 
     /**
-     * Return the legacy event log data.
-     *
-     * @return array|null
-     */
-    protected function get_legacy_logdata() {
-        return array($this->courseid, 'mplayer', 'viewing', 'view.php?id='.$this->objectid,
-            $this->other['objectname'], $this->contextinstanceid);
-    }
-
-    /**
-     * @return null|string
-     */
-    public static function get_legacy_eventname() {
-        return 'mplayer viewing';
-    }
-
-    /**
      * Custom validation.
      *
      * @throws \coding_exception
