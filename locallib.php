@@ -629,6 +629,7 @@ function mplayer_require_js($mplayer, $mode) {
                 $cssfragment = '<link rel="stylesheet" type="text/css" href="'.$CFG->wwwroot.$flowplayercss.'">';
                 return $jsfragment.$cssfragment;
             }
+            $jsloaded = [];
             $jsloaded[$mplayer->technology] = true;
             $jsfragment = '<script src="'.$CFG->wwwroot.$jsplayerfile.'" type="text/javascript"></script>';
             $jsfragment .= '<script src="'.$CFG->wwwroot.$completionfile.'" type="text/javascript"></script>';
